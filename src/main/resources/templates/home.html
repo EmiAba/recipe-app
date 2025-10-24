@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Buddy - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link th:href="@{/css/one.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <div th:replace="~{fragments/navbar::navbar}"></div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Navigation Bar -->
+        <nav class="top-navbar">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+
+                </div>
+                <div class="d-flex align-items-center">
+
+                    <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <div class="container-fluid py-4">
+                <div class="row g-4">
+                    <!-- User Profile Card -->
+                    <div class="col-lg-6">
+                        <div class="dashboard-card user-profile h-100 d-flex flex-column">
+                            <div class="profile-header d-flex align-items-center">
+                                <div class="profile-img me-3">
+                                    <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://ui-avatars.com/api/?name=' + user.username + '&background=FCDA05&color=20470b' : user.profilePicture}" th:alt="${user.username}">
+                                </div>
+                                <div class="profile-info">
+                                    <h2 th:text="${user.username}">John Doe</h2>
+                                    <p th:if="${user.isActive()}" class="active-status">Active</p>
+                                    <p th:if="${!user.isActive()}" class="active-status">Inactive</p>
+                                </div>
+                            </div>
+                            <div class="profile-details mt-3 flex-grow-1">
+                                <div class="detail-item">
+                                    <span class="label">First Name:</span>
+                                    <span class="value" th:text="${#strings.isEmpty(user.firstName) ? 'Edit your profile' : user.firstName}">Emi</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <span class="label">Last Name:</span>
+                                    <span class="value" th:text="${#strings.isEmpty(user.lastName) ? 'Edit your profile' : user.lastName}">aba</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Email:</span>
+                                    <span class="value" th:text="${user.email}">john.doe@example.com</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Member Since:</span>
+                                    <span class="value" th:text="${#temporals.format(user.createdOn, 'dd MMM yyyy')}">15 Jan 2025</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Updated on:</span>
+                                    <span class="value" th:text="${#temporals.format(user.updatedOn, 'dd MMM yyyy')}">15 Jan 2025</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Country:</span>
+                                    <span class="value" th:text="${#strings.isEmpty(user.country) ? 'Edit your profile' : user.country}">Bulgaria</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <a th:href="@{/users/profile}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe Stats Card -->
+                    <div class="col-lg-6">
+                        <div class="dashboard-card stats-card h-100 d-flex flex-column">
+                            <h3 class="mb-4">Your Recipe Stats</h3>
+
+                            <div class="row g-3 mb-4 flex-grow-1">
+                                <div class="col-6">
+                                    <div class="stat-block h-100">
+                                        <div class="stat-value" th:text="${user.recipes.size()}">9</div>
+                                        <div class="stat-label">Recipes Created</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-block h-100">
+                                        <div class="stat-value" th:text="${user.favorites.size()}">4</div>
+                                        <div class="stat-label">Favorites</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action buttons at bottom -->
+                            <div class="mt-auto">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a th:href="@{/recipes/add}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-plus-circle me-1"></i>Add Recipe
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Recipes Table -->
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3>Recent Recipes</h3>
+                             </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Recipe</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="recipe : ${recentRecipes}">
+
+                                    <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="recipe-mini-img me-2">
+                                                    <img th:src="${recipe.imageUrl ?: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'}"
+                                                         class="img-fluid rounded"
+                                                         th:alt="${recipe.title}"
+                                                         style="width: 80%; height: 50px; object-fit: cover;">
+
+                                                </div>
+                                                <span th:text="${recipe.title}">Recipe Title</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span th:if="${!#lists.isEmpty(recipe.categories)}" th:text="${recipe.categories.iterator().next().name}">Category</span>
+                                            <span th:if="${#lists.isEmpty(recipe.categories)}">No Category</span>
+                                        </td>
+                                        <td th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">02 May 2025</td>
+                                        <td>
+                                            <span th:if="${recipe.isPublic}" class="status-badge public">Public</span>
+                                            <span th:if="${!recipe.isPublic}" class="status-badge private">Private</span>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a th:href="@{/recipes/{id}(id=${recipe.id})}" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Empty state -->
+                                    <tr th:if="${#lists.isEmpty(user.recipes)}">
+                                        <td colspan="5" class="text-center text-muted py-3">
+                                            No recipes yet. <a th:href="@{/recipes/add}">Create your first recipe!</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a th:href="@{/recipes/mine}" class="btn btn-outline-primary">View All Recipes</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Space for Adding Information -->
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
+                            <h3>Quick Actions</h3>
+                            <div class="d-flex flex-column gap-2">
+                                <a th:href="@{/recipes/add}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>Create Recipe
+                                </a>
+                                <a th:href="@{/categories}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-grid-fill me-2"></i>Browse Categories
+                                </a>
+                                <a th:href="@{/meal-planning}" class="btn btn-outline-success">
+                                    <i class="bi bi-calendar-week me-2"></i>Plan Meals
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/one.js}"></script>
+</body>
+</html>
