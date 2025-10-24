@@ -1,12 +1,22 @@
 package app.user.service;
 
 
+import app.exception.UserNotFoundException;
+import app.exception.UsernameAlreadyExistException;
+import app.security.AuthenticationMethadata;
+import app.exception.DomainException;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
 import app.web.dto.RegisterRequest;
+import app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -17,7 +27,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -30,13 +40,29 @@ public class UserService {
     }
 
 
+    @CacheEvict(value = "users", allEntries = true)
+    public void editUserDetails(UUID userId, UserEditRequest userEditRequest) {
 
+    User user = getById(userId);
+
+    user.setFirstName(userEditRequest.getFirstName());
+    user.setLastName(userEditRequest.getLastName());
+    user.setProfilePicture(userEditRequest.getProfilePicture());
+    user.setCountry(userEditRequest.getCountry());
+    user.setUpdatedOn(LocalDateTime.now());
+
+
+    userRepository.save(user);
+    }
+
+
+    @CacheEvict(value = "users", allEntries = true)
     public User register(RegisterRequest registerRequest) {
 
         Optional<User> userOptional = userRepository.findByUsername(registerRequest.getUsername());
 
         if (userOptional.isPresent()) {
-            throw new RuntimeException("Username [%s] already exist.".formatted(registerRequest.getUsername()));
+            throw new UsernameAlreadyExistException("Username [%s] already exist.".formatted(registerRequest.getUsername()));
         }
 
         User user = userRepository.save(initializeUser(registerRequest));
@@ -59,7 +85,7 @@ public class UserService {
                 .build();
     }
 
-
+    @Cacheable("users")
     public List<User> getAllUsers() {
 
         return userRepository.findAll();
@@ -67,21 +93,36 @@ public class UserService {
 
     public User getById(UUID id) {
 
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User with id[%s] does not exist.".formatted(id)));
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id[%s] does not exist.".formatted(id)));
     }
 
 
-
-       public void changeUserRole(UUID userId, UserRole newRole) {
+    @CacheEvict(value = "users", allEntries = true)
+    public void changeUserRole(UUID userId, UserRole newRole) {
         User user = getById(userId);
+
+        if (user.getRole() == UserRole.ADMIN && newRole == UserRole.USER) {
+            long adminCount = getAdminCount();
+            if (adminCount <= 1) {
+                throw new DomainException("Cannot remove the last admin user!");
+            }
+        }
+
         user.setRole(newRole);
         user.setUpdatedOn(LocalDateTime.now());
         userRepository.save(user);
     }
 
 
+
     public long getTotalUsers() {
         return getAllUsers().size();
+    }
+
+    public long getAdminCount() {
+        return getAllUsers().stream()
+                .filter(u -> u.getRole() == UserRole.ADMIN)
+                .count();
     }
 
     public long getUserCount() {
@@ -89,5 +130,10 @@ public class UserService {
                 .filter(u -> u.getRole() == UserRole.USER)
                 .count();
     }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+       User user= userRepository.findByUsername(username).orElseThrow(() -> new DomainException("User with this username does not exist."));
 
+        return new AuthenticationMethadata(user.getId(), user.getUsername(), user.getPassword(), user.getRole(), user.isActive());
+    }
 }
