@@ -4,7 +4,7 @@ package app.category.model;
 import app.recipe.model.Recipe;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,9 +26,6 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
-    private LocalDateTime createdOn;
-
-       @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories")
     private Set<Recipe> recipes = new HashSet<>();
 }
