@@ -49,11 +49,9 @@ public class User {
     private String country;
 
     @OneToMany(mappedBy = "author")
-    @OrderBy("createdOn DESC")
     private List<Recipe> recipes = new ArrayList<>();
 
     @OneToMany(mappedBy = "author")
-    @OrderBy("createdOn DESC")
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany(mappedBy = "favoriteBy")
