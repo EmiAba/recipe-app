@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="profile-menu" class="dropdown profile">
+    <button class="btn profile-btn" type="button" data-bs-toggle="dropdown">
+        <div class="profile-img">
+            <img th:src="${#strings.isEmpty(user.profilePicture)
+              ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
+              : user.profilePicture}"
+                 th:alt="${user.username}"
+                 class="rounded-circle"
+                 style="width:32px;height:32px;object-fit:cover;">
+
+
+        </div>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" th:href="@{'/users/profile'}">Edit Profile</a></li>
+         <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" th:href="@{/logout}"  >Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>
