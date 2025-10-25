@@ -121,11 +121,10 @@ public class RecipeController {
             return new ModelAndView("redirect:/recipes/" + recipeId);
         }
 
-        RecipeUpdateRequest updateRequest = recipeMapper.toUpdateRequest(recipe);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-edit");
-        modelAndView.addObject("recipeUpdateRequest", updateRequest);
+        modelAndView.addObject("recipeUpdateRequest",  RecipeMapper.toUpdateRequest(recipe));
         modelAndView.addObject("recipeId", recipeId);
         modelAndView.addObject("categories", categoryService.getAllCategories());
         modelAndView.addObject("user", user);
@@ -154,5 +153,13 @@ public class RecipeController {
         return new ModelAndView("redirect:/recipes/" + updatedRecipe.getId());
     }
 
+
+    @DeleteMapping("/{recipeId}/delete")
+    public ModelAndView deleteRecipe(@PathVariable UUID recipeId,
+                                     @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        User user = userService.getById(authenticationMethadata.getUserId());
+        recipeService.deleteRecipe(recipeId, user);
+        return new ModelAndView("redirect:/recipes/mine");
+    }
 
 }

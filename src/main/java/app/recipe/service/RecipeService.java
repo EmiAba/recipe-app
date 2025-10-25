@@ -2,6 +2,7 @@ package app.recipe.service;
 
 import app.category.model.Category;
 import app.exception.RecipeNotFoundException;
+import app.exception.RecipeUsedInMealPlanException;
 import app.exception.UnauthorizedAccessException;
 import app.user.service.UserService;
 import app.web.dto.RecipeUpdateRequest;
@@ -105,6 +106,24 @@ public class RecipeService {
 
         return recipeRepository.save(recipe);
     }
+
+
+    public void deleteRecipe(UUID recipeId, User currentUser) {
+        Recipe recipe = getById(recipeId);
+
+        if (!recipe.getAuthor().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedAccessException("You can only edit your own recipes.");
+        }
+
+        recipe.getCategories().clear();
+
+        recipeRepository.saveAndFlush(recipe);
+
+        recipeRepository.delete(recipe);
+    }
+
+
+
 
     public boolean isAuthor(Recipe recipe, User user) {
         return recipe.getAuthor().getId().equals(user.getId());
