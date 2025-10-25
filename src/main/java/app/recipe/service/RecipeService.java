@@ -2,7 +2,9 @@ package app.recipe.service;
 
 import app.category.model.Category;
 import app.exception.RecipeNotFoundException;
+import app.exception.UnauthorizedAccessException;
 import app.user.service.UserService;
+import app.web.dto.RecipeUpdateRequest;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +27,13 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final CategoryService categoryService;
 
-   private final UserService userService;
 
     public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService,
                           UserService userService) {
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
 
-        this.userService = userService;
+
     }
 
     @CacheEvict(cacheNames = "publicRecipes", allEntries = true)
@@ -72,8 +73,46 @@ public class RecipeService {
     }
 
 
+    public Recipe updateRecipe(UUID recipeId, RecipeUpdateRequest recipeUpdateRequest, User currentUser) {
+        Recipe recipe = getById(recipeId);
 
-      public List<Recipe> getRecentRecipesByUser(User user, int limit) {
+        if (!recipe.getAuthor().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedAccessException("You can only edit your own recipes.");
+        }
+
+        Set<Category> categories = categoryService.findCategoriesByNames(recipeUpdateRequest.getCategoryNames());
+
+        recipe.setTitle(recipeUpdateRequest.getTitle());
+        recipe.setDescription(recipeUpdateRequest.getDescription());
+        recipe.setInstructions(recipeUpdateRequest.getInstructions());
+        recipe.setPrepTimeMinutes(recipeUpdateRequest.getPrepTimeMinutes());
+        recipe.setCookTimeMinutes(recipeUpdateRequest.getCookTimeMinutes());
+        recipe.setServingSize(recipeUpdateRequest.getServingSize());
+        recipe.setDifficultyLevel(recipeUpdateRequest.getDifficultyLevel());
+        recipe.setImageUrl(recipeUpdateRequest.getImageUrl());
+        recipe.setPublic(recipeUpdateRequest.getIsPublic());
+        recipe.setIngredients(recipeUpdateRequest.getIngredients());
+        recipe.setCalories(recipeUpdateRequest.getCalories());
+        recipe.setProtein(recipeUpdateRequest.getProtein());
+        recipe.setCarbs(recipeUpdateRequest.getCarbs());
+        recipe.setFat(recipeUpdateRequest.getFat());
+        recipe.setFiber(recipeUpdateRequest.getFiber());
+        recipe.setSugar(recipeUpdateRequest.getSugar());
+        recipe.setSodium(recipeUpdateRequest.getSodium());
+        recipe.getCategories().clear();
+        recipe.getCategories().addAll(categories);
+        recipe.setUpdatedOn(LocalDateTime.now());
+
+        return recipeRepository.save(recipe);
+    }
+
+    public boolean isAuthor(Recipe recipe, User user) {
+        return recipe.getAuthor().getId().equals(user.getId());
+    }
+
+
+
+    public List<Recipe> getRecentRecipesByUser(User user, int limit) {
         return user.getRecipes().stream()
                 .sorted((r1, r2) -> r2.getCreatedOn().compareTo(r1.getCreatedOn()))
                 .limit(limit)
