@@ -80,7 +80,9 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
-
+    public List<Recipe> getRecipesByUser(User user) {
+        return recipeRepository.findByAuthorOrderByCreatedOnDesc(user);
+    }
 
 
 

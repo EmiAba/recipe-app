@@ -84,8 +84,21 @@ public class RecipeController {
         modelAndView.addObject("recipe", recipe);
         modelAndView.addObject("user", user);
 
+        return modelAndView;
+    }
 
 
+    @GetMapping("/mine")
+    public ModelAndView getMyRecipes(@AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        User user = userService.getById(authenticationMethadata.getUserId());
+
+
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("recipe-list");
+        modelAndView.addObject("recipes", recipeService.getRecipesByUser(user));
+
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
