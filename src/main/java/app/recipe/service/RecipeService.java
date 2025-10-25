@@ -2,9 +2,7 @@ package app.recipe.service;
 
 import app.category.model.Category;
 import app.exception.RecipeNotFoundException;
-import app.exception.RecipeUsedInMealPlanException;
 import app.exception.UnauthorizedAccessException;
-import app.user.service.UserService;
 import app.web.dto.RecipeUpdateRequest;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -29,8 +27,8 @@ public class RecipeService {
     private final CategoryService categoryService;
 
 
-    public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService,
-                          UserService userService) {
+    public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService
+                         ) {
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
 
@@ -143,7 +141,11 @@ public class RecipeService {
     }
 
 
-
+    public List<Recipe> getPublicRecipes(Category category) {
+        return category.getRecipes().stream()
+                .filter(Recipe::isPublic)
+                .collect(Collectors.toList());
+    }
 
 
 }

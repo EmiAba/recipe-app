@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories - Recipe Buddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <link th:href="@{/css/one.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-container">
+  <!-- Sidebar Navigation -->
+  <div th:replace="~{fragments/navbar::navbar}"></div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center">
+
+        </div>
+        <div class="d-flex align-items-center">
+
+                 <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Categories Content -->
+    <div class="dashboard-content">
+      <div class="container-fluid py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="mb-1">Recipe Categories</h2>
+
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="dashboard-card">
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4" th:each="category : ${categories}">
+              <div class="recipe-card">
+                <a th:href="@{'/categories/' + ${category.name}}" class="text-decoration-none">
+
+
+                <!-- Category Emoji -->
+                  <div class="text-center mb-3 mt-3">
+                    <div th:switch="${category.name}" class="category-emoji">
+                      <span th:case="'Breakfast'">🍳</span>
+                      <span th:case="'Lunch'">🥗</span>
+                      <span th:case="'Dinner'">🍽️</span>
+                      <span th:case="'Dessert'">🍰</span>
+                      <span th:case="'Appetizer'">🥖</span>
+                      <span th:case="'Snack'">🍿</span>
+                      <span th:case="'Drink'">🥤</span>
+                      <span th:case="'Soup'">🍲</span>
+                      <span th:case="'Salad'">🥬</span>
+                      <span th:case="*">🍽️</span>
+                    </div>
+                  </div>
+
+                  <!-- Category Content -->
+                  <div class="recipe-content text-center">
+                    <h3 th:text="${#strings.capitalize(category.name)}">Category</h3>
+                    <p th:text="${category.description}" class="text-muted">Category description</p>
+
+                    <!-- Recipe Count -->
+                    <div class="mt-3">
+                      <span class="tag category-tag" th:text="${categoryCounts[category.name]} + ' recipes'">0 recipes</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div th:if="${#lists.isEmpty(categories)}" class="empty-state">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <h4>No categories found</h4>
+            <p>Categories will appear here, when they are made.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

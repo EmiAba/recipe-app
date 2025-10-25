@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${#strings.capitalize(category.name)} + ' Recipes - Recipe Buddy'">Category Recipes - Recipe Buddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <link th:href="@{/css/one.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-container">
+  <!-- Sidebar Navigation -->
+  <div th:replace="~{fragments/navbar::navbar}"></div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+      <nav class="top-navbar">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center">
+
+
+        </div>
+        <div class="d-flex align-items-center">
+
+                 <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Category Detail Content -->
+    <div class="dashboard-content">
+      <div class="container-fluid py-4">
+
+        <!-- Breadcrumb Navigation -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/categories}">Categories</a></li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${#strings.capitalize(category.name)}">Category</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Category  -->
+        <div class="dashboard-card mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+
+              <div th:switch="${category.name}" class="category-emoji">
+                <span th:case="'breakfast'">🍳</span>
+                <span th:case="'lunch'">🥗</span>
+                <span th:case="'dinner'">🍽️</span>
+                <span th:case="'dessert'">🍰</span>
+                <span th:case="'appetizer'">🥖</span>
+                <span th:case="'snack'">🍿</span>
+                <span th:case="'drink'">🥤</span>
+                <span th:case="'soup'">🍲</span>
+                <span th:case="'salad'">🥬</span>
+                <span th:case="*">🍽️</span>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <h1 th:text="${#strings.capitalize(category.name)} + ' Recipes'">Category Recipes</h1>
+              <p th:text="${category.description}" class="text-muted">Category description</p>
+              <div class="d-flex align-items-center gap-3">
+                <span class="tag category-tag" th:text="${recipeCount} + ' public recipe' + (${recipeCount} != 1 ? 's' : '') + ' available'">0 recipes available</span>
+                <span class="text-muted">•</span>
+
+              </div>
+            </div>
+            <div class="col-md-2 text-center">
+              <a th:href="@{/recipes/add}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Add Recipe
+              </a>
+            </div>
+          </div>
+        </div>
+
+                <!-- Recipes Grid -->
+        <div th:if="${not #lists.isEmpty(recipes)}">
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4" th:each="recipe : ${recipes}">
+              <div class="recipe-card">
+                <div class="recipe-image">
+                  <img th:src="${recipe.imageUrl ?: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'}"
+                       th:alt="${recipe.title}" class="img-fluid">
+                  <div th:class="'difficulty-badge ' + ${#strings.toLowerCase(recipe.difficultyLevel)}"
+                       th:text="${recipe.difficultyLevel}">Medium</div>
+                </div>
+                <div class="recipe-content">
+                  <h3 th:text="${recipe.title}">Recipe Title</h3>
+                  <p th:text="${#strings.abbreviate(recipe.description, 100)}">Recipe description...</p>
+
+                  <div class="recipe-meta">
+                    <span><i class="bi bi-clock"></i> <span th:text="${recipe.prepTimeMinutes + recipe.cookTimeMinutes}">45</span> min</span>
+                    <span><i class="bi bi-person"></i> <span th:text="${recipe.servingSize}">4</span> servings</span>
+                  </div>
+
+                  <!-- Author Info -->
+                  <div class="d-flex align-items-center mt-2 mb-3">
+                    <img th:src="'https://ui-avatars.com/api/?name=' + ${recipe.author.username} + '&background=FCDA05&color=20470b'"
+                         alt="Author" class="rounded-circle me-2" style="width: 25px; height: 25px;">
+                    <span class="text-muted small">by <span th:text="${recipe.author.username}">Author</span></span>
+                    <span class="text-muted small ms-auto" th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">15 May 2025</span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <span class="status-badge public">Public</span>
+                    </div>
+                    <a th:href="@{'/recipes/' + ${recipe.id}}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye"></i> View Recipe
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(recipes)}" class="empty-state">
+          <div th:switch="${category.name}" class="category-emoji">
+            <span th:case="'breakfast'">🍳</span>
+            <span th:case="'lunch'">🥗</span>
+            <span th:case="'dinner'">🍽️</span>
+            <span th:case="'dessert'">🍰</span>
+            <span th:case="'appetizer'">🥖</span>
+            <span th:case="'snack'">🍿</span>
+            <span th:case="'drink'">🥤</span>
+            <span th:case="'soup'">🍲</span>
+            <span th:case="'salad'">🥬</span>
+            <span th:case="*">🍽️</span>
+          </div>
+          <h3 th:text="'No ' + ${#strings.toLowerCase(category.name)} + ' recipes yet'">No recipes yet</h3>
+          <p>Be the first to share a delicious recipe in this category!</p>
+          <a th:href="@{/recipes/add}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Add First Recipe
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
