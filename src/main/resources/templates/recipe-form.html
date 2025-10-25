@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Buddy - Add New Recipe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link th:href="@{/css/one.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <div th:replace="~{fragments/navbar::navbar}"></div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Navigation Bar -->
+        <nav class="top-navbar">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center"></div>
+                <div class="d-flex align-items-center">
+                    <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Add Recipe Content -->
+        <div class="dashboard-content">
+            <div class="container-fluid py-4">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <div class="form-container">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="mb-0">Add New Recipe</h3>
+                                <a th:href="@{/recipes/mine}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to My Recipes
+                                </a>
+
+                            </div>
+
+                            <form th:action="@{/recipes/save}" th:method="post" th:object="${recipeCreateRequest}" enctype="multipart/form-data" novalidate >
+
+                                <!-- Basic Information Section -->
+                                <div class="row mb-4">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label class="form-label">Recipe Title*</label>
+                                            <input type="text" class="form-control" th:field="*{title}" placeholder="E.g., Homemade Margherita Pizza">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Write a brief description of your recipe..."></textarea>
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Preparation Time (minutes)*</label>
+                                                    <input type="number" class="form-control" th:field="*{prepTimeMinutes}" min="1">
+                                                    <p class="alert-warning" th:if="${#fields.hasErrors('prepTimeMinutes')}" th:errors="*{prepTimeMinutes}"></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Cooking Time (minutes)*</label>
+                                                    <input type="number" class="form-control" th:field="*{cookTimeMinutes}" min="0">
+                                                    <p class="alert-warning" th:if="${#fields.hasErrors('cookTimeMinutes')}" th:errors="*{cookTimeMinutes}"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Servings*</label>
+                                            <input type="number" class="form-control" th:field="*{servingSize}" min="1">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('servingSize')}" th:errors="*{servingSize}"></p>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">Difficulty Level*</label>
+                                            <div class="difficulty-options">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" th:field="*{difficultyLevel}" value="EASY" id="easy">
+                                                    <label class="form-check-label difficulty-easy" for="easy"><i class="bi bi-star"></i> Easy</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" th:field="*{difficultyLevel}" value="MEDIUM" id="medium">
+                                                    <label class="form-check-label difficulty-medium" for="medium"><i class="bi bi-star"></i><i class="bi bi-star"></i> Medium</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" th:field="*{difficultyLevel}" value="HARD" id="hard">
+                                                    <label class="form-check-label difficulty-hard" for="hard"><i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i> Hard</label>
+                                                </div>
+                                            </div>
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('difficultyLevel')}" th:errors="*{difficultyLevel}"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Recipe Image</label>
+                                        <div class="mt-4">
+                                            <p class="text-muted">Provide an image URL:</p>
+                                            <input type="url" class="form-control" th:field="*{imageUrl}" placeholder="https://example.com/your-recipe-image.jpg">
+                                            <div class="form-text">Paste a direct link to your recipe image.</div>
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></p>
+                                            <div class="image-preview mt-3" id="imagePreview" style="display: none;">
+                                                <img src="" alt="Recipe preview" class="img-fluid rounded" style="max-height: 200px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- Ingredients Section -->
+                                <h4 class="mb-3">Ingredients</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Ingredients List*</label>
+                                    <textarea class="form-control" th:field="*{ingredients}" rows="6"
+                                              placeholder="Enter ingredients (one per line):&#10;2 cups all-purpose flour&#10;1 tsp salt&#10;3 large eggs&#10;1/2 cup milk"></textarea>
+                                    <div class="form-text">Enter each ingredient on a separate line with quantity, unit, and name.</div>
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('ingredients')}" th:errors="*{ingredients}"></p>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- Instructions Section -->
+                                <h4 class="mb-3">Instructions</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Step by Step Instructions*</label>
+                                    <textarea class="form-control" th:field="*{instructions}" rows="6" placeholder="Enter detailed step-by-step instructions..."></textarea>
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('instructions')}" th:errors="*{instructions}"></p>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- Categories Section -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4 class="mb-3">Categories</h4>
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="breakfast" id="categoryBreakfast">
+                                                <label class="form-check-label" for="categoryBreakfast">Breakfast</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="lunch" id="categoryLunch">
+                                                <label class="form-check-label" for="categoryLunch">Lunch</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="dinner" id="categoryDinner">
+                                                <label class="form-check-label" for="categoryDinner">Dinner</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="appetizer" id="categoryAppetizer">
+                                                <label class="form-check-label" for="categoryAppetizer">Appetizer</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="dessert" id="categoryDessert">
+                                                <label class="form-check-label" for="categoryDessert">Dessert</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="snack" id="categorySnack">
+                                                <label class="form-check-label" for="categorySnack">Snack</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="drink" id="categoryDrink">
+                                                <label class="form-check-label" for="categoryDrink">Drink</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="soup" id="categorySoup">
+                                                <label class="form-check-label" for="categorySoup">Soup</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="salad" id="categorySalad">
+                                                <label class="form-check-label" for="categorySalad">Salad</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- Nutritional Information (Optional) -->
+                                <h4 class="mb-3">Nutritional Information (Optional)</h4>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Calories per serving</label>
+                                            <input type="number" class="form-control" th:field="*{calories}" min="0" placeholder="Enter value...">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Protein (g) per serving</label>
+                                            <input type="number" class="form-control" th:field="*{protein}" min="0" step="0.1" placeholder="Enter value...">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('protein')}" th:errors="*{protein}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Carbs (g) per serving</label>
+                                            <input type="number" class="form-control" th:field="*{carbs}" min="0" step="0.1" placeholder="Enter value...">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Fat (g)</label>
+                                            <input type="number" class="form-control" th:field="*{fat}" min="0" step="0.1" placeholder="e.g., 12">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('fat')}" th:errors="*{fat}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Fiber (g)</label>
+                                            <input type="number" class="form-control" th:field="*{fiber}" min="0" step="0.1" placeholder="e.g., 6">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('fiber')}" th:errors="*{fiber}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Sugar (g)</label>
+                                            <input type="number" class="form-control" th:field="*{sugar}" min="0" step="0.1" placeholder="e.g., 5">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('sugar')}" th:errors="*{sugar}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Sodium (mg)</label>
+                                            <input type="number" class="form-control" th:field="*{sodium}" min="0" step="0.1" placeholder="e.g., 220">
+                                            <p class="alert-warning" th:if="${#fields.hasErrors('sodium')}" th:errors="*{sodium}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- Recipe Visibility -->
+                                <div class="mb-4">
+                                    <h4 class="mb-3">Recipe Visibility</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" th:field="*{isPublic}" value="true" id="visibilityPublic">
+                                                <label class="form-check-label" for="visibilityPublic">
+                                                    <i class="bi bi-globe"></i> Public - Everyone can see this recipe
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" th:field="*{isPublic}" value="false" id="visibilityPrivate">
+                                                <label class="form-check-label" for="visibilityPrivate">
+                                                    <i class="bi bi-lock"></i> Private - Only you can see this recipe
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('isPublic')}" th:errors="*{isPublic}"></p>
+                                </div>
+
+                                <!-- Submit Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                  <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Publish Recipe</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/one.js"></script>
+</body>
+</html>
