@@ -5,6 +5,7 @@ public class RecipeNotFoundException extends RuntimeException {
         super(message);
     }
 
+
     public RecipeNotFoundException() {
     }
 }

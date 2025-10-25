@@ -6,6 +6,7 @@ public class UsernameAlreadyExistException extends RuntimeException{
         super(message);
     }
 
+
     public UsernameAlreadyExistException() {
     }
 }
