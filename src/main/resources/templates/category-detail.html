@@ -68,8 +68,9 @@
               <h1 th:text="${#strings.capitalize(category.name)} + ' Recipes'">Category Recipes</h1>
               <p th:text="${category.description}" class="text-muted">Category description</p>
               <div class="d-flex align-items-center gap-3">
-                <span class="tag category-tag" th:text="${recipeCount} + ' public recipe' + (${recipeCount} != 1 ? 's' : '') + ' available'">0 recipes available</span>
-                <span class="text-muted">•</span>
+
+                <span class="tag category-tag" th:text="${recipeCount} + '  public recipes'">0 recipes</span>
+
 
               </div>
             </div>

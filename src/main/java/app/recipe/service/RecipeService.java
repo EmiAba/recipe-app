@@ -166,7 +166,9 @@ public class RecipeService {
     public List<Recipe> getUserFavorites(UUID userId) {
         User user = userService.getById(userId);
 
-        return new ArrayList<>(user.getFavorites());
+        return user.getFavorites().stream()
+                .sorted((r1, r2) -> r2.getCreatedOn().compareTo(r1.getCreatedOn()))
+                .collect(Collectors.toList());
     }
 
     public boolean isFavorite(Recipe recipe, User user) {
