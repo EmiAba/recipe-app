@@ -120,6 +120,7 @@ public class RecipeService {
 
         recipe.getCategories().clear();
         recipe.getFavoriteBy().clear();
+        recipe.getComments().clear();
 
         recipeRepository.saveAndFlush(recipe);
 

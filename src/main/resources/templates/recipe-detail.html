@@ -11,7 +11,6 @@
 </head>
 <body>
 
-
 <div class="dashboard-container">
     <!-- Sidebar Navigation -->
     <div th:replace="~{fragments/navbar::navbar}"></div>
@@ -29,22 +28,18 @@
             </div>
         </nav>
 
-
         <!-- Recipe Detail Content -->
         <div class="dashboard-content">
             <div class="container-fluid py-4">
                 <!-- Recipe Action Buttons -->
-                <!-- Recipe Action Buttons -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
 
                     <div>
-
                         <form th:if="${!isFavorite}" th:action="@{'/recipes/' + ${recipe.id} + '/favorite'}" th:method="post">
                             <button type="submit" class="btn btn-outline-primary">
                                 <i class="bi bi-heart"></i> Add to favorites
                             </button>
                         </form>
-
 
                         <form th:if="${isFavorite}" th:action="@{'/recipes/' + ${recipe.id} + '/unfavorite'}" th:method="post">
                             <button type="submit" class="btn btn-outline-danger">
@@ -52,7 +47,6 @@
                             </button>
                         </form>
                     </div>
-
 
                     <div th:if="${isAuthor}" class="d-flex gap-2">
                         <a th:href="@{'/recipes/edit/' + ${recipe.id}}" class="btn btn-outline-primary">
@@ -66,6 +60,8 @@
                         </form>
                     </div>
                 </div>
+
+                <!-- Recipe Section -->
                 <div class="recipe-detail-card">
                     <!-- Recipe Header -->
                     <div class="recipe-header">
@@ -138,7 +134,6 @@
                                     </div>
                                     <div class="info-text">
                                         <span class="info-title">Difficulty:</span>
-
                                         <span class="info-value" th:text="${#strings.capitalize(#strings.toLowerCase(recipe.difficultyLevel))}">Medium</span>
                                     </div>
                                 </div>
@@ -205,12 +200,127 @@
                         </div>
                     </div>
                 </div>
+
+
+                <!-- Comment Section -->
+                <div class="dashboard-card mt-4" id="comments">
+                    <h3 class="mb-3">Reviews & Comments</h3>
+
+                    <div class="comments-section"
+                         th:classappend="${#lists.isEmpty(comments)} ? ' no-comments-state' : ' has-comments'">
+
+                        <!-- Overall Rating Summary -->
+                        <div class="overall-rating" th:if="${averageRating != null}">
+                            <div class="rating-number"
+                                 th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">4.5</div>
+                            <div class="rating-stars">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                      th:class="${i <= averageRating ? 'bi bi-star-fill' : 'bi bi-star'}"
+                                      class="bi bi-star-fill"></span>
+                            </div>
+                            <div class="rating-count"
+                                 th:text="${totalRatings} + ' review' + ${totalRatings != 1 ? 's' : ''}">
+                                12 reviews
+                            </div>
+                        </div>
+
+                        <!-- Comment Form -->
+                        <div class="comment-form">
+                            <h5 class="mb-3">Leave a Review</h5>
+
+                            <form th:action="@{/comments/recipe/{id}(id=${recipe.id})}"
+                                  th:method="post"
+                                  th:object="${commentCreateRequest}"
+                                  novalidate>
+
+
+
+                                <div class="form-group">
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></p>
+                                    <label class="rating-label">Your Rating * : </label>
+                                    <div class="rating" aria-label="Rating">
+                                        <input class="rating__input" type="radio" id="rate5" th:field="*{rating}" value="5" required>
+                                        <label class="rating__label" for="rate5" title="Excellent"></label>
+
+                                        <input class="rating__input" type="radio" id="rate4" th:field="*{rating}" value="4">
+                                        <label class="rating__label" for="rate4" title="Good"></label>
+
+                                        <input class="rating__input" type="radio" id="rate3" th:field="*{rating}" value="3">
+                                        <label class="rating__label" for="rate3" title="Average"></label>
+
+                                        <input class="rating__input" type="radio" id="rate2" th:field="*{rating}" value="2">
+                                        <label class="rating__label" for="rate2" title="Poor"></label>
+
+                                        <input class="rating__input" type="radio" id="rate1" th:field="*{rating}" value="1">
+                                        <label class="rating__label" for="rate1" title="Terrible"></label>
+                                    </div>
+                                    <small class="rating-hint">Click a star to rate this recipe</small>
+
+
+
+                                <!-- Review content -->
+                                <div class="mb-3">
+                                    <label class="form-label">Your Review *</label>
+                                    <textarea class="form-control"
+                                              th:field="*{content}"
+                                              rows="3"
+                                              placeholder="Share your thoughts (minimum 2 characters)..."></textarea>
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-send"></i> Post Review
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Comments List -->
+                        <div class="comment-list mt-4" th:if="${not #lists.isEmpty(comments)}">
+                            <div class="comment-item mb-4 pb-3 border-bottom" th:each="comment : ${comments}">
+                                <div class="comment-header d-flex align-items-center mb-2">
+                                    <img th:src="${#strings.isEmpty(comment.author.profilePicture)  ? 'https://ui-avatars.com/api/?name=' + comment.author.username + '&background=FCDA05&color=20470b'
+              : comment.author.profilePicture}"  alt="User Avatar"  class="comment-author-img rounded-circle me-3"
+                                         width="40" height="40"  style="object-fit: cover; border: 2px solid #FCDA05;">
+
+                                    <div>
+                                        <p class="mb-0 fw-bold" th:text="${comment.author.username}">Username</p>
+                                        <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'MMM d, yyyy')}">May 15, 2025</small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                              th:class="${i <= comment.rating ? 'bi bi-star-fill text-warning' : 'bi bi-star text-secondary'}"
+                                              class="bi bi-star-fill"></span>
+                                    </div>
+                                </div>
+                                <div class="comment-content" th:text="${comment.content}">Comment text…</div>
+                                <form th:action="@{/comments/{id}/delete(id=${comment.id})}" th:method="delete" class="mt-2">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </form>
+
+
+                            </div>
+
+
+
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

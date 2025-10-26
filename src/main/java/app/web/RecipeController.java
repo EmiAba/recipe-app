@@ -1,12 +1,14 @@
 package app.web;
 
 
+import app.comment.service.CommentService;
 import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.category.service.CategoryService;
 import app.security.AuthenticationMethadata;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.web.dto.CommentCreateRequest;
 import app.web.dto.RecipeCreateRequest;
 import app.web.dto.RecipeUpdateRequest;
 import app.web.mapper.RecipeMapper;
@@ -30,18 +32,20 @@ public class RecipeController {
     private final CategoryService categoryService;
     private final UserService userService;
     private final RecipeMapper recipeMapper;
+    private final CommentService commentService;
 
 
 
 
     @Autowired
     public RecipeController(RecipeService recipeService, CategoryService categoryService,
-                            UserService userService, RecipeMapper recipeMapper) {
+                            UserService userService, RecipeMapper recipeMapper, CommentService commentService) {
         this.recipeService = recipeService;
         this.categoryService = categoryService;
         this.userService = userService;
 
         this.recipeMapper = recipeMapper;
+        this.commentService = commentService;
     }
 
     @GetMapping("/add")
@@ -88,6 +92,8 @@ public class RecipeController {
         boolean isAuthor = recipeService.isAuthor(recipe, user);
         boolean isFavorite = recipeService.isFavorite(recipe, user);
 
+        Double averageRating = commentService.getAverageRatingForRecipe(recipeId);
+        int totalRatings = commentService.getTotalRatingsForRecipe(recipeId);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-detail");
@@ -95,6 +101,10 @@ public class RecipeController {
         modelAndView.addObject("isAuthor", isAuthor);
         modelAndView.addObject("isFavorite", isFavorite);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("comments", commentService.getCommentsByRecipe(recipe.getId()));
+        modelAndView.addObject("averageRating", averageRating);
+        modelAndView.addObject("totalRatings", totalRatings);
+        modelAndView.addObject("commentCreateRequest", new CommentCreateRequest());
 
         return modelAndView;
     }

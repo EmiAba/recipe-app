@@ -14,7 +14,6 @@
     --space-md: 15px;
     --space-lg: 25px;
 
-
     --fw-medium: 600;
     --fw-bold: 700;
     --fw-extra-bold: 800;
@@ -646,42 +645,6 @@ body {
     border: 2px solid rgba(252, 218, 5, 0.3);
 }
 
-.star-rating {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
-    padding: var(--space-md);
-    background: rgba(252, 218, 5, 0.1);
-    border-radius: 12px;
-    border: 2px solid rgba(252, 218, 5, 0.3);
-}
-
-.star-rating .star {
-    font-size: 2rem;
-    color: #ccc;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-    filter: grayscale(40%);
-}
-
-.star-rating .star:hover,
-.star-rating .star.active,
-.star-rating .star.hover {
-    color: #ffc107;
-    transform: scale(1.2);
-    filter: grayscale(0%);
-    text-shadow: 2px 2px 4px rgba(255, 193, 7, 0.5);
-}
-
-.rating-text {
-    margin-left: var(--space-md);
-    color: #333;
-    font-weight: var(--fw-bold);
-    min-width: 100px;
-}
-
 /* Breadcrumbs */
 .breadcrumb {
     background: none;
@@ -1176,3 +1139,69 @@ body {
     padding-bottom: 26px;
 }
 
+/* === STAR RATING === */
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 6px;
+    margin: 8px 0 14px;
+}
+
+/* hide inputs */
+.rating__input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* base star look */
+.rating__label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.15s ease;
+    user-select: none;
+}
+
+/* star shape */
+.rating__label::before {
+    content: "★";
+}
+
+/* hover preview  */
+.rating__label:hover,
+.rating__label:hover ~ .rating__label {
+    color: #fcda05;
+    transform: scale(1.08);
+}
+
+/* selected  */
+.rating__input:checked ~ .rating__label {
+    color: #ff7b54; /* coral */
+}
+
+
+.rating__input:focus + .rating__label {
+    outline: 2px solid #20470b;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+.rating-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #20470b;
+    font-size: 1rem;
+}
+
+/* optional helper text */
+.rating-hint {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: -4px;
+}

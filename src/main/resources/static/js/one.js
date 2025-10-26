@@ -1,28 +1,10 @@
-// Recipe Buddy - Optimized
+
 const RecipeBuddy = {
     init() {
-        this.setupImagePreviews();
-        this.setupStars();
-        this.setupCheckboxes();
+       this.setupStars();
         this.setupDeletes();
     },
 
-    setupImagePreviews() {
-        const imageInputs = document.querySelectorAll('input[name="imageUrl"], input[name="profilePicture"]');
-        imageInputs.forEach(input => {
-            input.oninput = () => {
-                const preview = document.getElementById('imagePreview');
-                const url = input.value.trim();
-
-                if (preview && url) {
-                    preview.innerHTML = `<img src="${url}" class="img-fluid rounded" style="max-height: 200px;" onerror="this.parentElement.style.display='none'">`;
-                    preview.style.display = 'block';
-                } else if (preview) {
-                    preview.style.display = 'none';
-                }
-            };
-        });
-    },
 
     setupStars() {
         const stars = document.querySelectorAll('.star');
@@ -45,18 +27,7 @@ const RecipeBuddy = {
         });
     },
 
-    setupCheckboxes() {
 
-        document.querySelectorAll('.ingredients-list .form-check-input').forEach(checkbox => {
-            checkbox.onchange = function() {
-                const item = this.closest('.ingredient-line');
-                if (item) {
-                    item.style.textDecoration = this.checked ? 'line-through' : 'none';
-                    item.style.opacity = this.checked ? '0.7' : '1';
-                }
-            };
-        });
-    },
 
     setupDeletes() {
 
