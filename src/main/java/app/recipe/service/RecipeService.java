@@ -3,8 +3,10 @@ package app.recipe.service;
 import app.category.model.Category;
 import app.exception.RecipeNotFoundException;
 import app.exception.UnauthorizedAccessException;
+import app.user.service.UserService;
 import app.web.dto.RecipeUpdateRequest;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.recipe.model.Recipe;
@@ -26,13 +28,16 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final CategoryService categoryService;
 
+    private final UserService userService;
 
-    public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService
-                         ) {
+
+    public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService,
+                         UserService userService) {
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
 
 
+        this.userService = userService;
     }
 
     @CacheEvict(cacheNames = "publicRecipes", allEntries = true)
@@ -114,6 +119,7 @@ public class RecipeService {
         }
 
         recipe.getCategories().clear();
+        recipe.getFavoriteBy().clear();
 
         recipeRepository.saveAndFlush(recipe);
 
@@ -140,11 +146,38 @@ public class RecipeService {
         return recipeRepository.findByAuthorOrderByCreatedOnDesc(user);
     }
 
-
+    @Cacheable("publicRecipes")
     public List<Recipe> getPublicRecipes(Category category) {
         return category.getRecipes().stream()
                 .filter(Recipe::isPublic)
                 .collect(Collectors.toList());
+    }
+
+
+    public void addToFavorites(User user, UUID recipeId) {
+        Recipe recipe = getById(recipeId);
+
+        if (!recipe.getFavoriteBy().contains(user)) {
+            recipe.getFavoriteBy().add(user);
+            user.getFavorites().add(recipe);
+            recipeRepository.save(recipe);
+        }
+    }
+
+    public List<Recipe> getUserFavorites(UUID userId) {
+        User user = userService.getById(userId);
+
+        return new ArrayList<>(user.getFavorites());
+    }
+
+    public boolean isFavorite(Recipe recipe, User user) {
+        return user.getFavorites().contains(recipe);
+    }
+    public void removeFromFavorites(User user, UUID recipeId) {
+        Recipe recipe = getById(recipeId);
+        recipe.getFavoriteBy().remove(user);
+        user.getFavorites().remove(recipe);
+        recipeRepository.save(recipe);
     }
 
 

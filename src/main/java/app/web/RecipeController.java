@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -28,8 +29,8 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final CategoryService categoryService;
     private final UserService userService;
-
     private final RecipeMapper recipeMapper;
+
 
 
 
@@ -85,12 +86,14 @@ public class RecipeController {
         Recipe recipe = recipeService.getById(recipeId);
 
         boolean isAuthor = recipeService.isAuthor(recipe, user);
+        boolean isFavorite = recipeService.isFavorite(recipe, user);
 
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-detail");
         modelAndView.addObject("recipe", recipe);
         modelAndView.addObject("isAuthor", isAuthor);
+        modelAndView.addObject("isFavorite", isFavorite);
         modelAndView.addObject("user", user);
 
         return modelAndView;
@@ -122,6 +125,8 @@ public class RecipeController {
         }
 
 
+
+        System.out.println("Difficulty Level: " + recipe.getDifficultyLevel());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-edit");
         modelAndView.addObject("recipeUpdateRequest",  RecipeMapper.toUpdateRequest(recipe));
@@ -160,6 +165,39 @@ public class RecipeController {
         User user = userService.getById(authenticationMethadata.getUserId());
         recipeService.deleteRecipe(recipeId, user);
         return new ModelAndView("redirect:/recipes/mine");
+    }
+
+
+    @GetMapping("/favorites")
+    public ModelAndView getMyFavorites(@AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        User user = userService.getById(authenticationMethadata.getUserId());
+        UUID userId = authenticationMethadata.getUserId();
+        List<Recipe> favorites = recipeService.getUserFavorites(userId);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("recipe-favorites");
+        modelAndView.addObject("recipes", favorites);
+        modelAndView.addObject("user", user);
+
+        return modelAndView;
+    }
+
+
+    @PostMapping("/{recipeId}/favorite")
+    public ModelAndView addToFavorites(@PathVariable UUID recipeId,
+                                       @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        User user = userService.getById(authenticationMethadata.getUserId());
+        recipeService.addToFavorites(user, recipeId);
+        return new ModelAndView("redirect:/recipes/" + recipeId +"?success=added");
+    }
+
+
+    @PostMapping("/{recipeId}/unfavorite")
+    public ModelAndView removeFromFavorites(@PathVariable UUID recipeId,
+                                            @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        User user = userService.getById(authenticationMethadata.getUserId());
+        recipeService.removeFromFavorites(user, recipeId);
+        return new ModelAndView("redirect:/recipes/" + recipeId +"?success=removed");
     }
 
 }
