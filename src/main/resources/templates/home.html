@@ -144,9 +144,9 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span th:if="${!#lists.isEmpty(recipe.categories)}" th:text="${recipe.categories.iterator().next().name}">Category</span>
-                                            <span th:if="${#lists.isEmpty(recipe.categories)}">No Category</span>
+                                            <span th:text="${recipe.categories[0]?.name ?: 'No Category'}">Category</span>
                                         </td>
+
                                         <td th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">02 May 2025</td>
                                         <td>
                                             <span th:if="${recipe.isPublic}" class="status-badge public">Public</span>
