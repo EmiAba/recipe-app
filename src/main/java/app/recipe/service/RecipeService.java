@@ -5,8 +5,6 @@ import app.exception.RecipeNotFoundException;
 import app.exception.UnauthorizedAccessException;
 import app.user.service.UserService;
 import app.web.dto.RecipeUpdateRequest;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.recipe.model.Recipe;
@@ -40,7 +38,7 @@ public class RecipeService {
         this.userService = userService;
     }
 
-    @CacheEvict(cacheNames = "publicRecipes", allEntries = true)
+
     public Recipe createRecipe(RecipeCreateRequest recipeCreateRequest, User author) {
         Set<Category> categories = categoryService.findCategoriesByNames(recipeCreateRequest.getCategoryNames());
 
@@ -147,7 +145,7 @@ public class RecipeService {
         return recipeRepository.findByAuthorOrderByCreatedOnDesc(user);
     }
 
-    @Cacheable("publicRecipes")
+
     public List<Recipe> getPublicRecipes(Category category) {
         return category.getRecipes().stream()
                 .filter(Recipe::isPublic)
