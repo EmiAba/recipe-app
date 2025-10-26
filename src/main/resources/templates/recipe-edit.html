@@ -196,21 +196,21 @@
                                         <div class="mb-3">
                                             <label class="form-label">Calories per serving</label>
                                             <input type="number" class="form-control" th:field="*{calories}" min="0" placeholder="Enter value...">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}"></p>
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Protein (g) per serving</label>
                                             <input type="number" class="form-control" th:field="*{protein}" min="0" step="0.1" placeholder="Enter value...">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('protein')}" th:errors="*{protein}"></p>
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Carbs (g) per serving</label>
                                             <input type="number" class="form-control" th:field="*{carbs}" min="0" step="0.1" placeholder="Enter value...">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}"></p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -219,28 +219,28 @@
                                         <div class="mb-3">
                                             <label class="form-label">Fat (g)</label>
                                             <input type="number" class="form-control" th:field="*{fat}" min="0" step="0.1" placeholder="e.g., 12">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('fat')}" th:errors="*{fat}"></p>
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Fiber (g)</label>
                                             <input type="number" class="form-control" th:field="*{fiber}" min="0" step="0.1" placeholder="e.g., 6">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('fiber')}" th:errors="*{fiber}"></p>
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Sugar (g)</label>
                                             <input type="number" class="form-control" th:field="*{sugar}" min="0" step="0.1" placeholder="e.g., 5">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('sugar')}" th:errors="*{sugar}"></p>
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Sodium (mg)</label>
                                             <input type="number" class="form-control" th:field="*{sodium}" min="0" step="0.1" placeholder="e.g., 220">
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('sodium')}" th:errors="*{sodium}"></p>
+
                                         </div>
                                     </div>
                                 </div>
