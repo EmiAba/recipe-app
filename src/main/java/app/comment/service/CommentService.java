@@ -87,7 +87,7 @@ public class CommentService {
                 .orElseThrow(() -> new CommentNotFoundException("Comment with id [%s] does not exist.".formatted(id)));
     }
 
-    @Transactional
+
     public void deleteComment(UUID commentId, User currentUser) {
         Comment comment = getById(commentId);
 
