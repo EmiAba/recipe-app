@@ -34,7 +34,7 @@ public class CommentService {
 
     }
 
-    @Transactional
+
     public Comment createComment(CommentCreateRequest commentCreateRequest, UUID recipeId, User author) {
         Recipe recipe = recipeService.getById(recipeId);
 
