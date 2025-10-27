@@ -8,6 +8,8 @@ import app.security.AuthenticationMethadata;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.CommentCreateRequest;
+import app.web.dto.CommentEditRequest;
+import app.web.mapper.CommentMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +27,7 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
     private final RecipeService recipeService;
+
 
 
     @Autowired
@@ -83,6 +86,50 @@ public class CommentController {
         commentService.deleteComment(commentId, currentUser);
 
         return new ModelAndView("redirect:/recipes/" + recipeId + "#comments");
+    }
+
+    @GetMapping("/{commentId}/edit")
+    public ModelAndView editCommentForm(@PathVariable UUID commentId,
+                                        @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        Comment comment = commentService.getById(commentId);
+        User user = userService.getById(authenticationMethadata.getUserId());
+
+        if (!comment.getAuthor().getId().equals(user.getId())) {
+            return new ModelAndView("redirect:/recipes/" + comment.getRecipe().getId());
+        }
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("comment-edit");
+        modelAndView.addObject("comment", comment);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("commentEditRequest", CommentMapper.toEditRequest(comment));
+
+        return modelAndView;
+    }
+
+    @PutMapping("/{commentId}/edit")
+    public ModelAndView updateComment(@PathVariable UUID commentId,
+                                      @Valid CommentEditRequest commentEditRequest,
+                                      BindingResult bindingResult,
+                                      @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+
+        Comment comment = commentService.getById(commentId);
+
+        if (bindingResult.hasErrors()) {
+            User currentUser = userService.getById(authenticationMethadata.getUserId());
+
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("comment-edit");
+            modelAndView.addObject("comment", comment);
+            modelAndView.addObject("user", currentUser);
+            modelAndView.addObject("commentEditRequest", commentEditRequest);
+            return modelAndView;
+        }
+
+        User currentUser = userService.getById(authenticationMethadata.getUserId());
+        commentService.updateComment(commentId, commentEditRequest, currentUser);
+
+        return new ModelAndView("redirect:/recipes/" + comment.getRecipe().getId() + "#comments");
     }
 
 }

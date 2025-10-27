@@ -8,10 +8,10 @@ import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.user.model.User;
 import app.web.dto.CommentCreateRequest;
+import app.web.dto.CommentEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +57,26 @@ public class CommentService {
         return savedComment;
     }
 
+
+
+    public Comment updateComment(UUID commentId, CommentEditRequest commentEditRequest, User currentUser) {
+        Comment comment = getById(commentId);
+
+
+        if (!comment.getAuthor().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedAccessException("You can only edit your own comments.");
+        }
+
+        comment.setContent(commentEditRequest.getContent());
+        comment.setRating(commentEditRequest.getRating());
+        comment.setUpdatedOn(LocalDateTime.now());
+
+        Comment updatedComment = commentRepository.save(comment);
+
+        log.info("User [{}] updated comment [{}]", currentUser.getUsername(), commentId);
+
+        return updatedComment;
+    }
 
     public List<Comment> getCommentsByRecipe(UUID recipeId) {
         return commentRepository.findByRecipeIdWithAuthor(recipeId);

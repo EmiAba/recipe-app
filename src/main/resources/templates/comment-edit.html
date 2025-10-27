@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Comment - Recipe Buddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <link th:href="@{/css/one.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-container">
+  <!-- Sidebar Navigation -->
+  <div th:replace="~{fragments/navbar::navbar}"></div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center">
+        </div>
+        <div class="d-flex align-items-center">
+          <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Edit Comment Content -->
+    <div class="dashboard-content">
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <h3 class="mb-1">Edit Review</h3>
+                  <p class="text-muted mb-0" th:text="'for ' + ${comment.recipe.title}">for Recipe Name</p>
+                </div>
+                <a th:href="@{/recipes/{id}(id=${comment.recipe.id})}" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-arrow-left"></i> Back to Recipe
+                </a>
+              </div>
+
+              <div class="comment-form">
+                <form th:action="@{/comments/{id}/edit(id=${comment.id})}" th:method="PUT" th:object="${commentEditRequest}" novalidate>
+
+                  <!-- Rating section -->
+                  <div class="form-group">
+                    <label class="rating-label">Your Rating *</label>
+                    <p class="alert-warning" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></p>
+                    <div class="rating" aria-label="Rating">
+                      <input class="rating__input" type="radio" id="rate5" th:field="*{rating}" value="5">
+                      <label class="rating__label" for="rate5" title="Excellent"></label>
+
+                      <input class="rating__input" type="radio" id="rate4" th:field="*{rating}" value="4">
+                      <label class="rating__label" for="rate4" title="Good"></label>
+
+                      <input class="rating__input" type="radio" id="rate3" th:field="*{rating}" value="3">
+                      <label class="rating__label" for="rate3" title="Average"></label>
+
+                      <input class="rating__input" type="radio" id="rate2" th:field="*{rating}" value="2">
+                      <label class="rating__label" for="rate2" title="Poor"></label>
+
+                      <input class="rating__input" type="radio" id="rate1" th:field="*{rating}" value="1">
+                      <label class="rating__label" for="rate1" title="Terrible"></label>
+                    </div>
+                    <small class="rating-hint">Click a star to rate this recipe</small>
+                  </div>
+
+                  <!-- Comment text -->
+                  <div class="mb-4">
+                    <label class="form-label">Your Review *</label>
+                    <textarea class="form-control" th:field="*{content}" rows="6"
+                              placeholder="Share your thoughts..."></textarea>
+                    <p class="alert-warning" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="d-flex justify-content-between align-items-center">
+                    <a th:href="@{/recipes/{id}(id=${comment.recipe.id})}" class="btn btn-outline-secondary">
+                      <i class="bi bi-x-lg"></i> Cancel
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-check-lg"></i> Save Changes
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
