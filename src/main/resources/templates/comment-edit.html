@@ -45,7 +45,7 @@
               </div>
 
               <div class="comment-form">
-                <form th:action="@{/comments/{id}/edit(id=${comment.id})}" th:method="PUT" th:object="${commentEditRequest}" novalidate>
+                <form th:action="@{'/comments/' + ${comment.id} + '/edit'}" th:method="PUT" th:object="${commentEditRequest}" novalidate>
 
                   <!-- Rating section -->
                   <div class="form-group">
