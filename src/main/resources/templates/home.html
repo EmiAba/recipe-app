@@ -144,7 +144,9 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span th:text="${recipe.categories[0]?.name ?: 'No Category'}">Category</span>
+                                        <span th:text="${!recipe.categories.isEmpty() ? recipe.categories.iterator().next().name : 'No Category'}">
+                                         Category
+                                         </span>
                                         </td>
 
                                         <td th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">02 May 2025</td>
@@ -159,7 +161,7 @@
                                         </td>
                                     </tr>
                                     <!-- Empty state -->
-                                    <tr th:if="${#lists.isEmpty(user.recipes)}">
+                                    <tr th:if="${#lists.isEmpty(recentRecipes)}">
                                         <td colspan="5" class="text-center text-muted py-3">
                                             No recipes yet. <a th:href="@{/recipes/add}">Create your first recipe!</a>
                                         </td>

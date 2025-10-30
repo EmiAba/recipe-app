@@ -5,6 +5,8 @@ import app.exception.RecipeNotFoundException;
 import app.exception.UnauthorizedAccessException;
 import app.user.service.UserService;
 import app.web.dto.RecipeUpdateRequest;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.recipe.model.Recipe;
@@ -113,16 +115,10 @@ public class RecipeService {
         Recipe recipe = getById(recipeId);
 
         if (!recipe.getAuthor().getId().equals(currentUser.getId())) {
-            throw new UnauthorizedAccessException("You can only edit your own recipes.");
+            throw new UnauthorizedAccessException("You can only delete your own recipes.");
         }
 
-        recipe.getCategories().clear();
-        recipe.getFavoriteBy().clear();
-        recipe.getComments().clear();
-
-        recipeRepository.saveAndFlush(recipe);
-
-        recipeRepository.delete(recipe);
+          recipeRepository.delete(recipe);
     }
 
 
@@ -134,17 +130,15 @@ public class RecipeService {
 
 
 
-    public List<Recipe> getRecentRecipesByUser(User user, int limit) {
-        return user.getRecipes().stream()
-                .sorted((r1, r2) -> r2.getCreatedOn().compareTo(r1.getCreatedOn()))
-                .limit(limit)
-                .collect(Collectors.toList());
-    }
+    public List<Recipe> getRecipesByUser(User user, Integer limit) {
+        List<Recipe> recipes = recipeRepository.findByAuthorOrderByCreatedOnDesc(user);
 
-    public List<Recipe> getRecipesByUser(User user) {
-        return recipeRepository.findByAuthorOrderByCreatedOnDesc(user);
-    }
+        if (limit != null && limit > 0) {
+            return recipes.stream().limit(limit).toList();
+        }
 
+        return recipes;
+    }
 
     public List<Recipe> getPublicRecipes(Category category) {
         return category.getRecipes().stream()
@@ -152,17 +146,15 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
-
+    @CacheEvict(value = "userFavorites", key = "#user.id")
     public void addToFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
-
-        if (!recipe.getFavoriteBy().contains(user)) {
-            recipe.getFavoriteBy().add(user);
-            user.getFavorites().add(recipe);
-            recipeRepository.save(recipe);
-        }
+        user.getFavorites().add(recipe);
+        recipeRepository.save(recipe);
     }
 
+
+    @Cacheable(value = "userFavorites", key = "#userId")
     public List<Recipe> getUserFavorites(UUID userId) {
         User user = userService.getById(userId);
 
@@ -174,9 +166,10 @@ public class RecipeService {
     public boolean isFavorite(Recipe recipe, User user) {
         return user.getFavorites().contains(recipe);
     }
+
+    @CacheEvict(value = "userFavorites", key = "#user.id")
     public void removeFromFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
-        recipe.getFavoriteBy().remove(user);
         user.getFavorites().remove(recipe);
         recipeRepository.save(recipe);
     }

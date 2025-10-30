@@ -31,7 +31,6 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final CategoryService categoryService;
     private final UserService userService;
-    private final RecipeMapper recipeMapper;
     private final CommentService commentService;
 
 
@@ -39,12 +38,10 @@ public class RecipeController {
 
     @Autowired
     public RecipeController(RecipeService recipeService, CategoryService categoryService,
-                            UserService userService, RecipeMapper recipeMapper, CommentService commentService) {
+                            UserService userService,  CommentService commentService) {
         this.recipeService = recipeService;
         this.categoryService = categoryService;
         this.userService = userService;
-
-        this.recipeMapper = recipeMapper;
         this.commentService = commentService;
     }
 
@@ -116,7 +113,7 @@ public class RecipeController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-list");
-        modelAndView.addObject("recipes", recipeService.getRecipesByUser(user));
+        modelAndView.addObject("recipes", recipeService.getRecipesByUser(user, null));
 
         modelAndView.addObject("user", user);
         return modelAndView;

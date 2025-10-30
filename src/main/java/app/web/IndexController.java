@@ -77,7 +77,7 @@ public class IndexController {
     @GetMapping("/home")
     public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationMethadata authenticationMethadata){
         User user = userService.getById(authenticationMethadata.getUserId());
-        List<Recipe> recentRecipes = recipeService.getRecentRecipesByUser(user, 3);
+        List<Recipe> recentRecipes = recipeService.getRecipesByUser(user, 3);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
