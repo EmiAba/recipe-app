@@ -17,4 +17,10 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     @Query("SELECT c FROM Comment c LEFT JOIN FETCH c.author WHERE c.recipe.id = :recipeId ORDER BY c.createdOn DESC")
     List<Comment> findByRecipeIdWithAuthor(@Param("recipeId") UUID recipeId);
+
+
+    @Query("SELECT COUNT(DISTINCT c.author.id) FROM Comment c")
+    long countDistinctAuthors();
+
+
 }

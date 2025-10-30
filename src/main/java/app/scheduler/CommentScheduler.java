@@ -34,10 +34,7 @@ public class CommentScheduler {
         long totalComments = commentRepository.count();
 
 
-        long usersWithComments = commentRepository.findAll().stream()
-                .map(comment -> comment.getAuthor().getId())
-                .distinct()
-                .count();
+        long usersWithComments = commentRepository.countDistinctAuthors();
 
         log.info("Comment report: {} total comments from {} active users out of {} total users",
                 totalComments, usersWithComments, totalUsers);
