@@ -116,19 +116,15 @@ public class UserService implements UserDetailsService {
 
 
     public long getTotalUsers() {
-        return getAllUsers().size();
+        return userRepository.count();
     }
 
     public long getAdminCount() {
-        return getAllUsers().stream()
-                .filter(u -> u.getRole() == UserRole.ADMIN)
-                .count();
+       return userRepository.countByRole(UserRole.ADMIN);
     }
 
     public long getUserCount() {
-        return getAllUsers().stream()
-                .filter(u -> u.getRole() == UserRole.USER)
-                .count();
+        return  userRepository.countByRole(UserRole.USER);
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

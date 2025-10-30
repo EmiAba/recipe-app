@@ -22,7 +22,7 @@ public class UserInit implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        if(!userService.getAllUsers().isEmpty()){
+        if(userService.getTotalUsers() > 0){
             return;
         }
 
