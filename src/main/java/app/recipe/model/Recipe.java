@@ -80,4 +80,7 @@ public class Recipe {
     @ManyToMany
     private Set<User> favoriteBy = new HashSet<>();
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
-    List<Recipe> findByAuthorOrderByCreatedOnDesc(User user);
+    List<Recipe> findByAuthorAndDeletedFalseOrderByCreatedOnDesc(User user);
 
     List<Recipe> findByIsPublicTrue();
 }

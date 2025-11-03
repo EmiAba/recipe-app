@@ -118,7 +118,8 @@ public class RecipeService {
             throw new UnauthorizedAccessException("You can only delete your own recipes.");
         }
 
-          recipeRepository.delete(recipe);
+        recipe.setDeleted(true);
+        recipeRepository.save(recipe);
     }
 
 
@@ -131,7 +132,7 @@ public class RecipeService {
 
 
     public List<Recipe> getRecipesByUser(User user, Integer limit) {
-        List<Recipe> recipes = recipeRepository.findByAuthorOrderByCreatedOnDesc(user);
+        List<Recipe> recipes = recipeRepository.findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user);
 
         if (limit != null && limit > 0) {
             return recipes.stream().limit(limit).toList();
