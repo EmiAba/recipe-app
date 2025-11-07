@@ -28,4 +28,11 @@ public interface MealPlanningClient {
             @RequestBody MealPlanRequest requestBody
     );
 
+
+    @DeleteMapping("/{mealPlanId}")
+    ResponseEntity<Void> deleteMealPlan(
+            @PathVariable UUID mealPlanId,
+            @RequestParam UUID userId
+    );
+
 }

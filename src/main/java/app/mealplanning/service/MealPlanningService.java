@@ -60,9 +60,16 @@ public class MealPlanningService {
 
     }
 
-
-
+    public void deleteMealPlan(UUID mealPlanId, UUID userId) {
+        try {
+            mealPlanningClient.deleteMealPlan(mealPlanId, userId);
+        } catch (FeignException e) {
+            log.error("Error deleting meal plan: {}", e.getMessage());
+            throw new IllegalArgumentException("Unable to delete meal. Please try again.");
+        }
     }
+
+}
 
 
 
