@@ -1,6 +1,7 @@
 package app.mealplanning.client;
 
 
+import app.mealplanning.client.dto.MealPlanRequest;
 import app.mealplanning.client.dto.MealPlanResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,12 @@ public interface MealPlanningClient {
     ResponseEntity<List<MealPlanResponse>> getWeeklyMealPlans(
             @RequestParam("userId") UUID userId,
             @RequestParam("weekStart") LocalDate weekStart
+    );
+
+
+    @PostMapping
+    ResponseEntity<MealPlanResponse> addMealPlan(
+            @RequestBody MealPlanRequest requestBody
     );
 
 }
