@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meal Planning - Recipe Buddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <link th:href="@{/css/one.css}" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-container">
+  <div th:replace="~{fragments/navbar::navbar}"></div>
+  <div class="main-content">
+    <nav class="top-navbar">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center"></div>
+        <div class="d-flex align-items-center">
+          <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+        </div>
+      </div>
+    </nav>
+    <div class="dashboard-content">
+      <div class="container-fluid py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="mb-1">
+              <i class="bi bi-calendar-week me-2 text-primary"></i>
+              Meal Planning
+            </h2>
+            <p class="text-muted">Plan your meals for the whole week</p>
+          </div>
+        </div>
+
+        <div class="dashboard-card mb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="mb-1">
+                Week of <span th:text="${#temporals.format(weekStart, 'MMMM dd, yyyy')}">July 15, 2025</span>
+              </h4>
+            </div>
+            <div class="d-flex gap-2">
+              <a th:href="@{/meal-planning/week(weekStart=${weekStart.minusWeeks(1)})}" class="btn btn-outline-secondary">
+                <i class="bi bi-chevron-left"></i> Previous
+              </a>
+              <a th:href="@{/meal-planning}" class="btn btn-outline-primary">
+                <i class="bi bi-calendar-today"></i> This Week
+              </a>
+              <a th:href="@{/meal-planning/week(weekStart=${weekStart.plusWeeks(1)})}" class="btn btn-outline-secondary">
+                Next <i class="bi bi-chevron-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="row meal-planning-header mb-3">
+            <div class="col-md-2">
+              <h5 class="text-center mb-0">Meal Type</h5>
+            </div>
+            <div class="col meal-day-header" th:each="day : ${#numbers.sequence(0, 6)}">
+              <div class="text-center">
+                <h6 class="fw-bold" th:text="${#temporals.format(weekStart.plusDays(day), 'EEEE')}">Monday</h6>
+                <p class="text-muted small" th:text="${#temporals.format(weekStart.plusDays(day), 'MMM dd')}">Jul 15</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="row meal-type-row">
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+              <div class="meal-type-label breakfast">
+                <i class="bi bi-sunrise"></i>
+                <span>Breakfast</span>
+              </div>
+            </div>
+            <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
+              <div class="meal-slot">
+                <div th:each="meal : ${weeklyMealPlans}"
+                     th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'BREAKFAST'}"
+                     class="meal-card">
+                  <div class="meal-content">
+                    <h6 class="meal-name" th:text="${meal.mealName}">Oatmeal with Berries</h6>
+                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">320 cal</p>
+                    <div class="meal-actions">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='BREAKFAST', weekStart=${weekStart})}">
+                  <i class="bi bi-plus-circle"></i><span>Add Breakfast</span>
+                </a>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row meal-type-row">
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+              <div class="meal-type-label lunch">
+                <i class="bi bi-sun"></i>
+                <span>Lunch</span>
+              </div>
+            </div>
+            <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
+              <div class="meal-slot">
+                <div th:each="meal : ${weeklyMealPlans}"
+                     th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'LUNCH'}"
+                     class="meal-card">
+                  <div class="meal-content">
+                    <h6 class="meal-name" th:text="${meal.mealName}">Caesar Salad</h6>
+                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">280 cal</p>
+                    <div class="meal-actions">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='LUNCH', weekStart=${weekStart})}">
+                  <i class="bi bi-plus-circle"></i><span>Add Lunch</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row meal-type-row">
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+              <div class="meal-type-label dinner">
+                <i class="bi bi-moon"></i>
+                <span>Dinner</span>
+              </div>
+            </div>
+            <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
+              <div class="meal-slot">
+                <div th:each="meal : ${weeklyMealPlans}"
+                     th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'DINNER'}"
+                     class="meal-card">
+                  <div class="meal-content">
+                    <h6 class="meal-name" th:text="${meal.mealName}">Grilled Salmon</h6>
+                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">450 cal</p>
+                    <div class="meal-actions">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='DINNER', weekStart=${weekStart})}">
+                  <i class="bi bi-plus-circle"></i><span>Add Dinner</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row meal-type-row">
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+              <div class="meal-type-label snack">
+                <i class="bi bi-cup-hot"></i>
+                <span>Snacks</span>
+              </div>
+            </div>
+            <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
+              <div class="meal-slot">
+                <div th:each="meal : ${weeklyMealPlans}"
+                     th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'SNACK'}"
+                     class="meal-card">
+                  <div class="meal-content">
+                    <h6 class="meal-name" th:text="${meal.mealName}">Mixed Nuts</h6>
+                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">180 cal</p>
+                    <div class="meal-actions">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='SNACK', weekStart=${weekStart})}">
+                  <i class="bi bi-plus-circle"></i><span>Add Snack</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div th:if="${param.date != null or selectedDate != null}" class="dashboard-card mt-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>
+              <i class="bi bi-plus-circle me-2 text-primary"></i>
+              Add Meal to Plan
+            </h5>
+            <a th:href="@{/meal-planning}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-x"></i> Cancel
+            </a>
+          </div>
+
+          <div th:object="${mealPlanAddRequest}">
+            <p class="alert-warning" th:if="${#fields.hasErrors('plannedDate')}" th:errors="*{plannedDate}"></p>
+            <p class="alert-warning" th:if="${#fields.hasErrors('recipeId')}" th:errors="*{recipeId}"></p>
+            </div>
+
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Planning for:</strong>
+            <span th:text="${param.date != null ? param.date[0] : selectedDate}">2025-07-15</span>
+            /
+            <span th:text="${param.mealType != null ? param.mealType[0] : selectedMealType}">BREAKFAST</span>
+          </div>
+
+          <form th:action="@{/meal-planning/add}" th:method="post" th:object="${mealPlanAddRequest}">
+            <input type="hidden" name="weekStart" th:value="${weekStart}"/>
+            <input type="hidden" name="plannedDate" th:value="${param.date != null ? param.date[0] : selectedDate}"/>
+            <input type="hidden" name="mealType" th:value="${param.mealType != null ? param.mealType[0] : selectedMealType}"/>
+
+            <div class="mb-3">
+              <label for="recipeSelect" class="form-label">Choose Recipe:</label>
+              <select class="form-select" id="recipeSelect" name="recipeId" required>
+                <option value="">Select a recipe...</option>
+                <option th:each="recipe : ${userRecipes}"
+                        th:value="${recipe.id}"
+                        th:text="${recipe.title}">
+                </option>
+              </select>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i> Add to Plan</button>
+              <a th:href="@{/meal-planning}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
