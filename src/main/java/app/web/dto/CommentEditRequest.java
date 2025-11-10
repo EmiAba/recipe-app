@@ -11,7 +11,7 @@ import lombok.*;
 public class CommentEditRequest {
 
     @NotBlank(message = "Comment content is required")
-    @Size(min = 1, max = 1000, message = "Comment must be between 1 and 1000 characters")
+    @Size(min = 2, max = 1000, message = "Comment must be between 2 and 1000 characters")
     private String content;
 
     @NotNull(message = "Rating is required")

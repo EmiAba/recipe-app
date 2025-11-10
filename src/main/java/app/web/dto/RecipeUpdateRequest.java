@@ -18,6 +18,7 @@ public class RecipeUpdateRequest {
     @Size(max = 255, message = "Title must not exceed 255 characters")
     private String title;
 
+    @NotBlank(message = "Description is required")
     private String description;
 
     @NotNull(message = "Preparation time is required")
@@ -39,6 +40,7 @@ public class RecipeUpdateRequest {
     private String instructions;
 
     @URL
+    @Size(max = 500)
     private String imageUrl;
 
     private Boolean isPublic = true;

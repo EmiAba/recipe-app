@@ -39,12 +39,8 @@ public class RecipeCreateRequest {
     @NotBlank(message = "Instructions are required")
     private String instructions;
 
-
-    @URL(message = "Please provide a valid URL")
-    @Size(max = 500, message = "Image URL must not exceed 500 characters")
-    @Pattern(regexp = ".*\\.(jpg|jpeg|png|gif|webp|bmp|svg)(\\?.*)?$",
-            flags = Pattern.Flag.CASE_INSENSITIVE,
-            message = "URL must be a valid image (jpg, jpeg, png, gif, webp)")
+    @URL
+    @Size(max = 500)
     private String imageUrl;
 
     private Boolean isPublic = true;
