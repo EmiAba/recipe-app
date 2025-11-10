@@ -1,7 +1,7 @@
 package app.category.service;
 
 
-import app.exception.DomainException;
+import app.exception.CategoryNotFoundException;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import app.category.model.Category;
@@ -55,7 +55,7 @@ public class CategoryService {
 
     public Category findByName(String name) {
         return categoryRepository.findByName(name)
-                .orElseThrow(() -> new DomainException("Category '" + name + "' not found"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category '" + name + "' not found"));
     }
 
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link th:href="@{/css/one.css}" rel="stylesheet">
+    <title>Internal Server Error - Recipe Buddy</title>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="/home">🍕 Recipe Buddy</a>
+    </div>
+</nav>
+
+<main>
+    <div class="container-fluid py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="dashboard-card text-center">
+                    <div class="empty-state">
+                        <span class="category-emoji">⚠️</span>
+                        <h3>Oops! Something went wrong in our kitchen.</h3>
+                        <p>We're sorry for the inconvenience. Our chef team is working hard to fix the recipe. If you need immediate assistance, please contact our support team. We're here to help!</p>
+                    </div>
+
+                    <div class="user-stats mb-4">
+                        <div class="stat-item">
+                            <div class="stat-label">Error Code</div>
+                            <div class="stat-value">500</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Status</div>
+                            <div class="stat-value">Server Error</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Time</div>
+                            <div class="stat-value">Just Now</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-warning mb-4">
+                        <strong>Additional Message:</strong>
+                        <span th:text="${errorMessage}">Internal server error occurred</span>
+                    </div>
+
+                    <a th:href="@{/home}" class="btn btn-primary">
+                        <i class="bi bi-house-fill me-2"></i>
+                        Go back home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="footer">
+    <div class="container text-center">
+        <p>© 2025 Recipe Buddy. All rights reserved.</p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

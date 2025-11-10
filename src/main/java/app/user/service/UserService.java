@@ -1,10 +1,10 @@
 package app.user.service;
 
 
+import app.exception.LastAdminException;
 import app.exception.UserNotFoundException;
 import app.exception.UsernameAlreadyExistException;
 import app.security.AuthenticationMethadata;
-import app.exception.DomainException;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
@@ -104,7 +104,7 @@ public class UserService implements UserDetailsService {
         if (user.getRole() == UserRole.ADMIN && newRole == UserRole.USER) {
             long adminCount = getAdminCount();
             if (adminCount <= 1) {
-                throw new DomainException("Cannot remove the last admin user!");
+                throw new LastAdminException("Cannot remove the last admin user!");
             }
         }
 
@@ -128,7 +128,7 @@ public class UserService implements UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       User user= userRepository.findByUsername(username).orElseThrow(() -> new DomainException("User with this username does not exist."));
+       User user= userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with this username does not exist."));
 
         return new AuthenticationMethadata(user.getId(), user.getUsername(), user.getPassword(), user.getRole(), user.isActive());
     }
