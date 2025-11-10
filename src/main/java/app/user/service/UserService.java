@@ -65,6 +65,12 @@ public class UserService implements UserDetailsService {
             throw new UsernameAlreadyExistException("Username [%s] already exist.".formatted(registerRequest.getUsername()));
         }
 
+
+        Optional<User> emailOptional = userRepository.findByEmail(registerRequest.getEmail());
+
+        if (emailOptional.isPresent()) {
+            throw new UsernameAlreadyExistException("This Email is already used for registration.");
+        }
         User user = userRepository.save(initializeUser(registerRequest));
 
         log.info("Successfully created new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));
