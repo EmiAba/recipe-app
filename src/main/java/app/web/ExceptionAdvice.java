@@ -1,7 +1,6 @@
 package app.web;
 
 import app.exception.*;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingRequestValueException;
@@ -20,7 +19,7 @@ public class ExceptionAdvice {
 
 
     @ExceptionHandler(UsernameAlreadyExistException.class)
-    public String handleUsernameAlreadyExist(HttpServletRequest request, RedirectAttributes redirectAttributes, UsernameAlreadyExistException exception) {
+    public String handleUsernameAlreadyExist(RedirectAttributes redirectAttributes, UsernameAlreadyExistException exception) {
 
         String message = exception.getMessage();
 
@@ -31,9 +30,7 @@ public class ExceptionAdvice {
 
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(
-            {AccessDeniedException.class,
-                    UnauthorizedAccessException.class })
+    @ExceptionHandler({AccessDeniedException.class, UnauthorizedAccessException.class })
     public ModelAndView handleAccessDenied(Exception exception) {
         ModelAndView modelAndView = new ModelAndView("access-denied");
         modelAndView.addObject("errorMessage", exception.getMessage());
