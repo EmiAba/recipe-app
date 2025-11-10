@@ -24,10 +24,6 @@
           <span class="category-emoji">🚫</span>
           <h3>Access Denied!</h3>
 
-          <div class="alert-warning mb-4">
-            <span th:if="${errorMessage != null}" th:text="${errorMessage}">Custom error message</span>
-            <span th:if="${errorMessage == null}">You don't have permission to access this area.</span>
-          </div>
 
           <div class="alert-warning mb-4">
             <strong>Error Code:</strong> 403 - Forbidden Access
