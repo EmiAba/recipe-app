@@ -65,6 +65,14 @@ public class ExceptionAdvice {
     }
 
 
+    @ExceptionHandler(MealPlanningException.class)
+    public String handleMealPlanningException(MealPlanningException exception,
+                                              RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+        return "redirect:/meal-planning";
+    }
+
+
     @ExceptionHandler(LastAdminException.class)
     public String handleLastAdminException(LastAdminException exception,
                                            RedirectAttributes redirectAttributes) {

@@ -1,5 +1,6 @@
 package app.mealplanning.service;
 
+import app.exception.MealPlanningException;
 import app.mealplanning.client.MealPlanningClient;
 import app.mealplanning.client.dto.ApiMealType;
 import app.mealplanning.client.dto.MealPlanRequest;
@@ -45,7 +46,7 @@ public class MealPlanningService {
 
         } catch (FeignException e) {
             log.error("Error adding meal plan: {}", e.getMessage());
-            throw new IllegalArgumentException("Unable to add meal to your plan. Please try again.");
+            throw new MealPlanningException("Unable to add meal to your plan. Please try again.");
         }
     }
 
@@ -65,7 +66,7 @@ public class MealPlanningService {
             mealPlanningClient.deleteMealPlan(mealPlanId, userId);
         } catch (FeignException e) {
             log.error("Error deleting meal plan: {}", e.getMessage());
-            throw new IllegalArgumentException("Unable to delete meal. Please try again.");
+            throw new MealPlanningException("Unable to delete meal. Please try again.");
         }
     }
 
