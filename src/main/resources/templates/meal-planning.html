@@ -33,7 +33,7 @@
             <p class="text-muted">Plan your meals for the whole week</p>
           </div>
         </div>
-
+        <p class="alert-warning" th:if="${errorMessage}"  th:text="${errorMessage}"></p>
         <div class="dashboard-card mb-4">
           <div class="d-flex justify-content-between align-items-center">
             <div>
