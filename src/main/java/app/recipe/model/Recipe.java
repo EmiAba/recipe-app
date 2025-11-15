@@ -73,7 +73,7 @@ public class Recipe {
     @ManyToMany
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "recipe")
     @OrderBy("createdOn DESC")
     private List<Comment> comments = new ArrayList<>();
 
