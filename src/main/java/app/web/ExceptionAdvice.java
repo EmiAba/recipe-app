@@ -33,8 +33,7 @@ public class ExceptionAdvice {
     @ExceptionHandler({AccessDeniedException.class, UnauthorizedAccessException.class })
     public ModelAndView handleAccessDenied(Exception exception) {
         ModelAndView modelAndView = new ModelAndView("access-denied");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        return modelAndView;
+      return modelAndView;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
