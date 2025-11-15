@@ -7,7 +7,7 @@ public class LastAdminException extends RuntimeException{
     }
 
 
-    public LastAdminException(String message, Throwable cause) {
-        super(message, cause);
+    public LastAdminException() {
+
     }
 }
