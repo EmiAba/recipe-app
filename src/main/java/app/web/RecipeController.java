@@ -127,13 +127,7 @@ public class RecipeController {
         User user = userService.getById(authenticationMethadata.getUserId());
         Recipe recipe = recipeService.getById(recipeId);
 
-        if (!recipe.getAuthor().getId().equals(user.getId())) {
-            return new ModelAndView("redirect:/recipes/" + recipeId);
-        }
 
-
-
-        System.out.println("Difficulty Level: " + recipe.getDifficultyLevel());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-edit");
         modelAndView.addObject("recipeUpdateRequest",  RecipeMapper.toUpdateRequest(recipe));
