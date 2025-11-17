@@ -3,11 +3,12 @@ package app.web.mapper;
 import app.category.model.Category;
 import app.recipe.model.Recipe;
 import app.web.dto.RecipeUpdateRequest;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
+
 
 import java.util.stream.Collectors;
 
-@Component
+@UtilityClass
 public class RecipeMapper {
 
 

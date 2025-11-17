@@ -2,9 +2,10 @@ package app.web.mapper;
 
 import app.comment.model.Comment;
 import app.web.dto.CommentEditRequest;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
+
+@UtilityClass
 public class CommentMapper {
 
     public static CommentEditRequest toEditRequest(Comment comment) {
