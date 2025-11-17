@@ -14,6 +14,9 @@ import app.web.dto.RecipeUpdateRequest;
 import app.web.mapper.RecipeMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -199,6 +202,19 @@ public class RecipeController {
         User user = userService.getById(authenticationMethadata.getUserId());
         recipeService.removeFromFavorites(user, recipeId);
         return new ModelAndView("redirect:/recipes/" + recipeId +"?success=removed");
+    }
+
+
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> downloadPdf(@PathVariable UUID id) {
+        byte[] pdf = recipeService.generateRecipePdf(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "recipe.pdf");
+
+        return ResponseEntity.ok().headers(headers).body(pdf);
     }
 
 }
