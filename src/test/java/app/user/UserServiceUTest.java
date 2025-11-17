@@ -2,10 +2,12 @@ package app.user;
 
 import app.exception.LastAdminException;
 import app.exception.UserNotFoundException;
+import app.exception.UsernameAlreadyExistException;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
 import app.user.service.UserService;
+import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -173,10 +176,82 @@ public class UserServiceUTest {
     }
 
 
+    @Test
+    void givenExistingUsername_whenRegisterUser_thenThrowException() {
+
+        RegisterRequest registerRequest=  RegisterRequest.builder()
+                .username("Emi123")
+                .email("abad@email.com")
+                .password("123")
+                .build();
+
+        when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.of(new User()));
+
+        assertThrows(UsernameAlreadyExistException.class, () -> userService.register(registerRequest));
+        verify(userRepository,never()).save(any());
+    }
+
+
+    @Test
+    void givenExistingEmail_whenRegisterUser_thenThrowException() {
+
+        RegisterRequest registerRequest=  RegisterRequest.builder()
+                .username("Emi123")
+                .email("abad@email.com")
+                .password("123")
+                .build();
+
+        when(userRepository.findByUsername("Emi123")) .thenReturn(Optional.empty());
+        when(userRepository.findByEmail("abad@email.com")) .thenReturn(Optional.of(new User()));
+
+        assertThrows(UsernameAlreadyExistException.class,  () -> userService.register(registerRequest));
+        verify(userRepository, never()).save(any());
+    }
+
+
+    @Test
+    void givenNewUser_whenRegister_thenCreateUser() {
+
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .username("Emi123")
+                .email("abad@email.com")
+                .password("123")
+                .build();
+
+        when(userRepository.findByUsername("Emi123")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("abad@email.com")).thenReturn(Optional.empty());
+        when(passwordEncoder.encode("123")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(new User());
 
 
 
+        User registeredUser = userService.register(registerRequest);
 
+
+        assertThat(registeredUser).isNotNull();
+        verify(passwordEncoder).encode("123");
+        verify(userRepository).save(any(User.class));
+    }
+
+
+    @Test
+    void whenGetAllUsers_thenReturnUserList() {
+
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        List<User> users = List.of(user1, user2, user3);
+
+        when(userRepository.findAll()).thenReturn(users);
+
+
+        List<User> result = userService.getAllUsers();
+
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        verify(userRepository, times(1)).findAll();
+    }
 
 
 
