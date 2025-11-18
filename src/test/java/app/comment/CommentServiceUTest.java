@@ -3,6 +3,7 @@ package app.comment;
 import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
 import app.comment.service.CommentService;
+import app.exception.CommentNotFoundException;
 import app.exception.UnauthorizedAccessException;
 import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
@@ -163,8 +164,84 @@ public class CommentServiceUTest {
         verify(commentRepository).delete(comment);
     }
 
+    @Test
+    public void givenRecipeWithNoComments_whenGetAverageRating_thenReturnNull() {
+        UUID recipeId = UUID.randomUUID();
+        when(commentRepository.findByRecipeIdWithAuthor(recipeId)).thenReturn(List.of());
+
+        Double result = commentService.getAverageRatingForRecipe(recipeId);
+
+        assertThat(result).isNull();
+        verify(commentRepository).findByRecipeIdWithAuthor(recipeId);
+    }
 
 
+    @Test
+    public void givenRecipeWithComments_whenGetAverageRatingFromRecipes_thenReturnAverageRating() {
+        UUID recipeId = UUID.randomUUID();
+        Comment c1 = Comment.builder().rating(5).build();
+        Comment c2 = Comment.builder().rating(3).build();
+
+        when(commentRepository.findByRecipeIdWithAuthor(recipeId)).thenReturn(List.of(c1, c2));
+
+        Double result=commentService.getAverageRatingForRecipe(recipeId);
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(4.0);
+        verify(commentRepository).findByRecipeIdWithAuthor(recipeId);
+
+    }
+
+    @Test
+    void givenRecipeWithComments_whenGetTotalRatings_thenReturnCount() {
+        UUID recipeId = UUID.randomUUID();
+        Comment c1 = Comment.builder().build();
+        Comment c2 = Comment.builder().build();
+        Comment c3 = Comment.builder().build();
+        when(commentRepository.findByRecipeIdWithAuthor(recipeId)).thenReturn(List.of(c1, c2, c3));
+
+        int count = commentService.getTotalRatingsForRecipe(recipeId);
+
+        assertThat(count).isEqualTo(3);
+        verify(commentRepository).findByRecipeIdWithAuthor(recipeId);
+
+    }
+
+    @Test
+    void givenRecipeWithNoComments_whenGetTotalRatings_thenReturnZero() {
+        UUID recipeId = UUID.randomUUID();
+        when(commentRepository.findByRecipeIdWithAuthor(recipeId))
+                .thenReturn(List.of());
+
+        int count = commentService.getTotalRatingsForRecipe(recipeId);
+
+        assertThat(count).isEqualTo(0);
+        verify(commentRepository).findByRecipeIdWithAuthor(recipeId);
+    }
+
+
+    @Test
+    public void givenNonExistingCommentId_whenGetById_thenThrowException() {
+        UUID commentId = UUID.randomUUID();
+
+        when(commentRepository.findByIdWithDetails(commentId)).thenReturn(Optional.empty());
+
+        assertThrows(CommentNotFoundException.class, () -> commentService.getById(commentId));
+    }
+
+
+    @Test
+    public void givenExistingCommentId_whenGetById_thenReturnComment() {
+        UUID commentId = UUID.randomUUID();
+        Comment comment = Comment.builder().content("Test").build();
+
+        when(commentRepository.findByIdWithDetails(commentId)).thenReturn(Optional.of(comment));
+
+        Comment result = commentService.getById(commentId);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getContent()).isEqualTo("Test");
+        verify(commentRepository).findByIdWithDetails(commentId);
+    }
 
 
 }
