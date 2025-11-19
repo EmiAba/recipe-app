@@ -280,7 +280,52 @@ public class RecipeServiceUTest {
         assertThat(result).isFalse();
     }
 
-    //get recipe by user
+
+    @Test
+    public void whenGetRecipesByUserWithLimit_thenReturnLimitedRecipes() {
+        User user = User.builder().build();
+        Recipe recipe1 = Recipe.builder().build();
+        Recipe recipe2 = Recipe.builder().build();
+        Recipe recipe3 = Recipe.builder().build();
+
+        when(recipeRepository.findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user))
+                .thenReturn(List.of(recipe1, recipe2, recipe3));
+
+        List<Recipe> result = recipeService.getRecipesByUser(user, 2);
+
+        assertThat(result).hasSize(2);
+        verify(recipeRepository).findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user);
+    }
+
+    @Test
+    public void whenGetRecipesByUserWithNoLimit_thenReturnAllUserRecipes(){
+
+        User user= User.builder().build();
+        Recipe recipe1= Recipe.builder().build();
+        Recipe recipe2= Recipe.builder().build();
+
+
+        when(recipeRepository.findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user)).thenReturn(List.of(recipe1, recipe2));
+        List<Recipe> result = recipeService.getRecipesByUser(user, null);
+
+        assertThat(result.size()).isEqualTo(2);
+        verify(recipeRepository).findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user);
+
+
+    }
+
+    @Test
+    public void whenGetRecipesByUserWithZeroLimit_thenReturnAllRecipes() {
+        User user = User.builder().build();
+        Recipe recipe1 = Recipe.builder().build();
+        Recipe recipe2 = Recipe.builder().build();
+
+        when(recipeRepository.findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user)).thenReturn(List.of(recipe1, recipe2));
+
+        List<Recipe> result = recipeService.getRecipesByUser(user, 0);
+
+        assertThat(result).hasSize(2);
+    }
 
 
     @Test
@@ -314,7 +359,6 @@ public class RecipeServiceUTest {
         assertThat(result).doesNotContain(privateRecipe);
     }
 
-    //user favourite
 
     @Test
     public void whenAddToFavorites_thenRecipeAddedToUserFavorites(){
@@ -341,7 +385,6 @@ public class RecipeServiceUTest {
 
     @Test
     public void whenGetUserFavorites_thenReturnSortedFavoritesByCreatedDate(){
-        UUID recipeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
         Recipe oldRecipe = Recipe.builder()
