@@ -95,6 +95,10 @@ public class AdminControllerApiTest {
                 .email("admin@test.com")
                 .role(UserRole.ADMIN)
                 .isActive(true)
+                .firstName("Admin")
+                .lastName("User")
+                .country("Bulgaria")
+                .profilePicture("")
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .recipes(new ArrayList<>())
@@ -102,7 +106,9 @@ public class AdminControllerApiTest {
                 .build();
     }
 
-    private User aRandomUser() {
+    public static User aRandomUser() {
+
+
         return User.builder()
                 .id(UUID.randomUUID())
                 .username("Emi123")
@@ -110,10 +116,15 @@ public class AdminControllerApiTest {
                 .email("test@test.com")
                 .role(UserRole.USER)
                 .isActive(true)
+                .firstName("Emi")
+                .lastName("Aba")
+                .country("Bulgaria")
+                .profilePicture("")
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .recipes(new ArrayList<>())
                 .favorites(new HashSet<>())
                 .build();
+
     }
 }

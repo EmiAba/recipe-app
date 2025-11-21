@@ -149,21 +149,24 @@ public class IndexControllerApiTest {
 
     public static User aRandomUser() {
 
-        User user = User.builder()
+
+        return User.builder()
                 .id(UUID.randomUUID())
                 .username("Emi123")
                 .password("123123")
-                .email("a@abv.bg")
+                .email("test@test.com")
                 .role(UserRole.USER)
                 .isActive(true)
+                .firstName("Emi")
+                .lastName("Aba")
+                .country("Bulgaria")
+                .profilePicture("")
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .recipes(new ArrayList<>())
                 .favorites(new HashSet<>())
                 .build();
 
-
-         return  user;
     }
 
 }

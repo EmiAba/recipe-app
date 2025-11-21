@@ -117,6 +117,7 @@ public class CategoryControllerApiTest {
 
 
     public static User aRandomUser() {
+
         return User.builder()
                 .id(UUID.randomUUID())
                 .username("Emi123")
@@ -124,11 +125,16 @@ public class CategoryControllerApiTest {
                 .email("test@test.com")
                 .role(UserRole.USER)
                 .isActive(true)
+                .firstName("Emi")
+                .lastName("Aba")
+                .country("Bulgaria")
+                .profilePicture("")
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .recipes(new ArrayList<>())
                 .favorites(new HashSet<>())
                 .build();
+
     }
 
     private Category createCategory(String name) {
