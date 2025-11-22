@@ -55,9 +55,9 @@
               My Favorite Recipes
             </h2>
             <p class="text-muted">
-              <span th:text="${#lists.size(recipes)}">0</span>
-              <span th:if="${#lists.size(recipes) == 1}">recipe</span>
-              <span th:if="${#lists.size(recipes) != 1}">recipes</span>
+              <span th:text="${#lists.size(favorites)}">0</span>
+              <span th:if="${#lists.size(favorites) == 1}">recipe</span>
+              <span th:if="${#lists.size(favorites) != 1}">recipes</span>
               you have favorite
             </p>
           </div>
@@ -66,8 +66,8 @@
 
         <div class="favorites-container" id="favoritesContainer">
 
-          <div class="row g-4 grid-view" th:if="${not #lists.isEmpty(recipes)}">
-            <div class="col-md-6 col-lg-4 col-xl-3" th:each="recipe : ${recipes}">
+          <div class="row g-4 grid-view" th:if="${not #lists.isEmpty(favorites)}">
+            <div class="col-md-6 col-lg-4 col-xl-3" th:each="recipe : ${favorites}">
               <div class="favorite-recipe-card">
                 <div class="recipe-image">
                   <img th:src="${recipe.imageUrl ?: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'}"
@@ -120,7 +120,7 @@
         </div>
 
         <!-- Empty state -->
-        <div class="favorites-empty-state text-center py-5" th:if="${#lists.isEmpty(recipes)}">
+        <div class="favorites-empty-state text-center py-5" th:if="${#lists.isEmpty(favorites)}">
           <div class="empty-heart-icon">
             <i class="bi bi-heart"></i>
           </div>

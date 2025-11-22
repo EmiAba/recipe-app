@@ -179,7 +179,7 @@ public class RecipeController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-favorites");
-        modelAndView.addObject("recipes", favorites);
+        modelAndView.addObject("favorites", favorites);
         modelAndView.addObject("user", user);
 
         return modelAndView;
