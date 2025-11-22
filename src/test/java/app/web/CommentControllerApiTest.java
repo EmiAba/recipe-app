@@ -1,5 +1,5 @@
 package app.web;
-
+import app.web.dto.CommentEditRequest;
 import app.category.model.Category;
 import app.category.service.CategoryService;
 import app.comment.model.Comment;
@@ -28,7 +28,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CommentController.class)
@@ -36,8 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CommentControllerApiTest {
 
 
-    @MockitoBean
-    private CategoryService categoryService;
     @MockitoBean
     private UserService userService;
     @MockitoBean
@@ -49,6 +47,70 @@ public class CommentControllerApiTest {
     @Autowired
     private MockMvc mockMvc;
 
+
+    @Test
+    void addComment_withValidData_shouldRedirectToRecipe() throws Exception {
+        User user = aRandomUser();
+        UUID recipeId = UUID.randomUUID();
+
+        when(userService.getById(user.getId())).thenReturn(user);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = post("/comments/recipe/" + recipeId)
+                .formField("content", "Great recipe!")
+                .formField("rating", "5")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/" + recipeId + "#comments"));
+
+        verify(userService, times(1)).getById(user.getId());
+        verify(commentService, times(1)).createComment(any(), eq(recipeId), eq(user));
+    }
+
+    @Test
+    void addComment_withInvalidData_shouldReturnRecipeDetailView() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+        UUID recipeId = recipe.getId();
+
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(recipeService.getById(recipeId)).thenReturn(recipe);
+        when(recipeService.isAuthor(recipe, user)).thenReturn(true);
+        when(recipeService.isFavorite(recipe, user)).thenReturn(false);
+        when(commentService.getAverageRatingForRecipe(recipeId)).thenReturn(4.5);
+        when(commentService.getTotalRatingsForRecipe(recipeId)).thenReturn(10);
+        when(commentService.getCommentsByRecipe(recipeId)).thenReturn(new ArrayList<>());
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+
+        MockHttpServletRequestBuilder httpRequest = post("/comments/recipe/" + recipeId)
+                .formField("content", "")
+                .formField("rating", "5")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe-detail"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("recipe"))
+                .andExpect(model().attributeExists("isAuthor"))
+                .andExpect(model().attributeExists("isFavorite"))
+                .andExpect(model().attributeExists("averageRating"))
+                .andExpect(model().attributeExists("totalRatings"))
+                .andExpect(model().attributeExists("commentCreateRequest"))
+                .andExpect(model().attributeExists("comments"));
+    }
 
      @Test
      void deleteComment_shouldRedirectToRecipe()  throws Exception {
@@ -64,11 +126,11 @@ public class CommentControllerApiTest {
          AuthenticationMethadata principal = new AuthenticationMethadata(user.getId(), user.getUsername(),
                  user.getPassword(), user.getRole(), user.isActive());
 
-         MockHttpServletRequestBuilder request = delete("/comments/" + comment.getId() + "/delete")
+         MockHttpServletRequestBuilder httpRequest = delete("/comments/" + comment.getId() + "/delete")
                  .with(user(principal))
                  .with(csrf());
 
-         mockMvc.perform(request)
+         mockMvc.perform(httpRequest)
                  .andExpect(status().is3xxRedirection())
                  .andExpect(redirectedUrl("/recipes/" + recipe.getId() + "#comments"));
 
@@ -78,6 +140,135 @@ public class CommentControllerApiTest {
 
 
      }
+
+
+    @Test
+    void editCommentForm_whenUserIsAuthor_shouldReturnEditView() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+        Comment comment = createComment("text", 5, user, recipe);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(commentService.getById(comment.getId())).thenReturn(comment);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = get("/comments/" + comment.getId() + "/edit")
+                .with(user(principal));
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().isOk())
+                .andExpect(view().name("comment-edit"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("comment"))
+                .andExpect(model().attributeExists("commentEditRequest"));
+
+        verify(commentService, times(1)).getById(comment.getId());
+        verify(userService, times(1)).getById(user.getId());
+
+    }
+    @Test
+    void editCommentForm_whenUserIsNotAuthor_shouldRedirectToRecipe() throws Exception {
+        User user = aRandomUser();
+        User differentUser = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+        Comment comment = createComment("text", 5, differentUser, recipe);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(commentService.getById(comment.getId())).thenReturn(comment);
+
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = get("/comments/" + comment.getId() + "/edit")
+                .with(user(principal));
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/" + comment.getRecipe().getId()));
+
+        verify(commentService, times(1)).getById(comment.getId());
+        verify(userService, times(1)).getById(user.getId());
+    }
+
+
+    @Test
+    void updateComment_withValidData_shouldRedirectToRecipe() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+        Comment comment = createComment("text", 5, user, recipe);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(commentService.getById(comment.getId())).thenReturn(comment);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = put("/comments/" + comment.getId() + "/edit")
+                .formField("content", "Super!")
+                .formField("rating", "4")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/" + comment.getRecipe().getId() + "#comments"));
+
+
+        verify(commentService, times(1)).getById(comment.getId());
+        verify(userService, times(1)).getById(user.getId());
+        verify(commentService, times(1)).updateComment(eq(comment.getId()), any(CommentEditRequest.class), eq(user));
+
+    }
+
+    @Test
+    void updateComment_withInvalidData_shouldReturnEditView() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+        Comment comment = createComment("text", 5, user, recipe);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(commentService.getById(comment.getId())).thenReturn(comment);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = put("/comments/" + comment.getId() + "/edit")
+                .formField("content", "")
+                .formField("rating", "4")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().isOk())
+                .andExpect(view().name("comment-edit"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("comment"))
+                .andExpect(model().attributeExists("commentEditRequest"));
+
+
+        verify(commentService, times(1)).getById(comment.getId());
+        verify(userService, times(1)).getById(user.getId());
+        verify(commentService, never()).updateComment(eq(comment.getId()), any(CommentEditRequest.class), eq(user));
+
+
+    }
+
+
+
+
+
+
 
 
 
