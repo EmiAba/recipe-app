@@ -4,6 +4,7 @@ import app.category.model.Category;
 import app.category.service.CategoryService;
 import app.comment.model.Comment;
 import app.comment.service.CommentService;
+import app.exception.UnauthorizedAccessException;
 import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.security.AuthenticationMethadata;
@@ -392,32 +393,53 @@ public class RecipeControllerApiTest {
     }
 
     @Test
-    void removeFromFavorites_shouldRedirectToRecipeWithSuccessMessage() throws Exception{
+    void downloadRecipePdf_shouldReturnPdfFile() throws Exception {
         User user = aRandomUser();
         Category category = createCategory("Dessert");
         Recipe recipe = createRecipe("Choco cake", user, category);
+        byte[] pdfBytes = "fake pdf content".getBytes();
 
-        when(userService.getById(user.getId())).thenReturn(user);
+        when(recipeService.generateRecipePdf(recipe.getId())).thenReturn(pdfBytes);
 
         AuthenticationMethadata principal = new AuthenticationMethadata(
                 user.getId(), user.getUsername(),
                 user.getPassword(), user.getRole(), user.isActive());
 
-        MockHttpServletRequestBuilder httpRequest = post("/recipes/"+ recipe.getId()+"/unfavorite")
-                .with(user(principal))
-                .with(csrf());
+        MockHttpServletRequestBuilder httpRequest = get("/recipes/" + recipe.getId() + "/pdf")
+                .with(user(principal));
 
         mockMvc.perform(httpRequest)
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/recipes/" + recipe.getId() +"?success=removed"));
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/pdf"))
+                .andExpect(content().bytes(pdfBytes));
 
-
-        verify(userService, times(1)).getById(user.getId());
-        verify(recipeService, times(1)).removeFromFavorites(user,recipe.getId());
-
-
+        verify(recipeService, times(1)).generateRecipePdf(recipe.getId());
     }
 
+
+
+
+    @Test
+    void deleteRecipe_whenNotAuthor_thenReturn403() throws Exception {
+        User author = aRandomUser();
+        User otherUser = aRandomUser();
+        Recipe recipe = createRecipe("Choco cake", author, createCategory("Dessert"));
+
+        when(userService.getById(otherUser.getId())).thenReturn(otherUser);
+        doThrow(new UnauthorizedAccessException("You can only delete your own recipes."))
+                .when(recipeService).deleteRecipe(recipe.getId(), otherUser);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(otherUser.getId(),
+                otherUser.getUsername(), otherUser.getPassword(), otherUser.getRole(), otherUser.isActive());
+
+        mockMvc.perform(delete("/recipes/" + recipe.getId() + "/delete")
+                        .with(user(principal))
+                        .with(csrf()))
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("access-denied"));
+
+        verify(recipeService, times(1)).deleteRecipe(recipe.getId(), otherUser);
+    }
     public static User aRandomUser() {
 
         return User.builder()

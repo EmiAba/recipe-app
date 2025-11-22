@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import app.exception.UsernameAlreadyExistException;
 import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.security.AuthenticationMethadata;
@@ -121,7 +122,7 @@ public class IndexControllerApiTest {
 
     @Test
     void getHomePage_shouldReturnHomeView_andStatusCodeIs200() throws Exception {
-        User user=aRandomUser();
+        User user = aRandomUser();
         List<Recipe> recentRecipes = List.of();
 
         when(userService.getById(user.getId())).thenReturn(user);
@@ -144,8 +145,29 @@ public class IndexControllerApiTest {
         verify(userService, times(1)).getById(user.getId());
         verify(recipeService, times(1)).getRecipesByUser(user, 3);
 
-
     }
+
+        @Test
+        void postRequestToRegisterEndpointWhenUsernameAlreadyExist_thenRedirectToRegisterWithFlashParameter() throws Exception {
+
+            when(userService.register(any())).thenThrow(new UsernameAlreadyExistException("Username already exist!"));
+
+            MockHttpServletRequestBuilder httpRequest= post("/register")
+                    .formField("username", "Emi123")
+                    .formField("password", "123456")
+                    .formField("email", "test@test.com")
+                    .with(csrf());
+
+
+
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(redirectedUrl("/register"))
+                    .andExpect(flash().attributeExists("usernameAlreadyExistMessage"));
+            verify(userService, times(1)).register(any());
+        }
+
+
 
     public static User aRandomUser() {
 

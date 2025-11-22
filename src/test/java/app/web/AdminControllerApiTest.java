@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exception.LastAdminException;
 import app.security.AuthenticationMethadata;
 import app.user.model.User;
 import app.user.model.UserRole;
@@ -85,6 +86,28 @@ public class AdminControllerApiTest {
     }
 
 
+    @Test
+    void changeUserRoleWhenLastAdmin_thenRedirectToAdminWithFlashParameter() throws Exception {
+        User adminUser = aRandomAdminUser();
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(adminUser.getId(), adminUser.getUsername(),
+                adminUser.getPassword(), adminUser.getRole(), adminUser.isActive());
+
+        doThrow(new LastAdminException("Cannot remove the last admin user!"))
+                .when(userService).changeUserRole(adminUser.getId(), UserRole.USER);
+
+        MockHttpServletRequestBuilder httpRequest = patch("/admin/users/" + adminUser.getId() + "/USER")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin"))
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Cannot remove the last admin user!"));
+
+        verify(userService, times(1)).changeUserRole(adminUser.getId(), UserRole.USER);
+    }
 
 
     private User aRandomAdminUser() {
@@ -105,6 +128,8 @@ public class AdminControllerApiTest {
                 .favorites(new HashSet<>())
                 .build();
     }
+
+
 
     public static User aRandomUser() {
 
