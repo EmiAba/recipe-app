@@ -15,7 +15,6 @@ import app.user.model.User;
 import app.category.service.CategoryService;
 import app.web.dto.RecipeCreateRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.thymeleaf.TemplateEngine;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -160,7 +159,8 @@ public class RecipeService {
     public void addToFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
         user.getFavorites().add(recipe);
-        recipeRepository.save(recipe);
+         recipe.getFavoriteBy().add(user);
+         recipeRepository.save(recipe);
     }
 
 
@@ -181,7 +181,9 @@ public class RecipeService {
     public void removeFromFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
         user.getFavorites().remove(recipe);
+        recipe.getFavoriteBy().remove(user);
         recipeRepository.save(recipe);
+
     }
 
 
