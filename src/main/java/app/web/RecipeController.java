@@ -175,8 +175,7 @@ public class RecipeController {
     @GetMapping("/favorites")
     public ModelAndView getMyFavorites(@AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
         User user = userService.getById(authenticationMethadata.getUserId());
-        UUID userId = authenticationMethadata.getUserId();
-        List<Recipe> favorites = recipeService.getUserFavorites(userId);
+        List<Recipe> favorites = recipeService.getUserFavorites(user.getId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-favorites");
