@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -255,7 +257,38 @@ public class UserServiceUTest {
 
 
 
+    @Test
+    void loadUserByUsername_whenUserExists_shouldReturnUserDetails() {
+        String username = "Emi123";
+        User user = User.builder()
+                .id(UUID.randomUUID())
+                .username(username)
+                .password("encodedPassword")
+                .role(UserRole.USER)
+                .isActive(true)
+                .build();
 
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+
+        UserDetails result = userService.loadUserByUsername(username);
+
+        assertThat(result.getUsername()).isEqualTo(username);
+        assertThat(result.getPassword()).isEqualTo("encodedPassword");
+        verify(userRepository, times(1)).findByUsername(username);
+    }
+
+    @Test
+    void givenMissingUserFromDatabase_whenEditUserDetails_thenExceptionIsThrown() {
+
+        UUID userId = UUID.randomUUID();
+        UserEditRequest dto = UserEditRequest.builder().build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.editUserDetails(userId, dto));
+
+
+    }
 
 
 
