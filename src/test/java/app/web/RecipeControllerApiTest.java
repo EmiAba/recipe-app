@@ -32,13 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class RecipeControllerApiTest {
     @MockitoBean
-    private  RecipeService recipeService;
+    private RecipeService recipeService;
     @MockitoBean
-    private  CategoryService categoryService;
+    private CategoryService categoryService;
     @MockitoBean
-    private  UserService userService;
+    private UserService userService;
     @MockitoBean
-    private  CommentService commentService;
+    private CommentService commentService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,7 +57,7 @@ public class RecipeControllerApiTest {
         AuthenticationMethadata principal = new AuthenticationMethadata(user.getId(), user.getUsername(),
                 user.getPassword(), user.getRole(), user.isActive());
 
-        MockHttpServletRequestBuilder httpRequest = get("/recipes/add" )
+        MockHttpServletRequestBuilder httpRequest = get("/recipes/add")
                 .with(user(principal));
 
 
@@ -70,10 +70,75 @@ public class RecipeControllerApiTest {
 
 
         verify(userService, times(1)).getById(user.getId());
-        verify(categoryService,times(1)).getAllCategories();
+        verify(categoryService, times(1)).getAllCategories();
     }
 
-    //save
+    @Test
+    void saveRecipe_withInvalidData_shouldReturnRecipeForm() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(categoryService.getAllCategories()).thenReturn(List.of(category));
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = post("/recipes/save")
+                .formField("title", "")
+                .formField("description", "")
+                .with(user(principal))
+                .with(csrf());
+
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe-form"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("categories"));
+
+
+        verify(userService, times(1)).getById(user.getId());
+        verify(categoryService, times(1)).getAllCategories();
+        verify(recipeService, never()).createRecipe(any(), eq(user));
+
+    }
+
+
+    @Test
+    void saveRecipe_withValidData_shouldRedirectToRecipeDetail() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(recipeService.createRecipe(any(), eq(user))).thenReturn(recipe);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = post("/recipes/save")
+                .formField("title", "Choco Cake")
+                .formField("description", "Yummy")
+                .formField("instructions", "Mix and bake")
+                .formField("ingredients", "Flour, sugar, cocoa")
+                .formField("prepTimeMinutes", "15")
+                .formField("cookTimeMinutes", "30")
+                .formField("servingSize", "4")
+                .formField("difficultyLevel", "EASY")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/" + recipe.getId()));
+
+        verify(userService, times(1)).getById(user.getId());
+        verify(recipeService, times(1)).createRecipe(any(), eq(user));
+    }
+
 
     @Test
     void viewRecipe_shouldReturnRecipeDetailView() throws Exception {
@@ -145,7 +210,7 @@ public class RecipeControllerApiTest {
 
 
     @Test
-    void getRecipeEditPage_shouldReturnRecipeEditView() throws Exception{
+    void getRecipeEditPage_shouldReturnRecipeEditView() throws Exception {
 
         User user = aRandomUser();
         Category category = createCategory("Dessert");
@@ -160,7 +225,7 @@ public class RecipeControllerApiTest {
                 user.getId(), user.getUsername(),
                 user.getPassword(), user.getRole(), user.isActive());
 
-        MockHttpServletRequestBuilder httpRequest = get("/recipes/edit/"+ recipe.getId())
+        MockHttpServletRequestBuilder httpRequest = get("/recipes/edit/" + recipe.getId())
                 .with(user(principal));
 
         mockMvc.perform(httpRequest)
@@ -176,13 +241,77 @@ public class RecipeControllerApiTest {
         verify(recipeService, times(1)).getById(recipe.getId());
         verify(categoryService, times(1)).getAllCategories();
 
-   }
+    }
 
 
-   //put
+    @Test
+    void updateRecipe_withInvalidData_shouldReturnRecipeEditView() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(categoryService.getAllCategories()).thenReturn(List.of(category));
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = put("/recipes/" + recipe.getId())
+                .formField("title", "")
+                .formField("description", "")
+                .with(user(principal))
+                .with(csrf());
 
 
+        mockMvc.perform(httpRequest)
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe-edit"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("recipeId"))
+                .andExpect(model().attributeExists("categories"))
+                .andExpect(model().attributeExists("recipeUpdateRequest"));
 
+
+        verify(userService, times(1)).getById(user.getId());
+        verify(categoryService, times(1)).getAllCategories();
+        verify(recipeService, never()).updateRecipe(any(), any(), eq(user));
+
+    }
+
+
+    @Test
+    void updateRecipe_withValidData_shouldRedirectToRecipeDetail() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco choco", user, category);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+        when(recipeService.updateRecipe(eq(recipe.getId()), any(), eq(user))).thenReturn(recipe);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = put("/recipes/" + recipe.getId())
+                .formField("title", "Choco Cake")
+                .formField("description", "Yummy")
+                .formField("instructions", "Mix and bake")
+                .formField("ingredients", "Flour, sugar, cocoa")
+                .formField("prepTimeMinutes", "15")
+                .formField("cookTimeMinutes", "30")
+                .formField("servingSize", "4")
+                .formField("difficultyLevel", "EASY")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/" + recipe.getId()));
+
+        verify(userService, times(1)).getById(user.getId());
+        verify(recipeService, times(1)).updateRecipe(eq(recipe.getId()), any(), eq(user));
+    }
     @Test
     void deleteRecipe_shouldRedirectToMyRecipes() throws Exception{
         User user = aRandomUser();
