@@ -372,12 +372,14 @@ public class RecipeServiceUTest {
 
         Recipe recipe = Recipe.builder()
                 .id(recipeId)
+                .favoriteBy(new HashSet<>())
                 .build();
 
         when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
         recipeService.addToFavorites(user, recipeId);
 
         assertThat(user.getFavorites()).contains(recipe);
+        assertThat(recipe.getFavoriteBy()).contains(user);
         verify(recipeRepository).save(recipe);
 
     }
@@ -449,22 +451,27 @@ public class RecipeServiceUTest {
         UUID recipeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
+
         Recipe recipe = Recipe.builder()
                 .id(recipeId)
+                .favoriteBy(new HashSet<>())
                 .build();
+
 
         User user = User.builder()
                 .id(userId)
-                .favorites(new HashSet<>(Set.of(recipe)))
+                .favorites(new HashSet<>(Set.of(recipe)))  // ← Директно с recipe
                 .build();
+
+
+        recipe.getFavoriteBy().add(user);
 
         when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
         recipeService.removeFromFavorites(user, recipeId);
 
         assertThat(user.getFavorites()).doesNotContain(recipe);
+        assertThat(recipe.getFavoriteBy()).doesNotContain(user);
         verify(recipeRepository).save(recipe);
-
     }
-
 
 }
