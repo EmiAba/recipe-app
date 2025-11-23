@@ -460,7 +460,7 @@ public class RecipeServiceUTest {
 
         User user = User.builder()
                 .id(userId)
-                .favorites(new HashSet<>(Set.of(recipe)))  // ← Директно с recipe
+                .favorites(new HashSet<>(Set.of(recipe)))
                 .build();
 
 
@@ -474,4 +474,39 @@ public class RecipeServiceUTest {
         verify(recipeRepository).save(recipe);
     }
 
+
+    @Test
+    public void whenGenerateRecipePdf_thenReturnPdfBytes(){
+        UUID recipeId = UUID.randomUUID();
+
+        User author = User.builder()
+                .id(UUID.randomUUID())
+                .username("TestUser")
+                .build();
+
+        Recipe recipe = Recipe.builder()
+                .id(recipeId)
+                .title("Test Recipe")
+                .description("Test description")
+                .ingredients("flour, sugar")
+                .instructions("Mix and bake")
+                .prepTimeMinutes(10)
+                .cookTimeMinutes(20)
+                .servingSize(4)
+                .difficultyLevel(DifficultyLevel.EASY)
+                .calories(300)
+                .protein(5.0)
+                .carbs(50.0)
+                .fat(10.0)
+                .author(author)
+                .build();
+
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
+
+        byte[] result = recipeService.generateRecipePdf(recipeId);
+
+        assertThat(result).isNotNull();
+        assertThat(result.length).isGreaterThan(0);
+        verify(recipeRepository).findById(recipeId);
+    }
 }
