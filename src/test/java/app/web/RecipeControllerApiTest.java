@@ -2,7 +2,6 @@ package app.web;
 
 import app.category.model.Category;
 import app.category.service.CategoryService;
-import app.comment.model.Comment;
 import app.comment.service.CommentService;
 import app.exception.UnauthorizedAccessException;
 import app.recipe.model.Recipe;
