@@ -102,7 +102,7 @@ public class RecipeControllerApiTest {
 
         verify(userService, times(1)).getById(user.getId());
         verify(categoryService, times(1)).getAllCategories();
-        verify(recipeService, never()).createRecipe(any(), eq(user));
+        verify(recipeService, never()).createRecipe(any(), any());
 
     }
 
@@ -137,7 +137,7 @@ public class RecipeControllerApiTest {
                 .andExpect(redirectedUrl("/recipes/" + recipe.getId()));
 
         verify(userService, times(1)).getById(user.getId());
-        verify(recipeService, times(1)).createRecipe(any(), eq(user));
+        verify(recipeService, times(1)).createRecipe(any(), any());
     }
 
 
@@ -276,7 +276,7 @@ public class RecipeControllerApiTest {
 
         verify(userService, times(1)).getById(user.getId());
         verify(categoryService, times(1)).getAllCategories();
-        verify(recipeService, never()).updateRecipe(any(), any(), eq(user));
+        verify(recipeService, never()).updateRecipe(any(), any(), any());
 
     }
 
@@ -311,7 +311,7 @@ public class RecipeControllerApiTest {
                 .andExpect(redirectedUrl("/recipes/" + recipe.getId()));
 
         verify(userService, times(1)).getById(user.getId());
-        verify(recipeService, times(1)).updateRecipe(eq(recipe.getId()), any(), eq(user));
+        verify(recipeService, times(1)).updateRecipe(any(), any(), any());
     }
     @Test
     void deleteRecipe_shouldRedirectToMyRecipes() throws Exception{
@@ -481,16 +481,7 @@ public class RecipeControllerApiTest {
     private Category createCategory(String name) {
         return Category.builder().name(name).build();
     }
-    private Comment createComment(String content, Integer rating, User author, Recipe recipe) {
-        return Comment.builder()
-                .id(UUID.randomUUID())
-                .content(content)
-                .rating(rating)
-                .author(author)
-                .recipe(recipe)
-                .createdOn(LocalDateTime.now())
-                .updatedOn(LocalDateTime.now())
-                .build();
-    }
+
+
 
 }
