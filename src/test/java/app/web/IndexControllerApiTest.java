@@ -147,6 +147,26 @@ public class IndexControllerApiTest {
 
     }
 
+    @Test
+    void getHomePage_somethingWentWrongInTheServiceLayer_shouldReturnInternalServiceErrorView() throws Exception {
+        UUID userId = UUID.randomUUID();
+
+        when(userService.getById(userId)).thenThrow(new RuntimeException("Database error"));
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                userId, "testuser", "password", UserRole.USER, true);
+
+        mockMvc.perform(get("/home").with(user(principal)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(view().name("internal-server-error"))
+                .andExpect(model().attribute("errorMessage", "RuntimeException"));
+
+        verify(userService, times(1)).getById(userId);
+        verify(recipeService, never()).getRecipesByUser(any(), anyInt());
+    }
+
+
+
         @Test
         void postRequestToRegisterEndpointWhenUsernameAlreadyExist_thenRedirectToRegisterWithFlashParameter() throws Exception {
 
