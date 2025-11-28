@@ -149,7 +149,7 @@
                                          </span>
                                         </td>
 
-                                        <td th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">02 May 2025</td>
+                                        <td th:text="${#temporals.format(recipe.updatedOn, 'dd MMM yyyy')}">02 May 2025</td>
                                         <td>
                                             <span th:if="${recipe.isPublic}" class="status-badge public">Public</span>
                                             <span th:if="${!recipe.isPublic}" class="status-badge private">Private</span>
