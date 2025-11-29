@@ -110,10 +110,11 @@ public class CommentController {
                                       BindingResult bindingResult,
                                       @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
 
+        User currentUser = userService.getById(authenticationMethadata.getUserId());
+
         Comment comment = commentService.getById(commentId);
 
         if (bindingResult.hasErrors()) {
-            User currentUser = userService.getById(authenticationMethadata.getUserId());
 
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("comment-edit");
@@ -123,7 +124,7 @@ public class CommentController {
             return modelAndView;
         }
 
-        User currentUser = userService.getById(authenticationMethadata.getUserId());
+
         commentService.updateComment(commentId, commentEditRequest, currentUser);
 
         return new ModelAndView("redirect:/recipes/" + comment.getRecipe().getId() + "#comments");
