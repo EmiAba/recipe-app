@@ -94,9 +94,6 @@ public class CommentController {
         Comment comment = commentService.getById(commentId);
         User user = userService.getById(authenticationMethadata.getUserId());
 
-        if (!comment.getAuthor().getId().equals(user.getId())) {
-            return new ModelAndView("redirect:/recipes/" + comment.getRecipe().getId());
-        }
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("comment-edit");
