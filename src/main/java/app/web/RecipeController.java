@@ -67,9 +67,10 @@ public class RecipeController {
             @Valid RecipeCreateRequest recipeCreateRequest,
             BindingResult bindingResult,
             @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+        User user = userService.getById(authenticationMethadata.getUserId());
 
         if (bindingResult.hasErrors()) {
-            User user = userService.getById(authenticationMethadata.getUserId());
+
 
             ModelAndView modelAndView = new ModelAndView("recipe-form");
             modelAndView.addObject("categories", categoryService.getAllCategories());
@@ -77,7 +78,7 @@ public class RecipeController {
             return modelAndView;
         }
 
-        User user = userService.getById(authenticationMethadata.getUserId());
+
         Recipe createdRecipe = recipeService.createRecipe(recipeCreateRequest, user);
         return new ModelAndView("redirect:/recipes/" + createdRecipe.getId());
     }
