@@ -7,7 +7,6 @@ import app.recipe.service.RecipeService;
 import app.security.AuthenticationMethadata;
 import app.user.model.User;
 import app.user.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
+
 @Controller
 @RequestMapping("/categories")
 public class CategoryController {
@@ -74,8 +73,6 @@ public class CategoryController {
         modelAndView.addObject("recipeCount", publicRecipes.size());
         modelAndView.addObject("user", user);
 
-        log.info("Loading category [{}] page - found {} public recipes",
-                category.getName(), publicRecipes.size());
 
         return modelAndView;
     }
