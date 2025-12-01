@@ -43,19 +43,17 @@ public class MealPlanningController {
 
         User user = userService.getById(authenticationMethadata.getUserId());
 
+        LocalDate displayWeekStart = mealPlanningService.resolveWeekStart(weekStart);
 
-        LocalDate currentWeekStart = (weekStart != null)
-                ? weekStart
-                : LocalDate.now().with(java.time.DayOfWeek.MONDAY);
 
-        List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), currentWeekStart);
+        List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), weekStart);
         List<app.recipe.model.Recipe> userRecipes = recipeService.getRecipesByUser(user, null);
 
         ModelAndView modelAndView = new ModelAndView("meal-planning");
         modelAndView.addObject("user", user);
         modelAndView.addObject("weeklyMealPlans", weeklyMealPlans);
         modelAndView.addObject("userRecipes", userRecipes);
-        modelAndView.addObject("weekStart", currentWeekStart);
+        modelAndView.addObject("weekStart", displayWeekStart);
         modelAndView.addObject("mealPlanAddRequest", new MealPlanAddRequest());
 
         return modelAndView;
@@ -68,15 +66,12 @@ public class MealPlanningController {
             @RequestParam(required = false) LocalDate weekStart,
             @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
 
-
-        LocalDate currentWeekStart = (weekStart != null)
-                ? weekStart
-                : LocalDate.now().with(java.time.DayOfWeek.MONDAY);
+        LocalDate currentWeekStart = mealPlanningService.resolveWeekStart(weekStart);
 
         if (bindingResult.hasErrors()) {
 
             User user = userService.getById(authenticationMethadata.getUserId());
-            List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), currentWeekStart);
+            List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), weekStart);
             List<app.recipe.model.Recipe> userRecipes = recipeService.getRecipesByUser(user, null);
 
             ModelAndView modelAndView = new ModelAndView("meal-planning");
@@ -91,20 +86,16 @@ public class MealPlanningController {
             return modelAndView;
         }
 
-        app.recipe.model.Recipe recipe = recipeService.getById(request.getRecipeId());
-
-        mealPlanningService.addRecipeToMealPlan(
+           mealPlanningService.addRecipeToMealPlan(
                 authenticationMethadata.getUserId(),
                 request.getRecipeId(),
-                recipe.getTitle(),
-                recipe.getCalories(),
                 request.getMealType(),
                 request.getPlannedDate()
         );
 
-
         return new ModelAndView("redirect:/meal-planning/week?weekStart=" + currentWeekStart);
     }
+
 
     @GetMapping("/week")
     public ModelAndView getWeeklyView(@RequestParam(name = "weekStart") LocalDate weekStart,

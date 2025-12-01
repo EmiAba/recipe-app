@@ -5,6 +5,8 @@ import app.mealplanning.client.MealPlanningClient;
 import app.mealplanning.client.dto.ApiMealType;
 import app.mealplanning.client.dto.MealPlanRequest;
 import app.mealplanning.client.dto.MealPlanResponse;
+import app.recipe.model.Recipe;
+import app.recipe.service.RecipeService;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +20,33 @@ import java.util.UUID;
 @Service
 public class MealPlanningService {
     private final MealPlanningClient mealPlanningClient;
+    private final RecipeService recipeService;
 
     @Autowired
-    public MealPlanningService(MealPlanningClient mealPlanningClient) {
+    public MealPlanningService(MealPlanningClient mealPlanningClient, RecipeService recipeService) {
         this.mealPlanningClient = mealPlanningClient;
+        this.recipeService = recipeService;
     }
 
 
-    public void addRecipeToMealPlan(UUID userId, UUID recipeId, String recipeName,
-                                    Integer calories, String mealType, LocalDate plannedDate) {
+    public void addRecipeToMealPlan(UUID userId, UUID recipeId, String mealType, LocalDate plannedDate) {
 
+
+        Recipe recipe = recipeService.getById(recipeId);
 
         try {
             ApiMealType apiMealType = ApiMealType.valueOf(mealType.toUpperCase());
 
             MealPlanRequest request = MealPlanRequest.builder()
                     .userId(userId)
-                    .mealName(recipeName)
+                    .mealName(recipe.getTitle())
                     .mealType(apiMealType)
                     .plannedDate(plannedDate)
-                    .calories(calories)
+                    .calories(recipe.getCalories())
                     .recipeId(recipeId)
                     .build();
 
             mealPlanningClient.addMealPlan(request);
-
 
         } catch (FeignException e) {
             log.error("Error adding meal plan: {}", e.getMessage());
@@ -50,15 +54,15 @@ public class MealPlanningService {
         }
     }
 
+
     public List<MealPlanResponse> getWeeklyMealPlans(UUID userId, LocalDate weekStart) {
         try {
-            return mealPlanningClient.getWeeklyMealPlans(userId, weekStart).getBody();
-
+            LocalDate actualWeekStart = resolveWeekStart(weekStart);
+            return mealPlanningClient.getWeeklyMealPlans(userId, actualWeekStart).getBody();
         } catch (FeignException e) {
             log.error("Error getting weekly meal plans: {}", e.getMessage());
             return List.of();
         }
-
     }
 
     public void deleteMealPlan(UUID mealPlanId, UUID userId) {
@@ -70,6 +74,12 @@ public class MealPlanningService {
         }
     }
 
+
+    public LocalDate resolveWeekStart(LocalDate weekStart) {
+        return (weekStart != null)
+                ? weekStart
+                : LocalDate.now().with(java.time.DayOfWeek.MONDAY);
+    }
 }
 
 
