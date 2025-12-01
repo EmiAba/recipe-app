@@ -2,6 +2,7 @@ package app.web;
 import app.category.model.Category;
 import app.comment.model.Comment;
 import app.comment.service.CommentService;
+import app.exception.UnauthorizedAccessException;
 import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.security.AuthenticationMethadata;
@@ -148,7 +149,7 @@ public class CommentControllerApiTest {
         Comment comment = createComment("text", 5, user, recipe);
 
         when(userService.getById(user.getId())).thenReturn(user);
-        when(commentService.getById(comment.getId())).thenReturn(comment);
+        when(commentService.getCommentWithAuthorCheck(comment.getId(), user)).thenReturn(comment);  // ← ТОЗИ РЕД!
 
         AuthenticationMethadata principal = new AuthenticationMethadata(
                 user.getId(), user.getUsername(),
@@ -164,12 +165,13 @@ public class CommentControllerApiTest {
                 .andExpect(model().attributeExists("comment"))
                 .andExpect(model().attributeExists("commentEditRequest"));
 
-        verify(commentService, times(1)).getById(comment.getId());
+        verify(commentService, times(1)).getCommentWithAuthorCheck(comment.getId(), user);  // ← ТОЗИ РЕД!
         verify(userService, times(1)).getById(user.getId());
-
     }
+
+
     @Test
-    void editCommentForm_whenUserIsNotAuthor_shouldRedirectToRecipe() throws Exception {
+    void editCommentForm_whenUserIsNotAuthor_shouldReturnForbidden() throws Exception {
         User user = aRandomUser();
         User differentUser = aRandomUser();
         Category category = createCategory("Dessert");
@@ -177,8 +179,8 @@ public class CommentControllerApiTest {
         Comment comment = createComment("text", 5, differentUser, recipe);
 
         when(userService.getById(user.getId())).thenReturn(user);
-        when(commentService.getById(comment.getId())).thenReturn(comment);
-
+        when(commentService.getCommentWithAuthorCheck(comment.getId(), user))
+                .thenThrow(new UnauthorizedAccessException("You can only modify your own comments."));
 
         AuthenticationMethadata principal = new AuthenticationMethadata(
                 user.getId(), user.getUsername(),
@@ -188,14 +190,11 @@ public class CommentControllerApiTest {
                 .with(user(principal));
 
         mockMvc.perform(httpRequest)
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/recipes/" + comment.getRecipe().getId()));
+                .andExpect(status().isForbidden());
 
-        verify(commentService, times(1)).getById(comment.getId());
+        verify(commentService, times(1)).getCommentWithAuthorCheck(comment.getId(), user);
         verify(userService, times(1)).getById(user.getId());
     }
-
-
     @Test
     void updateComment_withValidData_shouldRedirectToRecipe() throws Exception {
         User user = aRandomUser();
