@@ -42,13 +42,13 @@
               </h4>
             </div>
             <div class="d-flex gap-2">
-              <a th:href="@{/meal-planning/week(weekStart=${weekStart.minusWeeks(1)})}" class="btn btn-outline-secondary">
+              <a th:href="@{/meal-planning(weekStart=${weekStart.minusWeeks(1)})}" class="btn btn-outline-secondary">
                 <i class="bi bi-chevron-left"></i> Previous
               </a>
               <a th:href="@{/meal-planning}" class="btn btn-outline-primary">
                 <i class="bi bi-calendar-today"></i> This Week
               </a>
-              <a th:href="@{/meal-planning/week(weekStart=${weekStart.plusWeeks(1)})}" class="btn btn-outline-secondary">
+              <a th:href="@{/meal-planning(weekStart=${weekStart.plusWeeks(1)})}" class="btn btn-outline-secondary">
                 Next <i class="bi bi-chevron-right"></i>
               </a>
             </div>
@@ -219,7 +219,7 @@
 
             <div class="mb-3">
               <label for="recipeSelect" class="form-label">Choose Recipe:</label>
-              <select class="form-select" id="recipeSelect" name="recipeId" required>
+              <select class="form-select" id="recipeSelect" name="recipeId" >
                 <option value="">Select a recipe...</option>
                 <option th:each="recipe : ${userRecipes}"
                         th:value="${recipe.id}"
