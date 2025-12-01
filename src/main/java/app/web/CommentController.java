@@ -91,8 +91,11 @@ public class CommentController {
     @GetMapping("/{commentId}/edit")
     public ModelAndView editCommentForm(@PathVariable UUID commentId,
                                         @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
-        Comment comment = commentService.getById(commentId);
+
+
         User user = userService.getById(authenticationMethadata.getUserId());
+
+        Comment comment = commentService.getCommentWithAuthorCheck(commentId, user);
 
 
         ModelAndView modelAndView = new ModelAndView();

@@ -23,17 +23,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final RecipeService recipeService;
 
-
-
     @Autowired
     public CommentService(CommentRepository commentRepository,
-                          RecipeService recipeService ) {
+                          RecipeService recipeService) {
         this.commentRepository = commentRepository;
         this.recipeService = recipeService;
-
-
     }
-
 
     public Comment createComment(CommentCreateRequest commentCreateRequest, UUID recipeId, User author) {
         Recipe recipe = recipeService.getById(recipeId);
@@ -49,23 +44,24 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-
-
         log.info("User [{}] added comment to recipe [{}] with rating [{}]",
                 author.getUsername(), recipe.getTitle(), commentCreateRequest.getRating());
 
         return savedComment;
     }
 
-
-
-    public Comment updateComment(UUID commentId, CommentEditRequest commentEditRequest, User currentUser) {
+    public Comment getCommentWithAuthorCheck(UUID commentId, User currentUser) {
         Comment comment = getById(commentId);
 
-
         if (!comment.getAuthor().getId().equals(currentUser.getId())) {
-            throw new UnauthorizedAccessException("You can only edit your own comments.");
+            throw new UnauthorizedAccessException("You can only modify your own comments.");
         }
+
+        return comment;
+    }
+
+    public Comment updateComment(UUID commentId, CommentEditRequest commentEditRequest, User currentUser) {
+        Comment comment = getCommentWithAuthorCheck(commentId, currentUser);
 
         comment.setContent(commentEditRequest.getContent());
         comment.setRating(commentEditRequest.getRating());
@@ -82,7 +78,6 @@ public class CommentService {
         return commentRepository.findByRecipeIdWithAuthor(recipeId);
     }
 
-
     public Double getAverageRatingForRecipe(UUID recipeId) {
         List<Comment> comments = getCommentsByRecipe(recipeId);
         if (comments.isEmpty()) {
@@ -96,7 +91,6 @@ public class CommentService {
         return sum / comments.size();
     }
 
-
     public int getTotalRatingsForRecipe(UUID recipeId) {
         List<Comment> comments = getCommentsByRecipe(recipeId);
         return comments.size();
@@ -107,20 +101,11 @@ public class CommentService {
                 .orElseThrow(() -> new CommentNotFoundException("Comment with id [%s] does not exist.".formatted(id)));
     }
 
-
     public void deleteComment(UUID commentId, User currentUser) {
-        Comment comment = getById(commentId);
-
-
-        if (!comment.getAuthor().getId().equals(currentUser.getId())) {
-            throw new UnauthorizedAccessException("You can only delete your own comments.");
-        }
+        Comment comment = getCommentWithAuthorCheck(commentId, currentUser);
 
         commentRepository.delete(comment);
 
         log.info("User [{}] deleted comment [{}]", currentUser.getUsername(), commentId);
     }
-
-
-
 }
