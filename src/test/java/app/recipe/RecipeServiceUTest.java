@@ -474,6 +474,46 @@ public class RecipeServiceUTest {
         verify(recipeRepository).save(recipe);
     }
 
+    @Test
+    public void whenCountUserRecipes_thenReturnCorrectCount() {
+
+        User user = User.builder().id(UUID.randomUUID()).build();
+
+        Recipe recipe1 = Recipe.builder().deleted(false).build();
+        Recipe recipe2 = Recipe.builder().deleted(false).build();
+        Recipe recipe3 = Recipe.builder().deleted(false).build();
+
+        when(recipeRepository.findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user))
+                .thenReturn(Arrays.asList(recipe1, recipe2, recipe3));
+
+
+        int count = recipeService.countUserRecipes(user);
+
+
+        assertThat(count).isEqualTo(3);
+        verify(recipeRepository).findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user);
+    }
+
+    @Test
+    public void whenCountUserFavorites_thenReturnCorrectCount() {
+
+        UUID userId = UUID.randomUUID();
+        User user = User.builder().id(userId).build();
+
+        Recipe recipe1 = Recipe.builder().deleted(false).createdOn(LocalDateTime.now()).build();
+        Recipe recipe2 = Recipe.builder().deleted(false).createdOn(LocalDateTime.now()).build();
+
+        user.setFavorites(new HashSet<>(Arrays.asList(recipe1, recipe2)));
+
+        when(userService.getById(userId)).thenReturn(user);
+
+
+        int count = recipeService.countUserFavorites(userId);
+
+
+        assertThat(count).isEqualTo(2);
+        verify(userService).getById(userId);
+    }
 
     @Test
     public void whenGenerateRecipePdf_thenReturnPdfBytes(){
