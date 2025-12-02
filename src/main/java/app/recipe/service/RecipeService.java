@@ -170,6 +170,7 @@ public class RecipeService {
         User user = userService.getById(userId);
 
         return user.getFavorites().stream()
+                .filter(recipe -> !recipe.isDeleted())
                 .sorted((r1, r2) -> r2.getCreatedOn().compareTo(r1.getCreatedOn()))
                 .collect(Collectors.toList());
     }
@@ -185,6 +186,13 @@ public class RecipeService {
         recipe.getFavoriteBy().remove(user);
         recipeRepository.save(recipe);
 
+    }
+    public int countUserRecipes(User user) {
+        return recipeRepository.findByAuthorAndDeletedFalseOrderByCreatedOnDesc(user).size();
+    }
+
+    public int countUserFavorites(UUID userId) {
+        return getUserFavorites(userId).size();
     }
 
 

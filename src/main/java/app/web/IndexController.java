@@ -5,7 +5,6 @@ import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.security.AuthenticationMethadata;
 import app.user.model.User;
-import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
@@ -83,7 +82,8 @@ public class IndexController {
         modelAndView.setViewName("home");
         modelAndView.addObject("recentRecipes", recentRecipes);
         modelAndView.addObject("user", user);
-
+        modelAndView.addObject("myRecipesCount", recipeService.countUserRecipes(user));           // ← ДОБАВИ
+        modelAndView.addObject("favoritesCount", recipeService.countUserFavorites(user.getId())); // ← ДОБАВИ
 
         return modelAndView;
     }
