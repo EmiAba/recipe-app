@@ -155,7 +155,7 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
-    @CacheEvict(value = "userFavorites", key = "#user.id")
+    @CacheEvict(value = "userFavorites",  allEntries = true)
     public void addToFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
         user.getFavorites().add(recipe);
@@ -177,7 +177,7 @@ public class RecipeService {
         return user.getFavorites().contains(recipe);
     }
 
-    @CacheEvict(value = "userFavorites", key = "#user.id")
+    @CacheEvict(value = "userFavorites", allEntries = true)
     public void removeFromFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
         user.getFavorites().remove(recipe);
