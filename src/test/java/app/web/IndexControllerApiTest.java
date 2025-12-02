@@ -127,10 +127,11 @@ public class IndexControllerApiTest {
 
         when(userService.getById(user.getId())).thenReturn(user);
         when(recipeService.getRecipesByUser(user, 3)).thenReturn(recentRecipes);
+        when(recipeService.countUserRecipes(user)).thenReturn(0);
+        when(recipeService.countUserFavorites(user.getId())).thenReturn(0);
 
         AuthenticationMethadata principal = new AuthenticationMethadata(user.getId(), user.getUsername(),
                 user.getPassword(), user.getRole(), user.isActive());
-
 
         MockHttpServletRequestBuilder request = get("/home")
                 .with(user(principal));
@@ -139,12 +140,14 @@ public class IndexControllerApiTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"))
                 .andExpect(model().attributeExists("user"))
-                .andExpect(model().attributeExists("recentRecipes"));
-
+                .andExpect(model().attributeExists("recentRecipes"))
+                .andExpect(model().attributeExists("myRecipesCount"))
+                .andExpect(model().attributeExists("favoritesCount"));
 
         verify(userService, times(1)).getById(user.getId());
         verify(recipeService, times(1)).getRecipesByUser(user, 3);
-
+        verify(recipeService, times(1)).countUserRecipes(user);
+        verify(recipeService, times(1)).countUserFavorites(user.getId());
     }
 
     @Test

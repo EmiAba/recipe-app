@@ -82,8 +82,8 @@ public class IndexController {
         modelAndView.setViewName("home");
         modelAndView.addObject("recentRecipes", recentRecipes);
         modelAndView.addObject("user", user);
-        modelAndView.addObject("myRecipesCount", recipeService.countUserRecipes(user));           // ← ДОБАВИ
-        modelAndView.addObject("favoritesCount", recipeService.countUserFavorites(user.getId())); // ← ДОБАВИ
+        modelAndView.addObject("myRecipesCount", recipeService.countUserRecipes(user));
+        modelAndView.addObject("favoritesCount", recipeService.countUserFavorites(user.getId()));
 
         return modelAndView;
     }
