@@ -152,6 +152,7 @@ public class RecipeService {
     public List<Recipe> getPublicRecipes(Category category) {
         return category.getRecipes().stream()
                 .filter(Recipe::isPublic)
+                .filter(recipe -> !recipe.isDeleted())
                 .collect(Collectors.toList());
     }
 

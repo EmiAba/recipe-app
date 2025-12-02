@@ -42,11 +42,15 @@ public class CategoryService {
     }
 
     public Map<String, Long> getCategoryRecipeCounts() {
+
         List<Category> categories = getAllCategories();
-        return categories.stream()
+
+        return  categories.stream()
                 .collect(Collectors.toMap(
                         Category::getName,
-                        category -> (long) category.getRecipes().size()
+                        category -> category.getRecipes().stream()
+                                .filter(recipe -> !recipe.isDeleted())
+                                .count()
                 ));
 
     }
