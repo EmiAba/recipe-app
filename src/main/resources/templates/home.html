@@ -43,39 +43,39 @@
                                 </div>
                                 <div class="profile-info">
                                     <h2 th:text="${user.username}">John Doe</h2>
-                                    <p th:if="${user.isActive()}" class="active-status">Active</p>
-                                    <p th:if="${!user.isActive()}" class="active-status">Inactive</p>
+                                    <p th:if="${user.isActive()}" class="active-status">[[#{form.isActive}]]</p>
+                                    <p th:if="${!user.isActive()}" class="active-status">[[#{form.isNotActive}]]</p>
                                 </div>
                             </div>
                             <div class="profile-details mt-3 flex-grow-1">
                                 <div class="detail-item">
-                                    <span class="label">First Name:</span>
+                                    <span class="label">[[#{form.firstName}]]:</span>
                                     <span class="value" th:text="${#strings.isEmpty(user.firstName) ? 'Edit your profile' : user.firstName}">Emi</span>
                                 </div>
 
                                 <div class="detail-item">
-                                    <span class="label">Last Name:</span>
+                                    <span class="label">[[#{form.lastName}]]:</span>
                                     <span class="value" th:text="${#strings.isEmpty(user.lastName) ? 'Edit your profile' : user.lastName}">aba</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="label">Email:</span>
+                                    <span class="label">[[#{form.email}]]:</span>
                                     <span class="value" th:text="${user.email}">john.doe@example.com</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="label">Member Since:</span>
+                                    <span class="label">[[#{form.createdOn}]]:</span>
                                     <span class="value" th:text="${#temporals.format(user.createdOn, 'dd MMM yyyy')}">15 Jan 2025</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="label">Updated on:</span>
+                                    <span class="label">[[#{form.updatedOn}]]:</span>
                                     <span class="value" th:text="${#temporals.format(user.updatedOn, 'dd MMM yyyy')}">15 Jan 2025</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="label">Country:</span>
+                                    <span class="label">[[#{form.country}]]:</span>
                                     <span class="value" th:text="${#strings.isEmpty(user.country) ? 'Edit your profile' : user.country}">Bulgaria</span>
                                 </div>
                             </div>
                             <div class="mt-auto">
-                                <a th:href="@{/users/profile}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                                <a th:href="@{/users/profile}" class="btn btn-outline-primary btn-sm">[[#{form.editProfile}]]</a>
                             </div>
                         </div>
                     </div>
@@ -83,19 +83,19 @@
                     <!-- Recipe Stats Card -->
                     <div class="col-lg-6">
                         <div class="dashboard-card stats-card h-100 d-flex flex-column">
-                            <h3 class="mb-4">Your Recipe Stats</h3>
+                            <h3 class="mb-4">[[#{form.statisticInfo}]]</h3>
 
                             <div class="row g-3 mb-4 flex-grow-1">
                                 <div class="col-6">
                                     <div class="stat-block h-100">
                                         <div class="stat-value" th:text="${myRecipesCount}">9</div>
-                                        <div class="stat-label">Recipes Created</div>
+                                        <div class="stat-label">[[#{form.recipeCreatedNumber}]]</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="stat-block h-100">
                                         <div class="stat-value" th:text="${favoritesCount}">4</div>
-                                        <div class="stat-label">Favorites</div>
+                                        <div class="stat-label">[[#{form.favouriteRecipesNumber}]]</div>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                             <div class="mt-auto">
                                 <div class="d-flex gap-2 justify-content-center">
                                     <a th:href="@{/recipes/add}" class="btn btn-sm btn-primary">
-                                        <i class="bi bi-plus-circle me-1"></i>Add Recipe
+                                        <i class="bi bi-plus-circle me-1"></i>[[#{form.addRecipe}]]
                                     </a>
                                 </div>
                             </div>
@@ -115,17 +115,17 @@
                     <div class="col-lg-8">
                         <div class="dashboard-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3>Recent Recipes</h3>
+                                <h3>[[#{form.recentRecipes}]]</h3>
                              </div>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>Recipe</th>
-                                        <th>Category</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        <th>[[#{form.recipe}]]</th>
+                                        <th>[[#{form.category}]]</th>
+                                        <th>[[#{form.date}]]</th>
+                                        <th>[[#{form.status}]]</th>
+                                        <th>[[#{form.actions}]]</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -170,7 +170,7 @@
                                 </table>
                             </div>
                             <div class="text-center mt-3">
-                                <a th:href="@{/recipes/mine}" class="btn btn-outline-primary">View All Recipes</a>
+                                <a th:href="@{/recipes/mine}" class="btn btn-outline-primary">[[#{form.viewAllRecipes}]]</a>
                             </div>
                         </div>
                     </div>
@@ -181,13 +181,13 @@
                             <h3>Quick Actions</h3>
                             <div class="d-flex flex-column gap-2">
                                 <a th:href="@{/recipes/add}" class="btn btn-primary">
-                                    <i class="bi bi-plus-circle me-2"></i>Create Recipe
+                                    <i class="bi bi-plus-circle me-2"></i>[[#{form.createRecipe}]]
                                 </a>
                                 <a th:href="@{/categories}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-grid-fill me-2"></i>Browse Categories
+                                    <i class="bi bi-grid-fill me-2"></i>[[#{form.browseCategories}]]
                                 </a>
                                 <a th:href="@{/meal-planning}" class="btn btn-outline-success">
-                                    <i class="bi bi-calendar-week me-2"></i>Plan Meals
+                                    <i class="bi bi-calendar-week me-2"></i>[[#{form.mealPlans}]]
                                 </a>
                             </div>
                         </div>
