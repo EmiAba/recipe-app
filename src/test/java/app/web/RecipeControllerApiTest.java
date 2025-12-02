@@ -392,6 +392,31 @@ public class RecipeControllerApiTest {
     }
 
     @Test
+    void removeFromFavorites_shouldRedirectToRecipeWithSuccessMessage() throws Exception {
+        User user = aRandomUser();
+        Category category = createCategory("Dessert");
+        Recipe recipe = createRecipe("Choco cake", user, category);
+
+        when(userService.getById(user.getId())).thenReturn(user);
+
+        AuthenticationMethadata principal = new AuthenticationMethadata(
+                user.getId(), user.getUsername(),
+                user.getPassword(), user.getRole(), user.isActive());
+
+        MockHttpServletRequestBuilder httpRequest = post("/recipes/" + recipe.getId() + "/unfavorite")
+                .with(user(principal))
+                .with(csrf());
+
+        mockMvc.perform(httpRequest)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/" + recipe.getId() + "?success=removed"));
+
+        verify(userService, times(1)).getById(user.getId());
+        verify(recipeService, times(1)).removeFromFavorites(user, recipe.getId());
+    }
+
+
+    @Test
     void downloadRecipePdf_shouldReturnPdfFile() throws Exception {
         User user = aRandomUser();
         Category category = createCategory("Dessert");
