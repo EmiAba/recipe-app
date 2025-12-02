@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Navbar</title>
 </head>
 <body>
-<div  th:fragment="navbar" class="sidebar">
-  <div class="sidebar-header">
-    <h2 class="logo">🍕 Recipe Buddy</h2>
-  </div>
-  <div class="sidebar-menu">
-    <ul class="nav-links">
-      <li class="nav-link active">
-        <a th:href="@{/home}"><i class="bi bi-house-door-fill"></i> Dashboard</a>
-      </li>
-      <li class="nav-link">
-        <a th:href="@{/recipes/mine}"><i class="bi bi-book"></i> My Recipes</a>
-      </li>
-      <li class="nav-link">
-        <a th:href="@{/recipes/favorites}"><i class="bi bi-heart-fill"></i> Favorites</a>
-      </li>
-       <li class="nav-link">
-        <a th:href="@{/categories}"><i class="bi bi-grid-fill"></i> Categories</a>
-      </li>
-      <li class="nav-link">
-    <a th:href="@{/meal-planning}"><i class="bi bi-gear-fill"></i> Meal Planning</a>
-      </li>
-        <li class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')">
-            <a th:href="@{/admin}">
-                <i class="bi bi-gear-fill"></i> Admin Settings
-            </a>
-        </li>
+<div th:fragment="navbar" class="sidebar">
+    <div class="sidebar-header">
+        <h2 class="logo">🍕 Recipe Buddy</h2>
+    </div>
 
+    <div class="sidebar-menu">
+        <ul class="nav-links">
+            <li class="nav-link active">
+                <a th:href="@{/home}"><i class="bi bi-house-door-fill"></i> [[#{nav.home}]]</a>
+            </li>
+            <li class="nav-link">
+                <a th:href="@{/recipes/mine}"><i class="bi bi-book"></i> [[#{nav.myRecipes}]]</a>
+            </li>
+            <li class="nav-link">
+                <a th:href="@{/recipes/favorites}"><i class="bi bi-heart-fill"></i> [[#{nav.favorites}]]</a>
+            </li>
+            <li class="nav-link">
+                <a th:href="@{/categories}"><i class="bi bi-grid-fill"></i> [[#{nav.categories}]]</a>
+            </li>
+            <li class="nav-link">
+                <a th:href="@{/meal-planning}"><i class="bi bi-calendar-fill"></i> [[#{nav.mealPlanning}]]</a>
+            </li>
+            <li class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:href="@{/admin}">
+                    <i class="bi bi-gear-fill"></i> [[#{nav.adminSettings}]]
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    </ul>
-  </div>
-  <div class="sidebar-footer">
-    <a th:href="@{/logout}" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
-  </div>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <a th:href="@{''(lang='en')}" th:classappend="${#locale.language == 'en'} ? 'active' : ''">EN</a>
+        <span>|</span>
+        <a th:href="@{''(lang='bg')}" th:classappend="${#locale.language == 'bg'} ? 'active' : ''">БГ</a>
+    </div>
+
+    <div class="sidebar-footer">
+        <a th:href="@{/logout}" class="logout-btn">
+            <i class="bi bi-box-arrow-right"></i> [[#{nav.logout}]]
+        </a>
+    </div>
 </div>
 </body>
 </html>

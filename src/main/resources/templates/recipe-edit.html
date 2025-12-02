@@ -34,9 +34,9 @@
                     <div class="col-lg-10 mx-auto">
                         <div class="form-container">
                             <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h3 class="mb-0">Edit Recipe</h3>
+                                <h3 class="mb-0">[[#{form.editRecipe}]]</h3>
                                 <a th:href="@{/recipes/mine}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-arrow-left"></i> Back to My Recipes
+                                    <i class="bi bi-arrow-left"></i> [[#{form.backToRecipes}]]
                                 </a>
                             </div>
 
@@ -50,7 +50,7 @@
                                 <div class="row mb-4">
                                     <div class="col-md-8">
                                         <div class="mb-3">
-                                            <label class="form-label">Recipe Title*</label>
+                                            <label class="form-label">[[#{form.recipeTitle}]]</label>
                                             <input type="text" class="form-control" th:field="*{title}"
                                                    placeholder="E.g., Homemade Margherita Pizza">
                                             <p class="alert-warning" th:if="${#fields.hasErrors('title')}"
@@ -58,7 +58,7 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label">Description</label>
+                                            <label class="form-label">[[#{form.description}]]</label>
                                             <textarea class="form-control" th:field="*{description}" rows="3"
                                                       placeholder="Write a brief description of your recipe..."></textarea>
                                             <p class="alert-warning" th:if="${#fields.hasErrors('description')}"
@@ -68,7 +68,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Preparation Time (minutes)*</label>
+                                                    <label class="form-label">[[#{form.prepTime}]]</label>
                                                     <input type="number" class="form-control"
                                                            th:field="*{prepTimeMinutes}" min="1">
                                                     <p class="alert-warning"
@@ -78,7 +78,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Cooking Time (minutes)*</label>
+                                                    <label class="form-label">[[#{form.cookTime}]]</label>
                                                     <input type="number" class="form-control"
                                                            th:field="*{cookTimeMinutes}" min="0">
                                                     <p class="alert-warning"
@@ -89,34 +89,32 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label">Servings*</label>
+                                            <label class="form-label">[[#{form.servings}]]</label>
                                             <input type="number" class="form-control" th:field="*{servingSize}" min="1">
                                             <p class="alert-warning" th:if="${#fields.hasErrors('servingSize')}"
                                                th:errors="*{servingSize}"></p>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label d-block">Difficulty Level*</label>
+                                            <label class="form-label d-block">[[#{form.difficultyLevel}]]</label>
                                             <div class="difficulty-options">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio"
                                                            th:field="*{difficultyLevel}" value="EASY" id="easy">
-                                                    <label class="form-check-label difficulty-easy" for="easy"><i
-                                                            class="bi bi-star"></i> Easy</label>
+                                                    <label class="form-check-label difficulty-easy" for="easy">
+                                                        <i class="bi bi-star"></i> [[#{form.easy}]]</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio"
                                                            th:field="*{difficultyLevel}" value="MEDIUM" id="medium">
-                                                    <label class="form-check-label difficulty-medium" for="medium"><i
-                                                            class="bi bi-star"></i><i class="bi bi-star"></i>
-                                                        Medium</label>
+                                                    <label class="form-check-label difficulty-medium" for="medium">
+                                                        <i class="bi bi-star"></i><i class="bi bi-star"></i> [[#{form.medium}]]</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio"
                                                            th:field="*{difficultyLevel}" value="HARD" id="hard">
-                                                    <label class="form-check-label difficulty-hard" for="hard"><i
-                                                            class="bi bi-star"></i><i class="bi bi-star"></i><i
-                                                            class="bi bi-star"></i> Hard</label>
+                                                    <label class="form-check-label difficulty-hard" for="hard"><i class="bi bi-star"></i>
+                                                        <i class="bi bi-star"></i><i class="bi bi-star"></i> [[#{form.hard}]]</label>
                                                 </div>
                                             </div>
                                             <p class="alert-warning" th:if="${#fields.hasErrors('difficultyLevel')}"
@@ -125,12 +123,12 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label class="form-label">Recipe Image</label>
+                                        <label class="form-label">[[#{form.recipeImage}]]</label>
                                         <div class="mt-4">
-                                            <p class="text-muted">Provide an image URL:</p>
+                                            <p class="text-muted">[[#{form.provideImageUrl}]]</p>
                                             <input type="url" class="form-control" th:field="*{imageUrl}"
                                                    placeholder="https://example.com/your-recipe-image.jpg">
-                                            <div class="form-text">Paste a direct link to your recipe image.</div>
+                                            <div class="form-text">[[#{form.pasteImageLink}]]</div>
                                             <p class="alert-warning" th:if="${#fields.hasErrors('imageUrl')}"
                                                th:errors="*{imageUrl}"></p>
                                             <div class="image-preview mt-3" id="imagePreview">
@@ -144,15 +142,13 @@
                                 <div class="section-divider"></div>
 
                                 <!-- Ingredients Section -->
-                                <h4 class="mb-3">Ingredients</h4>
+                                <h4 class="mb-3">[[#{form.ingredients}]]</h4>
                                 <div class="mb-3">
-                                    <label class="form-label">Ingredients List*</label>
+
                                     <textarea class="form-control" th:field="*{ingredients}" rows="6"
                                               th:placeholder="'Enter ingredients (one per line):\n2 cups all-purpose flour\n1 tsp salt\n3 large eggs\n1/2 cup milk'">
                                     </textarea>
-                                    <div class="form-text">Enter each ingredient on a separate line with quantity, unit,
-                                        and name.
-                                    </div>
+                                    <div class="form-text">[[#{form.textI}]].</div>
                                     <p class="alert-warning" th:if="${#fields.hasErrors('ingredients')}"
                                        th:errors="*{ingredients}"></p>
                                 </div>
@@ -160,11 +156,11 @@
                                 <div class="section-divider"></div>
 
                                 <!-- Instructions Section -->
-                                <h4 class="mb-3">Instructions</h4>
+                                <h4 class="mb-3">[[#{form.instructions}]]</h4>
                                 <div class="mb-3">
-                                    <label class="form-label">Step by Step Instructions*</label>
+
                                     <textarea class="form-control" th:field="*{instructions}" rows="6"
-                                              placeholder="Enter detailed step-by-step instructions..."></textarea>
+                                              placeholder="#{form.instructionsPlaceholder}"></textarea>
                                     <p class="alert-warning" th:if="${#fields.hasErrors('instructions')}"
                                        th:errors="*{instructions}"></p>
                                 </div>
@@ -174,56 +170,54 @@
                                 <!-- Categories Section -->
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h4 class="mb-3">Categories</h4>
+                                        <h4 class="mb-3">[[#{form.categories}]]</h4>
                                         <div class="mb-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="breakfast"
                                                        id="categoryBreakfast">
-                                                <label class="form-check-label"
-                                                       for="categoryBreakfast">Breakfast</label>
+                                                <label class="form-check-label" for="categoryBreakfast">[[#{form.breakfast}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="lunch" id="categoryLunch">
-                                                <label class="form-check-label" for="categoryLunch">Lunch</label>
+                                                <label class="form-check-label" for="categoryLunch">[[#{form.lunch}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="dinner" id="categoryDinner">
-                                                <label class="form-check-label" for="categoryDinner">Dinner</label>
+                                                <label class="form-check-label" for="categoryDinner">[[#{form.dinner}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="appetizer"
                                                        id="categoryAppetizer">
-                                                <label class="form-check-label"
-                                                       for="categoryAppetizer">Appetizer</label>
+                                                <label class="form-check-label" for="categoryAppetizer">[[#{form.appetizer}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="dessert" id="categoryDessert">
-                                                <label class="form-check-label" for="categoryDessert">Dessert</label>
+                                                <label class="form-check-label" for="categoryDessert">[[#{form.dessert}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="snack" id="categorySnack">
-                                                <label class="form-check-label" for="categorySnack">Snack</label>
+                                                <label class="form-check-label" for="categorySnack">[[#{form.snack}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="drink" id="categoryDrink">
-                                                <label class="form-check-label" for="categoryDrink">Drink</label>
+                                                <label class="form-check-label" for="categoryDrink">[[#{form.drink}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="soup" id="categorySoup">
-                                                <label class="form-check-label" for="categorySoup">Soup</label>
+                                                <label class="form-check-label" for="categorySoup">[[#{form.soup}]]</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                        th:field="*{categoryNames}" value="salad" id="categorySalad">
-                                                <label class="form-check-label" for="categorySalad">Salad</label>
+                                                <label class="form-check-label" for="categorySalad">[[#{form.salad}]]</label>
                                             </div>
                                         </div>
                                     </div>
@@ -232,29 +226,26 @@
                                 <div class="section-divider"></div>
 
                                 <!-- Nutritional Information (Optional) -->
-                                <h4 class="mb-3">Nutritional Information (Optional)</h4>
+                                <h4 class="mb-3">[[#{form.nutritionalInfo}]]</h4>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Calories per serving</label>
-                                            <input type="number" class="form-control" th:field="*{calories}" min="0"
-                                                   placeholder="Enter value...">
+                                            <label class="form-label">[[#{form.caloriesPerServing}]]</label>
+                                            <input type="number" class="form-control" th:field="*{calories}" min="0" placeholder="Enter value...">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Protein (g) per serving</label>
-                                            <input type="number" class="form-control" th:field="*{protein}" min="0"
-                                                   step="0.1" placeholder="Enter value...">
+                                            <label class="form-label">[[#{form.proteinPerServing}]]</label>
+                                            <input type="number" class="form-control" th:field="*{protein}" min="0" step="0.1" placeholder="Enter value...">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Carbs (g) per serving</label>
-                                            <input type="number" class="form-control" th:field="*{carbs}" min="0"
-                                                   step="0.1" placeholder="Enter value...">
+                                            <label class="form-label">[[#{form.carbsPerServing}]]</label>
+                                            <input type="number" class="form-control" th:field="*{carbs}" min="0" step="0.1" placeholder="Enter value...">
 
                                         </div>
                                     </div>
@@ -262,33 +253,29 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Fat (g)</label>
-                                            <input type="number" class="form-control" th:field="*{fat}" min="0"
-                                                   step="0.1" placeholder="e.g., 12">
+                                            <label class="form-label">[[#{form.fat}]]</label>
+                                            <input type="number" class="form-control" th:field="*{fat}" min="0" step="0.1" placeholder="e.g., 12">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Fiber (g)</label>
-                                            <input type="number" class="form-control" th:field="*{fiber}" min="0"
-                                                   step="0.1" placeholder="e.g., 6">
+                                            <label class="form-label">[[#{form.fiber}]]</label>
+                                            <input type="number" class="form-control" th:field="*{fiber}" min="0" step="0.1" placeholder="e.g., 6">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Sugar (g)</label>
-                                            <input type="number" class="form-control" th:field="*{sugar}" min="0"
-                                                   step="0.1" placeholder="e.g., 5">
+                                            <label class="form-label">[[#{form.sugar}]]</label>
+                                            <input type="number" class="form-control" th:field="*{sugar}" min="0" step="0.1" placeholder="e.g., 5">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label class="form-label">Sodium (mg)</label>
-                                            <input type="number" class="form-control" th:field="*{sodium}" min="0"
-                                                   step="0.1" placeholder="e.g., 220">
+                                            <label class="form-label">[[#{form.sodium}]]</label>
+                                            <input type="number" class="form-control" th:field="*{sodium}" min="0" step="0.1" placeholder="e.g., 220">
 
                                         </div>
                                     </div>
@@ -298,14 +285,14 @@
 
                                 <!-- Recipe Visibility -->
                                 <div class="mb-4">
-                                    <h4 class="mb-3">Recipe Visibility</h4>
+                                    <h4 class="mb-3">[[#{form.recipeVisibility}]]</h4>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" th:field="*{isPublic}"
                                                        value="true" id="visibilityPublic">
                                                 <label class="form-check-label" for="visibilityPublic">
-                                                    <i class="bi bi-globe"></i> Public - Everyone can see this recipe
+                                                    <i class="bi bi-globe"></i> [[#{form.public}]]
                                                 </label>
                                             </div>
                                         </div>
@@ -314,7 +301,7 @@
                                                 <input class="form-check-input" type="radio" th:field="*{isPublic}"
                                                        value="false" id="visibilityPrivate">
                                                 <label class="form-check-label" for="visibilityPrivate">
-                                                    <i class="bi bi-lock"></i> Private - Only you can see this recipe
+                                                    <i class="bi bi-lock"></i> [[#{form.private}]]
                                                 </label>
                                             </div>
                                         </div>
@@ -326,9 +313,8 @@
                                 <!-- Submit Buttons -->
                                 <div class="d-flex justify-content-end gap-2 mt-4">
                                     <a th:href="@{'/recipes/' + ${recipeId}}"
-                                       class="btn btn-outline-secondary">Cancel</a>
-                                    <button type="submit" class="btn btn-primary"><i class="bi bi-pencil"></i> Update
-                                        Recipe
+                                       class="btn btn-outline-secondary">[[#{form.cancel}]]</a>
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-pencil"></i> [[#{form.updateRecipe}]]
                                     </button>
                                 </div>
                             </form>

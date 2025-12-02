@@ -1205,3 +1205,39 @@ body {
     color: #6c757d;
     margin-top: -4px;
 }
+
+/* Language Switcher */
+.language-switcher {
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin: var(--space-sm) 0;
+}
+
+.language-switcher a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-weight: var(--fw-bold);
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.language-switcher a:hover {
+    background-color: var(--bright-yellow);
+    color: var(--primary-green);
+}
+
+.language-switcher a.active {
+    background-color: var(--bright-yellow);
+    color: var(--primary-green);
+}
+
+.language-switcher span {
+    color: rgba(255,255,255,0.3);
+}

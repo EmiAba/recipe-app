@@ -14,14 +14,12 @@
                  th:alt="${user.username}"
                  class="rounded-circle"
                  style="width:32px;height:32px;object-fit:cover;">
-
-
         </div>
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
-          <li><a class="dropdown-item" th:href="@{'/users/profile'}">Edit Profile</a></li>
-         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" th:href="@{/logout}"  >Logout</a></li>
+        <li><a class="dropdown-item" th:href="@{'/users/profile'}">[[#{profile.editProfile}]]</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" th:href="@{/logout}">[[#{profile.logout}]]</a></li>
     </ul>
 </div>
 

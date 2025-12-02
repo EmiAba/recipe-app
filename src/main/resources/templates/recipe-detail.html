@@ -52,7 +52,7 @@
 
                     <div th:if="${isAuthor}" class="d-flex gap-2">
                         <a th:href="@{'/recipes/edit/' + ${recipe.id}}" class="btn btn-outline-primary">
-                            <i class="bi bi-pencil"></i> Edit Recipe
+                            <i class="bi bi-pencil"></i> [[#{form.editRecipe}]]
                         </a>
 
                         <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" th:method="DELETE" style="display: inline;"
@@ -91,8 +91,9 @@
                             </div>
 
 
-                            <a th:href="${'/recipes/' + recipe.id + '/pdf'}" class="btn btn-primary">
-                                Download PDF
+                            <a th:href="${'/recipes/' + recipe.id + '/pdf'}"
+                               target="_blank" class="btn btn-primary">
+                                [[#{form.downloadRecipe}]]
                             </a>
 
                             <!-- Recipe Quick Info -->
@@ -102,7 +103,7 @@
                                         <i class="bi bi-clock"></i>
                                     </div>
                                     <div class="info-text">
-                                        <span class="info-title">Total Time:</span>
+                                        <span class="info-title">[[#{form.totalTime}]]:</span>
                                         <span class="info-value"
                                               th:text="${recipe.prepTimeMinutes + recipe.cookTimeMinutes} + ' min'">45 min</span>
                                     </div>
@@ -113,7 +114,7 @@
                                         <i class="bi bi-alarm"></i>
                                     </div>
                                     <div class="info-text">
-                                        <span class="info-title">Prep Time:</span>
+                                        <span class="info-title">[[#{form.prepTime}]]:</span>
                                         <span class="info-value"
                                               th:text="${recipe.prepTimeMinutes} + ' min'">15 min</span>
                                     </div>
@@ -124,7 +125,7 @@
                                         <i class="bi bi-fire"></i>
                                     </div>
                                     <div class="info-text">
-                                        <span class="info-title">Cook Time:</span>
+                                        <span class="info-title">[[#{form.cookTime}]]:</span>
                                         <span class="info-value"
                                               th:text="${recipe.cookTimeMinutes} + ' min'">30 min</span>
                                     </div>
@@ -135,7 +136,7 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="info-text">
-                                        <span class="info-title">Servings:</span>
+                                        <span class="info-title">[[#{form.servings}]]:</span>
                                         <span class="info-value" th:text="${recipe.servingSize}">4</span>
                                     </div>
                                 </div>
@@ -145,7 +146,7 @@
                                         <i class="bi bi-bar-chart"></i>
                                     </div>
                                     <div class="info-text">
-                                        <span class="info-title">Difficulty:</span>
+                                        <span class="info-title">[[#{form.difficultyLevel}]]:</span>
                                         <span class="info-value"
                                               th:text="${#strings.capitalize(#strings.toLowerCase(recipe.difficultyLevel))}">Medium</span>
                                     </div>
@@ -154,7 +155,7 @@
 
                             <!-- Categories -->
                             <div class="mt-4">
-                                <h5>Categories:</h5>
+                                <h5>[[#{form.categories}]]:</h5>
                                 <div class="recipe-tags">
                                     <span class="tag category-tag"
                                           th:each="category : ${recipe.categories}"
@@ -168,13 +169,13 @@
                         <div class="col-lg-7">
                             <!-- Recipe Description -->
                             <div class="recipe-section">
-                                <h3>Description:</h3>
+                                <h3>[[#{form.description}]]:</h3>
                                 <p th:text="${recipe.description}">Recipe description...</p>
                             </div>
 
                             <!-- Recipe Ingredients -->
                             <div class="recipe-section">
-                                <h3>Ingredients:</h3>
+                                <h3>[[#{form.ingredients}]]:</h3>
                                 <div class="ingredients-list">
                                     <p th:text="${recipe.ingredients}">Ingredients list</p>
                                 </div>
@@ -182,7 +183,7 @@
 
                             <!-- Recipe Instructions -->
                             <div class="recipe-section">
-                                <h3>Instructions:</h3>
+                                <h3>[[#{form.instructions}]]:</h3>
                                 <div class="instructions-list">
                                     <p th:text="${recipe.instructions}">Instructions</p>
                                 </div>
@@ -190,25 +191,39 @@
 
                             <!-- Nutrition Facts -->
                             <div class="recipe-section" th:if="${recipe.calories != null}">
-                                <h3>Nutrition Facts:</h3>
+                                <h3>[[#{form.nutritionalInfo}]]:</h3>
                                 <div class="nutrition-facts">
                                     <div class="nutrition-item" th:if="${recipe.calories != null}">
-                                        <span class="nutrition-label">Calories:</span>
+                                        <span class="nutrition-label">[[#{form.caloriesPerServing}]]:</span>
                                         <span class="nutrition-value"
                                               th:text="${recipe.calories} + ' kcal'">350 kcal</span>
                                     </div>
                                     <div class="nutrition-item" th:if="${recipe.protein != null}">
-                                        <span class="nutrition-label">Protein:</span>
+                                        <span class="nutrition-label">[[#{form.proteinPerServing}]]:</span>
                                         <span class="nutrition-value" th:text="${recipe.protein} + 'g'">25g</span>
                                     </div>
                                     <div class="nutrition-item" th:if="${recipe.carbs != null}">
-                                        <span class="nutrition-label">Carbs:</span>
+                                        <span class="nutrition-label">[[#{form.carbsPerServing}]]:</span>
                                         <span class="nutrition-value" th:text="${recipe.carbs} + 'g'">42g</span>
                                     </div>
                                     <div class="nutrition-item" th:if="${recipe.fat != null}">
-                                        <span class="nutrition-label">Fat:</span>
+                                        <span class="nutrition-label">[[#{form.fat}]]:</span>
                                         <span class="nutrition-value" th:text="${recipe.fat} + 'g'">12g</span>
                                     </div>
+                                    <div class="nutrition-item" th:if="${recipe.fiber != null}">
+                                        <label class="form-label">[[#{form.fiber}]]:</label>
+                                        <span class="nutrition-value" th:text="${recipe.fiber} + 'g'">12g</span>
+                                    </div>
+                                    <div class="nutrition-item" th:if="${recipe.sugar != null}">
+                                        <label class="form-label">[[#{form.sugar}]]:</label>
+                                        <span class="nutrition-value" th:text="${recipe.sugar} + 'g'">12g</span>
+                                    </div>
+
+                                    <div class="nutrition-item" th:if="${recipe.sodium != null}">
+                                        <label class="form-label">[[#{form.sodium}]]:</label>
+                                        <span class="nutrition-value" th:text="${recipe.sodium} + 'g'">1222</span>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
