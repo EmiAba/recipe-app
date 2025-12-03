@@ -53,6 +53,7 @@ public class MealPlanningController {
         modelAndView.addObject("weeklyMealPlans", weeklyMealPlans);
         modelAndView.addObject("userRecipes", userRecipes);
         modelAndView.addObject("weekStart", displayWeekStart);
+        modelAndView.addObject("weekStartString", displayWeekStart.toString());
         modelAndView.addObject("mealPlanAddRequest", new MealPlanAddRequest());
 
 
@@ -97,7 +98,7 @@ public class MealPlanningController {
                 request.getPlannedDate()
         );
 
-        return new ModelAndView("redirect:/meal-planning?weekStart=" + currentWeekStart);
+        return new ModelAndView("redirect:/meal-planning?weekStart=" + currentWeekStart.toString());
     }
 
 

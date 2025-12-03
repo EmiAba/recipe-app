@@ -61,18 +61,27 @@ public class MealPlanningServiceUTest {
     @Test
     void getWeeklyMealPlans_shouldReturnMealPlans() {
         UUID userId = UUID.randomUUID();
+
         LocalDate weekStart = LocalDate.now();
+        String weekStartString = weekStart.toString();
+
         MealPlanResponse mockMeal = new MealPlanResponse();
         List<MealPlanResponse> mockResponse = List.of(mockMeal);
 
-        when(mealPlanningClient.getWeeklyMealPlans(userId, weekStart))
+        when(mealPlanningClient.getWeeklyMealPlans(userId, weekStartString))
                 .thenReturn(ResponseEntity.ok(mockResponse));
 
-        List<MealPlanResponse> result = mealPlanningService.getWeeklyMealPlans(userId, weekStart);
+
+        List<MealPlanResponse> result =
+                mealPlanningService.getWeeklyMealPlans(userId, weekStart);
+
 
         assertThat(result).hasSize(1);
-        verify(mealPlanningClient, times(1)).getWeeklyMealPlans(userId, weekStart);
+
+        verify(mealPlanningClient, times(1))
+                .getWeeklyMealPlans(userId, weekStartString);
     }
+
 
     @Test
     void deleteMealPlan_shouldCallFeignClient() {

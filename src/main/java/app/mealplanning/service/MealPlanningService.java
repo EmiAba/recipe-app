@@ -58,7 +58,7 @@ public class MealPlanningService {
     public List<MealPlanResponse> getWeeklyMealPlans(UUID userId, LocalDate weekStart) {
         try {
             LocalDate actualWeekStart = resolveWeekStart(weekStart);
-            return mealPlanningClient.getWeeklyMealPlans(userId, actualWeekStart).getBody();
+            return mealPlanningClient.getWeeklyMealPlans(userId, actualWeekStart.toString()).getBody();
         } catch (FeignException e) {
             log.error("Error getting weekly meal plans: {}", e.getMessage());
             return List.of();

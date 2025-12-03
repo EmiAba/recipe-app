@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +18,7 @@ public interface MealPlanningClient {
     @GetMapping("/weekly")
     ResponseEntity<List<MealPlanResponse>> getWeeklyMealPlans(
             @RequestParam("userId") UUID userId,
-            @RequestParam("weekStart") LocalDate weekStart
+            @RequestParam("weekStart") String weekStart
     );
 
 
