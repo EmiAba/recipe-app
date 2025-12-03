@@ -38,14 +38,14 @@
                         <form th:if="${!isFavorite}" th:action="@{'/recipes/' + ${recipe.id} + '/favorite'}"
                               th:method="post">
                             <button type="submit" class="btn btn-outline-primary">
-                                <i class="bi bi-heart"></i> Add to favorites
+                                <i class="bi bi-heart"></i> [[#{button.addToFavorites}]]
                             </button>
                         </form>
 
                         <form th:if="${isFavorite}" th:action="@{'/recipes/' + ${recipe.id} + '/unfavorite'}"
                               th:method="post">
                             <button type="submit" class="btn btn-outline-danger">
-                                <i class="bi bi-heart-fill"></i> Remove from favorites
+                                <i class="bi bi-heart-fill"></i> [[#{button.removeFromFavorites}]]
                             </button>
                         </form>
                     </div>
@@ -56,7 +56,7 @@
                         </a>
 
                         <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" th:method="DELETE" style="display: inline;"
-                              onsubmit="return confirm('Delete this recipe?')">
+                              th:attr="onsubmit=|return confirm('#{confirm.deleteRecipe}');|">
                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Recipe">
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -159,7 +159,7 @@
                                 <div class="recipe-tags">
                                     <span class="tag category-tag"
                                           th:each="category : ${recipe.categories}"
-                                          th:text="${#strings.capitalize(category.name)}"
+                                          th:text="${#messages.msg('form.' + category.name)}"
                                           title="Category">Category</span>
                                 </div>
                             </div>
@@ -211,16 +211,16 @@
                                         <span class="nutrition-value" th:text="${recipe.fat} + 'g'">12g</span>
                                     </div>
                                     <div class="nutrition-item" th:if="${recipe.fiber != null}">
-                                        <label class="form-label">[[#{form.fiber}]]:</label>
+                                        <span class="nutrition-label">[[#{form.fiber}]]:</span>
                                         <span class="nutrition-value" th:text="${recipe.fiber} + 'g'">12g</span>
                                     </div>
                                     <div class="nutrition-item" th:if="${recipe.sugar != null}">
-                                        <label class="form-label">[[#{form.sugar}]]:</label>
+                                        <span class="nutrition-label">[[#{form.sugar}]]:</span>
                                         <span class="nutrition-value" th:text="${recipe.sugar} + 'g'">12g</span>
                                     </div>
 
                                     <div class="nutrition-item" th:if="${recipe.sodium != null}">
-                                        <label class="form-label">[[#{form.sodium}]]:</label>
+                                        <span class="nutrition-label">[[#{form.sodium}]]:</span>
                                         <span class="nutrition-value" th:text="${recipe.sodium} + 'g'">1222</span>
                                     </div>
 
@@ -231,131 +231,131 @@
                 </div>
 
 
-                    <!-- Comment Section -->
-                    <div class="dashboard-card mt-4" id="comments">
-                        <h3 class="mb-3">Reviews & Comments</h3>
+                <!-- Comment Section -->
+                <div class="dashboard-card mt-4" id="comments">
+                    <h3 class="mb-3">[[#{comments.title}]]</h3>
 
-                        <div class="comments-section"
-                             th:classappend="${#lists.isEmpty(comments)} ? ' no-comments-state' : ' has-comments'">
+                    <div class="comments-section"
+                         th:classappend="${#lists.isEmpty(comments)} ? ' no-comments-state' : ' has-comments'">
 
-                            <!-- Overall Rating Summary -->
-                            <div class="overall-rating" th:if="${averageRating != null}">
-                                <div class="rating-number"
-                                     th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">4.5
-                                </div>
-                                <div class="rating-stars">
+                        <!-- Overall Rating Summary -->
+                        <div class="overall-rating" th:if="${averageRating != null}">
+                            <div class="rating-number"
+                                 th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">4.5
+                            </div>
+                            <div class="rating-stars">
                                 <span th:each="i : ${#numbers.sequence(1, 5)}"
                                       th:class="${i <= averageRating ? 'bi bi-star-fill' : 'bi bi-star'}"
                                       class="bi bi-star-fill"></span>
-                                </div>
-                                <div class="rating-count"
-                                     th:text="${totalRatings} + (${totalRatings} == 1 ? ' review' : ' reviews')">
-                                    12 reviews
-                                </div>
                             </div>
+                            <div class="rating-count"
+                                 th:text="${totalRatings} + ' ' + (${totalRatings} == 1 ? #{comments.review} : #{comments.reviews})">
+                                12 reviews
+                            </div>
+                        </div>
 
-                            <!-- Comment Form -->
-                            <div class="comment-form">
-                                <h5 class="mb-3">Leave a Review</h5>
+                        <!-- Comment Form -->
+                        <div class="comment-form">
+                            <h5 class="mb-3">[[#{comments.leaveReview}]]</h5>
 
-                                <form th:action="@{/comments/recipe/{id}(id=${recipe.id})}" th:method="post"
-                                      th:object="${commentCreateRequest}"
-                                      novalidate>
-
-
-                                    <div class="form-group">
-                                        <p class="alert-warning" th:if="${#fields.hasErrors('rating')}"
-                                           th:errors="*{rating}"></p>
-                                        <label class="rating-label">Your Rating * : </label>
-                                        <div class="rating" aria-label="Rating">
-                                            <input class="rating__input" type="radio" id="rate5" th:field="*{rating}"
-                                                   value="5" required>
-                                            <label class="rating__label" for="rate5" title="Excellent"></label>
-
-                                            <input class="rating__input" type="radio" id="rate4" th:field="*{rating}"
-                                                   value="4">
-                                            <label class="rating__label" for="rate4" title="Good"></label>
-
-                                            <input class="rating__input" type="radio" id="rate3" th:field="*{rating}"
-                                                   value="3">
-                                            <label class="rating__label" for="rate3" title="Average"></label>
-
-                                            <input class="rating__input" type="radio" id="rate2" th:field="*{rating}"
-                                                   value="2">
-                                            <label class="rating__label" for="rate2" title="Poor"></label>
-
-                                            <input class="rating__input" type="radio" id="rate1" th:field="*{rating}"
-                                                   value="1">
-                                            <label class="rating__label" for="rate1" title="Terrible"></label>
-                                        </div>
-                                        <small class="rating-hint">Click a star to rate this recipe</small>
+                            <form th:action="@{/comments/recipe/{id}(id=${recipe.id})}" th:method="post"
+                                  th:object="${commentCreateRequest}"
+                                  novalidate>
 
 
-                                        <!-- Review content -->
-                                        <div class="mb-3">
-                                            <label class="form-label">Your Review *</label>
-                                            <textarea class="form-control"
-                                                      th:field="*{content}"
-                                                      rows="3"
-                                                      placeholder="Share your thoughts (minimum 2 characters)..."></textarea>
-                                            <p class="alert-warning" th:if="${#fields.hasErrors('content')}"
-                                               th:errors="*{content}"></p>
-                                        </div>
+                                <div class="form-group">
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('rating')}"
+                                       th:errors="*{rating}"></p>
+                                    <label class="rating-label">[[#{comments.yourRating}]] * : </label>
+                                    <div class="rating" aria-label="Rating">
+                                        <input class="rating__input" type="radio" id="rate5" th:field="*{rating}"
+                                               value="5" required>
+                                        <label class="rating__label" for="rate5" th:title="#{rating.excellent}"></label>
 
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="bi bi-send"></i> Post Review
-                                            </button>
-                                        </div>
+                                        <input class="rating__input" type="radio" id="rate4" th:field="*{rating}"
+                                               value="4">
+                                        <label class="rating__label" for="rate4" th:title="#{rating.good}"></label>
+
+                                        <input class="rating__input" type="radio" id="rate3" th:field="*{rating}"
+                                               value="3">
+                                        <label class="rating__label" for="rate3" th:title="#{rating.average}"></label>
+
+                                        <input class="rating__input" type="radio" id="rate2" th:field="*{rating}"
+                                               value="2">
+                                        <label class="rating__label" for="rate2" th:title="#{rating.poor}"></label>
+
+                                        <input class="rating__input" type="radio" id="rate1" th:field="*{rating}"
+                                               value="1">
+                                        <label class="rating__label" for="rate1" th:title="#{rating.terrible}"></label>
                                     </div>
-                                </form>
+                                    <small class="rating-hint">[[#{comments.clickStar}]]</small>
 
-                            </div>
 
-                            <!-- Comments List -->
-                            <div class="comment-list mt-4" th:if="${not #lists.isEmpty(comments)}">
-                                <div class="comment-item mb-4 pb-3 border-bottom" th:each="comment : ${comments}">
-                                    <div class="comment-header d-flex align-items-center mb-2">
-                                        <img th:src="${#strings.isEmpty(comment.author.profilePicture)  ? 'https://ui-avatars.com/api/?name=' + comment.author.username + '&background=FCDA05&color=20470b'
+                                    <!-- Review content -->
+                                    <div class="mb-3">
+                                        <label class="form-label">[[#{comments.yourReview}]] *</label>
+                                        <textarea class="form-control"
+                                                  th:field="*{content}"
+                                                  rows="3"
+                                                  th:placeholder="#{comments.placeholder}"></textarea>
+                                        <p class="alert-warning" th:if="${#fields.hasErrors('content')}"
+                                           th:errors="*{content}"></p>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-send"></i> [[#{comments.postReview}]]
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <!-- Comments List -->
+                        <div class="comment-list mt-4" th:if="${not #lists.isEmpty(comments)}">
+                            <div class="comment-item mb-4 pb-3 border-bottom" th:each="comment : ${comments}">
+                                <div class="comment-header d-flex align-items-center mb-2">
+                                    <img th:src="${#strings.isEmpty(comment.author.profilePicture)  ? 'https://ui-avatars.com/api/?name=' + comment.author.username + '&background=FCDA05&color=20470b'
               : comment.author.profilePicture}" alt="User Avatar" class="comment-author-img rounded-circle me-3"
-                                             width="40" height="40" style="object-fit: cover; border: 2px solid #FCDA05;">
+                                         width="40" height="40" style="object-fit: cover; border: 2px solid #FCDA05;">
 
-                                        <div>
-                                            <p class="mb-0 fw-bold" th:text="${comment.author.username}">Username</p>
-                                            <small class="text-muted"
-                                                   th:text="${#temporals.format(comment.createdOn, 'MMM d, yyyy')}">May 15,
-                                                2025</small>
-                                        </div>
-                                        <div class="ms-auto">
+                                    <div>
+                                        <p class="mb-0 fw-bold" th:text="${comment.author.username}">Username</p>
+                                        <small class="text-muted"
+                                               th:text="${#temporals.format(comment.createdOn, 'MMM d, yyyy')}">May 15,
+                                            2025</small>
+                                    </div>
+                                    <div class="ms-auto">
                                         <span th:each="i : ${#numbers.sequence(1, 5)}"
                                               th:class="${i <= comment.rating ? 'bi bi-star-fill text-warning' : 'bi bi-star text-secondary'}"
                                               class="bi bi-star-fill"></span>
-                                        </div>
-                                    </div>
-                                    <div class="comment-content" th:text="${comment.content}">Comment text…</div>
-
-
-                                    <div class="comment-actions d-flex gap-2 mt-2">
-                                        <a th:href="@{'/comments/' + ${comment.id} + '/edit'}"
-                                           class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-
-                                        <form th:action="@{'/comments/' + ${comment.id} + '/delete'}"  th:method="delete"
-                                              class="d-inline m-0">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this comment?')">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
                                     </div>
                                 </div>
+                                <div class="comment-content" th:text="${comment.content}">Comment text…</div>
 
 
+                                <div class="comment-actions d-flex gap-2 mt-2">
+                                    <a th:href="@{'/comments/' + ${comment.id} + '/edit'}"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pencil"></i> [[#{button.edit}]]
+                                    </a>
+
+                                    <form th:action="@{'/comments/' + ${comment.id} + '/delete'}"  th:method="delete"
+                                          class="d-inline m-0">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                th:attr="onclick=|return confirm('#{confirm.deleteComment}');|">
+                                            <i class="bi bi-trash"></i> [[#{button.delete}]]
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
 
+
                         </div>
+
                     </div>
+                </div>
 
             </div>
         </div>

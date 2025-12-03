@@ -52,7 +52,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.recipeTitle}]]</label>
                                             <input type="text" class="form-control" th:field="*{title}"
-                                                   placeholder="E.g., Homemade Margherita Pizza">
+                                                   th:placeholder="#{form.recipeTitlePlaceholder}">
                                             <p class="alert-warning" th:if="${#fields.hasErrors('title')}"
                                                th:errors="*{title}"></p>
                                         </div>
@@ -60,7 +60,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.description}]]</label>
                                             <textarea class="form-control" th:field="*{description}" rows="3"
-                                                      placeholder="Write a brief description of your recipe..."></textarea>
+                                                      th:placeholder="#{form.descriptionPlaceholder}"></textarea>
                                             <p class="alert-warning" th:if="${#fields.hasErrors('description')}"
                                                th:errors="*{description}"></p>
                                         </div>
@@ -127,7 +127,7 @@
                                         <div class="mt-4">
                                             <p class="text-muted">[[#{form.provideImageUrl}]]</p>
                                             <input type="url" class="form-control" th:field="*{imageUrl}"
-                                                   placeholder="https://example.com/your-recipe-image.jpg">
+                                                   th:placeholder="#{form.imageUrlPlaceholder}">
                                             <div class="form-text">[[#{form.pasteImageLink}]]</div>
                                             <p class="alert-warning" th:if="${#fields.hasErrors('imageUrl')}"
                                                th:errors="*{imageUrl}"></p>
@@ -231,21 +231,21 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.caloriesPerServing}]]</label>
-                                            <input type="number" class="form-control" th:field="*{calories}" min="0" placeholder="Enter value...">
+                                            <input type="number" class="form-control" th:field="*{calories}" min="0" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.proteinPerServing}]]</label>
-                                            <input type="number" class="form-control" th:field="*{protein}" min="0" step="0.1" placeholder="Enter value...">
+                                            <input type="number" class="form-control" th:field="*{protein}" min="0" step="0.1" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.carbsPerServing}]]</label>
-                                            <input type="number" class="form-control" th:field="*{carbs}" min="0" step="0.1" placeholder="Enter value...">
+                                            <input type="number" class="form-control" th:field="*{carbs}" min="0" step="0.1" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>
@@ -254,28 +254,28 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.fat}]]</label>
-                                            <input type="number" class="form-control" th:field="*{fat}" min="0" step="0.1" placeholder="e.g., 12">
+                                            <input type="number" class="form-control" th:field="*{fat}" min="0" step="0.1" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.fiber}]]</label>
-                                            <input type="number" class="form-control" th:field="*{fiber}" min="0" step="0.1" placeholder="e.g., 6">
+                                            <input type="number" class="form-control" th:field="*{fiber}" min="0" step="0.1" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.sugar}]]</label>
-                                            <input type="number" class="form-control" th:field="*{sugar}" min="0" step="0.1" placeholder="e.g., 5">
+                                            <input type="number" class="form-control" th:field="*{sugar}" min="0" step="0.1" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.sodium}]]</label>
-                                            <input type="number" class="form-control" th:field="*{sodium}" min="0" step="0.1" placeholder="e.g., 220">
+                                            <input type="number" class="form-control" th:field="*{sodium}" min="0" step="0.1" th:placeholder="#{form.enterValue}">
 
                                         </div>
                                     </div>

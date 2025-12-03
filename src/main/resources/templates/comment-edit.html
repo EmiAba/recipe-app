@@ -36,11 +36,11 @@
             <div class="dashboard-card">
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                  <h3 class="mb-1">Edit Review</h3>
-                  <p class="text-muted mb-0" th:text="'for ' + ${comment.recipe.title}">for Recipe Name</p>
+                  <h3 class="mb-1">[[#{comments.editReview}]]</h3>
+                  <p class="text-muted mb-0" th:text="#{comments.for} + ' ' + ${comment.recipe.title}">for Recipe Name</p>
                 </div>
                 <a th:href="@{/recipes/{id}(id=${comment.recipe.id})}" class="btn btn-sm btn-outline-secondary">
-                  <i class="bi bi-arrow-left"></i> Back to Recipe
+                  <i class="bi bi-arrow-left"></i> [[#{button.backToRecipe}]]
                 </a>
               </div>
 
@@ -49,43 +49,43 @@
 
                   <!-- Rating section -->
                   <div class="form-group">
-                    <label class="rating-label">Your Rating *</label>
+                    <label class="rating-label">[[#{comments.yourRating}]] *</label>
                     <p class="alert-warning" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></p>
                     <div class="rating" aria-label="Rating">
                       <input class="rating__input" type="radio" id="rate5" th:field="*{rating}" value="5">
-                      <label class="rating__label" for="rate5" title="Excellent"></label>
+                      <label class="rating__label" for="rate5" th:title="#{rating.excellent}"></label>
 
                       <input class="rating__input" type="radio" id="rate4" th:field="*{rating}" value="4">
-                      <label class="rating__label" for="rate4" title="Good"></label>
+                      <label class="rating__label" for="rate4" th:title="#{rating.good}"></label>
 
                       <input class="rating__input" type="radio" id="rate3" th:field="*{rating}" value="3">
-                      <label class="rating__label" for="rate3" title="Average"></label>
+                      <label class="rating__label" for="rate3" th:title="#{rating.average}"></label>
 
                       <input class="rating__input" type="radio" id="rate2" th:field="*{rating}" value="2">
-                      <label class="rating__label" for="rate2" title="Poor"></label>
+                      <label class="rating__label" for="rate2" th:title="#{rating.poor}"></label>
 
                       <input class="rating__input" type="radio" id="rate1" th:field="*{rating}" value="1">
-                      <label class="rating__label" for="rate1" title="Terrible"></label>
+                      <label class="rating__label" for="rate1" th:title="#{rating.terrible}"></label>
                     </div>
-                    <small class="rating-hint">Click a star to rate this recipe</small>
+                    <small class="rating-hint">[[#{comments.clickStar}]]</small>
                   </div>
 
                   <!-- Comment text -->
                   <div class="mb-4">
-                    <label class="form-label">Your Review *</label>
+                    <label class="form-label">[[#{comments.yourReview}]] *</label>
                     <textarea class="form-control" th:field="*{content}" rows="6"
-                              placeholder="Share your thoughts..."></textarea>
+                              th:placeholder="#{comments.placeholder}"></textarea>
                     <p class="alert-warning" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
                   </div>
 
                   <!-- Buttons -->
                   <div class="d-flex justify-content-between align-items-center">
                     <a th:href="@{/recipes/{id}(id=${comment.recipe.id})}" class="btn btn-outline-secondary">
-                      <i class="bi bi-x-lg"></i> Cancel
+                      <i class="bi bi-x-lg"></i> [[#{form.cancel}]]
                     </a>
 
                     <button type="submit" class="btn btn-primary">
-                      <i class="bi bi-check-lg"></i> Save Changes
+                      <i class="bi bi-check-lg"></i> [[#{button.saveChanges}]]
                     </button>
                   </div>
                 </form>

@@ -40,12 +40,12 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="mb-1">My Recipes</h2>
-                        <p class="text-muted">Manage your collection of tasty recipes</p>
+                        <h2 class="mb-1">[[#{nav.myRecipes}]]</h2>
+                        <p class="text-muted">[[#{form.subtitles}]]</p>
                     </div>
                     <div class="d-flex gap-2">
                         <a th:href="@{/recipes/add}" class="btn btn-primary">
-                            <i class="bi bi-plus-circle"></i> New Recipe
+                            <i class="bi bi-plus-circle"></i> [[#{form.addRecipe}]]
                         </a>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                                 <img th:src="${recipe.imageUrl ?: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'}"
                                      class="img-fluid" th:alt="${recipe.title}">
                                 <div th:class="'difficulty-badge ' + ${#strings.toLowerCase(recipe.difficultyLevel)}"
-                                     th:text="${recipe.difficultyLevel}">Medium</div>
+                                     th:text="${#messages.msg('form.' + #strings.toLowerCase(recipe.difficultyLevel))}">Medium</div>
                             </div>
                             <div class="recipe-content">
                                 <h3 th:text="${recipe.title}">Recipe Title</h3>
@@ -81,14 +81,14 @@
                                 <div class="recipe-tags mt-2" th:if="${!#lists.isEmpty(recipe.categories)}">
                                     <span class="tag category-tag"
                                           th:each="category : ${recipe.categories}"
-                                          th:text="${#strings.capitalize(category.name)}"
+                                          th:text="${#messages.msg('form.' + category.name)}"
                                           title="Category">Category</span>
                                 </div>
 
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div>
                                         <span class="status-badge" th:class="'status-badge ' + ${recipe.isPublic ? 'public' : 'private'}"
-                                              th:text="${recipe.isPublic ? 'Public' : 'Private'}">Public</span>
+                                              th:text="${recipe.isPublic ? #messages.msg('status.public') : #messages.msg('status.private')}">Public</span>
                                     </div>
 
                                     <div class="action-buttons">
@@ -101,7 +101,7 @@
 
 
                                         <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}" th:method="DELETE" style="display: inline;"
-                                              onsubmit="return confirm('Delete this recipe?')">
+                                              th:attr="onsubmit=|return confirm('#{confirm.deleteRecipe}');|">
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Recipe">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -117,10 +117,10 @@
                 <div class="text-center py-5" th:if="${#lists.isEmpty(recipes)}">
                     <div class="empty-state">
                         <i class="bi bi-journal-richtext" style="font-size: 4rem; color: #ddd;"></i>
-                        <h3 class="mt-3">No recipes yet</h3>
+                        <h3 class="mt-3">[[#{form.noRecipesYet}]]</h3>
                         <p class="text-muted">You haven't created any recipes yet. Create your first recipe!</p>
                         <a th:href="@{/recipes/add}" class="btn btn-primary mt-3">
-                            <i class="bi bi-plus-circle"></i> Create Your First Recipe
+                            <i class="bi bi-plus-circle"></i> [[#{form.createFirstRecipe}]]
                         </a>
                     </div>
                 </div>

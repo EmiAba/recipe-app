@@ -50,12 +50,12 @@
                             <div class="profile-details mt-3 flex-grow-1">
                                 <div class="detail-item">
                                     <span class="label">[[#{form.firstName}]]:</span>
-                                    <span class="value" th:text="${#strings.isEmpty(user.firstName) ? 'Edit your profile' : user.firstName}">Emi</span>
+                                    <span class="value" th:text="${#strings.isEmpty(user.firstName) ? #messages.msg('form.editYourProfile') : user.firstName}">Emi</span>
                                 </div>
 
                                 <div class="detail-item">
                                     <span class="label">[[#{form.lastName}]]:</span>
-                                    <span class="value" th:text="${#strings.isEmpty(user.lastName) ? 'Edit your profile' : user.lastName}">aba</span>
+                                    <span class="value" th:text="${#strings.isEmpty(user.lastName) ? #messages.msg('form.editYourProfile') : user.lastName}">aba</span>
                                 </div>
                                 <div class="detail-item">
                                     <span class="label">[[#{form.email}]]:</span>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="detail-item">
                                     <span class="label">[[#{form.country}]]:</span>
-                                    <span class="value" th:text="${#strings.isEmpty(user.country) ? 'Edit your profile' : user.country}">Bulgaria</span>
+                                    <span class="value" th:text="${#strings.isEmpty(user.country) ? #messages.msg('form.editYourProfile') : user.country}">Bulgaria</span>
                                 </div>
                             </div>
                             <div class="mt-auto">
@@ -144,15 +144,15 @@
                                             </div>
                                         </td>
                                         <td>
-                                        <span th:text="${!recipe.categories.isEmpty() ? recipe.categories.iterator().next().name : 'No Category'}">
-                                         Category
-                                         </span>
+                                        <span th:if="${!recipe.categories.isEmpty()}"
+                                                th:text="${#messages.msg('form.' + recipe.categories.iterator().next().name)}">
+                                                        Category  </span>
+                                            <span th:if="${recipe.categories.isEmpty()}">[[#{form.noCategory}]]</span>
                                         </td>
-
                                         <td th:text="${#temporals.format(recipe.updatedOn, 'dd MMM yyyy')}">02 May 2025</td>
                                         <td>
-                                            <span th:if="${recipe.isPublic}" class="status-badge public">Public</span>
-                                            <span th:if="${!recipe.isPublic}" class="status-badge private">Private</span>
+                                            <span th:if="${recipe.isPublic}" class="status-badge public">[[#{form.public}]]</span>
+                                            <span th:if="${!recipe.isPublic}" class="status-badge private">[[#{form.private}]]</span>
                                         </td>
                                         <td>
                                             <div class="action-buttons">
@@ -163,7 +163,7 @@
                                     <!-- Empty state -->
                                     <tr th:if="${#lists.isEmpty(recentRecipes)}">
                                         <td colspan="5" class="text-center text-muted py-3">
-                                            No recipes yet. <a th:href="@{/recipes/add}">Create your first recipe!</a>
+                                            [[#{form.noRecipesYet}]] <a th:href="@{/recipes/add}">[[#{form.createFirstRecipe}]]</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -178,7 +178,7 @@
                     <!--  Space for Adding Information -->
                     <div class="col-lg-4">
                         <div class="dashboard-card">
-                            <h3>Quick Actions</h3>
+                            <h3>[[#{form.quickActions}]]</h3>
                             <div class="d-flex flex-column gap-2">
                                 <a th:href="@{/recipes/add}" class="btn btn-primary">
                                     <i class="bi bi-plus-circle me-2"></i>[[#{form.createRecipe}]]
