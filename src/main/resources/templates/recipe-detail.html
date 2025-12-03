@@ -148,7 +148,7 @@
                                     <div class="info-text">
                                         <span class="info-title">[[#{form.difficultyLevel}]]:</span>
                                         <span class="info-value"
-                                              th:text="${#strings.capitalize(#strings.toLowerCase(recipe.difficultyLevel))}">Medium</span>
+                                         th:text="${#messages.msg('form.' + #strings.toLowerCase(recipe.difficultyLevel))}">Medium</span>
                                     </div>
                                 </div>
                             </div>
