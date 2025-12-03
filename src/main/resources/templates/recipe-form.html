@@ -47,7 +47,7 @@
                                     <div class="col-md-8">
                                         <div class="mb-3">
                                             <label class="form-label">[[#{form.recipeTitle}]]</label>
-                                            <input type="text" class="form-control" th:field="*{title}" th:placeholder="#{form.recipeTitlePlaceholder}">>
+                                            <input type="text" class="form-control" th:field="*{title}" th:placeholder="#{form.recipeTitlePlaceholder}">
                                             <p class="alert-warning" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
                                         </div>
 

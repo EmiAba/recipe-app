@@ -163,8 +163,7 @@ body {
 }
 
 .dashboard-card:hover,
-.recipe-card:hover,
-.feature-card:hover {
+.recipe-card:hover{
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     border-color: var(--bright-yellow);
@@ -1240,4 +1239,29 @@ body {
 
 .language-switcher span {
     color: rgba(255,255,255,0.3);
+}
+/* Favorite Recipe Cards */
+
+.favorite-recipe-card {
+    height: 100%;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.favorite-recipe-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-color: var(--bright-yellow);
+}
+
+.favorite-recipe-card:hover .recipe-image img {
+    transform: scale(1.05);
+}
+
+.favorite-recipe-card h3 {
+    color: var(--primary-green);
+    font-weight: var(--fw-bold);
+    margin-bottom: var(--space-md);
 }

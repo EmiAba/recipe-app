@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="${#strings.capitalize(category.name)} + ' Recipes - Recipe Buddy'">Category Recipes - Recipe Buddy</title>
+  <title th:text="${#messages.msg('form.' + category.name)} + ' ' + #{categoryDetail.recipesTitle} + ' - Recipe Buddy'">Category Recipes - Recipe Buddy</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
@@ -17,7 +17,7 @@
 
   <!-- Main Content Area -->
   <div class="main-content">
-      <nav class="top-navbar">
+    <nav class="top-navbar">
       <div class="container-fluid">
         <div class="d-flex align-items-center">
 
@@ -25,7 +25,7 @@
         </div>
         <div class="d-flex align-items-center">
 
-                 <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+          <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
         </div>
       </div>
     </nav>
@@ -39,8 +39,8 @@
           <div>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/categories}">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page" th:text="${#strings.capitalize(category.name)}">Category</li>
+                <li class="breadcrumb-item"><a th:href="@{/categories}">[[#{nav.categories}]]</a></li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${#messages.msg('form.' + category.name)}">Category</li>
               </ol>
             </nav>
           </div>
@@ -65,24 +65,24 @@
               </div>
             </div>
             <div class="col-md-8">
-              <h1 th:text="${#strings.capitalize(category.name)} + ' Recipes'">Category Recipes</h1>
-              <p th:text="${category.description}" class="text-muted">Category description</p>
+              <h1 th:text="${#messages.msg('form.' + category.name)} + ' ' + #{categoryDetail.recipesTitle}">Category Recipes</h1>
+              <p th:text="${#messages.msg('category.desc.' + category.name)}" class="text-muted">Category description</p>
               <div class="d-flex align-items-center gap-3">
 
-                <span class="tag category-tag" th:text="${recipeCount} + '  public recipes'">0 recipes</span>
+                <span class="tag category-tag" th:text="${recipeCount} + ' ' + #{categoryDetail.publicRecipes}">0 recipes</span>
 
 
               </div>
             </div>
             <div class="col-md-2 text-center">
               <a th:href="@{/recipes/add}" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-2"></i>Add Recipe
+                <i class="bi bi-plus-circle me-2"></i>[[#{form.addRecipe}]]
               </a>
             </div>
           </div>
         </div>
 
-                <!-- Recipes Grid -->
+        <!-- Recipes Grid -->
         <div th:if="${not #lists.isEmpty(recipes)}">
           <div class="row g-4">
             <div class="col-md-6 col-lg-4" th:each="recipe : ${recipes}">
@@ -91,7 +91,7 @@
                   <img th:src="${recipe.imageUrl ?: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'}"
                        th:alt="${recipe.title}" class="img-fluid">
                   <div th:class="'difficulty-badge ' + ${#strings.toLowerCase(recipe.difficultyLevel)}"
-                       th:text="${recipe.difficultyLevel}">Medium</div>
+                       th:text="${#messages.msg('form.' + #strings.toLowerCase(recipe.difficultyLevel))}">Medium</div>
                 </div>
                 <div class="recipe-content">
                   <h3 th:text="${recipe.title}">Recipe Title</h3>
@@ -99,23 +99,23 @@
 
                   <div class="recipe-meta">
                     <span><i class="bi bi-clock"></i> <span th:text="${recipe.prepTimeMinutes + recipe.cookTimeMinutes}">45</span> min</span>
-                    <span><i class="bi bi-person"></i> <span th:text="${recipe.servingSize}">4</span> servings</span>
+                    <span><i class="bi bi-people"></i> <span th:text="${recipe.servingSize}">4</span> [[#{form.servings}]]</span>
                   </div>
 
                   <!-- Author Info -->
                   <div class="d-flex align-items-center mt-2 mb-3">
                     <img th:src="'https://ui-avatars.com/api/?name=' + ${recipe.author.username} + '&background=FCDA05&color=20470b'"
                          alt="Author" class="rounded-circle me-2" style="width: 25px; height: 25px;">
-                    <span class="text-muted small">by <span th:text="${recipe.author.username}">Author</span></span>
+                    <span class="text-muted small">[[#{categoryDetail.by}]] <span th:text="${recipe.author.username}">Author</span></span>
                     <span class="text-muted small ms-auto" th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">15 May 2025</span>
                   </div>
 
                   <div class="d-flex justify-content-between align-items-center">
                     <div>
-                      <span class="status-badge public">Public</span>
+                      <span class="status-badge public">[[#{status.public}]]</span>
                     </div>
                     <a th:href="@{'/recipes/' + ${recipe.id}}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-eye"></i> View Recipe
+                      <i class="bi bi-eye"></i> [[#{favorites.viewRecipe}]]
                     </a>
                   </div>
                 </div>
@@ -138,10 +138,10 @@
             <span th:case="'salad'">🥬</span>
             <span th:case="*">🍽️</span>
           </div>
-          <h3 th:text="'No ' + ${#strings.toLowerCase(category.name)} + ' recipes yet'">No recipes yet</h3>
-          <p>Be the first to share a delicious recipe in this category!</p>
+          <h3>[[#{categoryDetail.noRecipesYet}]]</h3>
+          <p>[[#{categoryDetail.beTheFirst}]]</p>
           <a th:href="@{/recipes/add}" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-2"></i>Add First Recipe
+            <i class="bi bi-plus-circle me-2"></i>[[#{categoryDetail.addFirstRecipe}]]
           </a>
         </div>
       </div>

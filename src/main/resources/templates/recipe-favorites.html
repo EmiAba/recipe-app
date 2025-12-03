@@ -42,8 +42,8 @@
         <!-- Success Messages -->
         <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
           <i class="bi bi-check-circle"></i>
-          <span th:if="${param.success[0] == 'added'}">Recipe added to favorites!</span>
-          <span th:if="${param.success[0] == 'removed'}">Recipe removed from favorites!</span>
+          <span th:if="${param.success[0] == 'added'}">[[#{favorites.successAdded}]]</span>
+          <span th:if="${param.success[0] == 'removed'}">[[#{favorites.successRemoved}]]</span>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
@@ -52,13 +52,13 @@
           <div class="favorites-header">
             <h2 class="mb-1">
               <i class="bi bi-heart-fill text-danger me-2"></i>
-              My Favorite Recipes
+              [[#{favorites.title}]]
             </h2>
             <p class="text-muted">
               <span th:text="${#lists.size(favorites)}">0</span>
-              <span th:if="${#lists.size(favorites) == 1}">recipe</span>
-              <span th:if="${#lists.size(favorites) != 1}">recipes</span>
-              you have favorite
+              <span th:if="${#lists.size(favorites) == 1}">[[#{favorites.recipe}]]</span>
+              <span th:if="${#lists.size(favorites) != 1}">[[#{favorites.recipes}]]</span>
+              [[#{favorites.youHave}]]
             </p>
           </div>
         </div>
@@ -73,12 +73,12 @@
                   <img th:src="${recipe.imageUrl ?: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'}"
                        class="img-fluid" th:alt="${recipe.title}">
                   <div th:class="'difficulty-badge ' + ${#strings.toLowerCase(recipe.difficultyLevel)}"
-                       th:text="${recipe.difficultyLevel}">Medium</div>
+                       th:text="${#messages.msg('form.' + #strings.toLowerCase(recipe.difficultyLevel))}">Medium</div>
 
 
                   <div class="favorite-heart">
                     <form th:action="@{'/recipes/' + ${recipe.id} + '/unfavorite'}" th:method="post" style="display: inline;">
-                      <button type="submit" class="btn btn-favorite-remove" title="Remove from favorites">
+                      <button type="submit" class="btn btn-favorite-remove" th:title="#{button.removeFromFavorites}">
                         <i class="bi bi-heart-fill"></i>
                       </button>
                     </form>
@@ -98,18 +98,18 @@
                     <!-- Categories  -->
                     <span class="tag category-tag"
                           th:each="category : ${recipe.categories}"
-                          th:text="${#strings.capitalize(category.name)}"
+                          th:text="${#messages.msg('form.' + category.name)}"
                           title="Category">Category</span>
-
+                  </div>
 
 
                   <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="recipe-date">
-                      <small class="text-muted">Added <span th:text="${#temporals.format(recipe.createdOn, 'MMM dd')}">May 15</span></small>
+                      <small class="text-muted">[[#{favorites.added}]] <span th:text="${#temporals.format(recipe.createdOn, 'MMM dd')}">May 15</span></small>
                     </div>
                     <div class="action-buttons">
                       <a th:href="@{'/recipes/' + ${recipe.id}}" class="btn btn-sm btn-primary">
-                        <i class="bi bi-eye"></i> View Recipe
+                        <i class="bi bi-eye"></i> [[#{favorites.viewRecipe}]]
                       </a>
                     </div>
                   </div>
@@ -124,10 +124,10 @@
           <div class="empty-heart-icon">
             <i class="bi bi-heart"></i>
           </div>
-          <h3 class="mt-4 mb-3">No favorite recipes yet</h3>
-            <div class="d-flex gap-3 justify-content-center">
-                       <a th:href="@{/recipes/add}" class="btn btn-outline-primary">
-              <i class="bi bi-plus-circle"></i> Create Recipe
+          <h3 class="mt-4 mb-3">[[#{favorites.noFavoritesYet}]]</h3>
+          <div class="d-flex gap-3 justify-content-center">
+            <a th:href="@{/recipes/add}" class="btn btn-outline-primary">
+              <i class="bi bi-plus-circle"></i> [[#{form.createRecipe}]]
             </a>
           </div>
         </div>
