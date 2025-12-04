@@ -70,9 +70,14 @@
                                 <div class="recipe-meta">
 
                                     <span><i class="bi bi-clock"></i>
-                                        <span th:if="${recipe.prepTimeMinutes > 0}" th:text="${recipe.prepTimeMinutes} + 'p'">15p</span>
-                                        <span th:if="${recipe.cookTimeMinutes > 0}" th:text="${recipe.cookTimeMinutes} + 'c'">30c</span>
+                                        <span th:if="${recipe.prepTimeMinutes > 0}"   th:text="${recipe.prepTimeMinutes} + #{time.prep.short}">15p</span>
                                     </span>
+
+                                    <span><i class="bi bi-clock"></i>
+                                        <span th:if="${recipe.cookTimeMinutes > 0}"  th:text="${recipe.cookTimeMinutes} + #{time.cook.short}">30c</span>
+                                    </span>
+
+
                                     <span><i class="bi bi-calendar-check"></i>[[#{form.created}]]: <span th:text="${#temporals.format(recipe.createdOn, 'dd MMM yyyy')}">28 Apr 2025</span></span>
                                     <span><i class="bi bi-calendar-check"></i>[[#{form.updated}]]: <span th:text="${#temporals.format(recipe.updatedOn, 'dd MMM yyyy')}">28 Apr 2025</span></span>
                                 </div>
