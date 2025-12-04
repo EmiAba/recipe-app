@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meal Planning - Recipe Buddy</title>
+  <title th:text="#{mealPlanning.title} + ' - Recipe Buddy'">Meal Planning - Recipe Buddy</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
@@ -28,9 +28,9 @@
           <div>
             <h2 class="mb-1">
               <i class="bi bi-calendar-week me-2 text-primary"></i>
-              Meal Planning
+              <span th:text="#{mealPlanning.title}">Meal Planning</span>
             </h2>
-            <p class="text-muted">Plan your meals for the whole week</p>
+            <p class="text-muted" th:text="#{mealPlanning.subtitle}">Plan your meals for the whole week</p>
           </div>
         </div>
         <p class="alert-warning" th:if="${errorMessage}"  th:text="${errorMessage}"></p>
@@ -38,18 +38,18 @@
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <h4 class="mb-1">
-                Week of <span th:text="${#temporals.format(weekStart, 'MMMM dd, yyyy')}">July 15, 2025</span>
+                <span th:text="#{mealPlanning.weekOf}">Week of</span> <span th:text="${#temporals.format(weekStart, 'MMMM dd, yyyy')}">July 15, 2025</span>
               </h4>
             </div>
             <div class="d-flex gap-2">
-              <a th:href="@{/meal-planning(weekStart=${weekStart.minusWeeks(1)})}" class="btn btn-outline-secondary">
-                <i class="bi bi-chevron-left"></i> Previous
+              <a th:href="@{/meal-planning(weekStart=${#temporals.format(weekStart.minusWeeks(1), 'yyyy-MM-dd')})}" class="btn btn-outline-secondary">
+                <i class="bi bi-chevron-left"></i> <span th:text="#{mealPlanning.previous}">Previous</span>
               </a>
               <a th:href="@{/meal-planning}" class="btn btn-outline-primary">
-                <i class="bi bi-calendar-today"></i> This Week
+                <i class="bi bi-calendar-today"></i> <span th:text="#{mealPlanning.thisWeek}">This Week</span>
               </a>
-              <a th:href="@{/meal-planning(weekStart=${weekStart.plusWeeks(1)})}" class="btn btn-outline-secondary">
-                Next <i class="bi bi-chevron-right"></i>
+              <a th:href="@{/meal-planning(weekStart=${#temporals.format(weekStart.plusWeeks(1), 'yyyy-MM-dd')})}" class="btn btn-outline-secondary">
+                <span th:text="#{mealPlanning.next}">Next</span> <i class="bi bi-chevron-right"></i>
               </a>
             </div>
           </div>
@@ -58,7 +58,7 @@
         <div class="dashboard-card">
           <div class="row meal-planning-header mb-3">
             <div class="col-md-2">
-              <h5 class="text-center mb-0">Meal Type</h5>
+              <h5 class="text-center mb-0" th:text="#{mealPlanning.mealType}">Meal Type</h5>
             </div>
             <div class="col meal-day-header" th:each="day : ${#numbers.sequence(0, 6)}">
               <div class="text-center">
@@ -74,7 +74,7 @@
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label breakfast">
                 <i class="bi bi-sunrise"></i>
-                <span>Breakfast</span>
+                <span th:text="#{mealPlanning.breakfast}">Breakfast</span>
               </div>
             </div>
             <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
@@ -84,18 +84,19 @@
                      class="meal-card">
                   <div class="meal-content">
                     <h6 class="meal-name" th:text="${meal.mealName}">Oatmeal with Berries</h6>
-                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">320 cal</p>
+                    <p class="meal-calories" th:if="${meal.calories != null}">
+                      <span th:text="${meal.calories}">320</span> <span th:text="#{mealPlanning.calories}">cal</span>
+                    </p>
                     <div class="meal-actions">
-                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" th:attr="onsubmit='return confirm(\'' + #{mealPlanning.removeMeal} + '\')'">
                         <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
                       </form>
                     </div>
                   </div>
                 </div>
-                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='BREAKFAST', weekStart=${weekStart})}">
-                  <i class="bi bi-plus-circle"></i><span>Add Breakfast</span>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${#temporals.format(weekStart.plusDays(day), 'yyyy-MM-dd')}, mealType='BREAKFAST', weekStart=${#temporals.format(weekStart, 'yyyy-MM-dd')})}">
+                  <i class="bi bi-plus-circle"></i><span th:text="#{mealPlanning.addBreakfast}">Add Breakfast</span>
                 </a>
-
               </div>
             </div>
           </div>
@@ -104,7 +105,7 @@
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label lunch">
                 <i class="bi bi-sun"></i>
-                <span>Lunch</span>
+                <span th:text="#{mealPlanning.lunch}">Lunch</span>
               </div>
             </div>
             <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
@@ -114,16 +115,18 @@
                      class="meal-card">
                   <div class="meal-content">
                     <h6 class="meal-name" th:text="${meal.mealName}">Caesar Salad</h6>
-                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">280 cal</p>
+                    <p class="meal-calories" th:if="${meal.calories != null}">
+                      <span th:text="${meal.calories}">280</span> <span th:text="#{mealPlanning.calories}">cal</span>
+                    </p>
                     <div class="meal-actions">
-                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" th:attr="onsubmit='return confirm(\'' + #{mealPlanning.removeMeal} + '\')'">
                         <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
                       </form>
                     </div>
                   </div>
                 </div>
-                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='LUNCH', weekStart=${weekStart})}">
-                  <i class="bi bi-plus-circle"></i><span>Add Lunch</span>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${#temporals.format(weekStart.plusDays(day), 'yyyy-MM-dd')}, mealType='LUNCH', weekStart=${#temporals.format(weekStart, 'yyyy-MM-dd')})}">
+                  <i class="bi bi-plus-circle"></i><span th:text="#{mealPlanning.addLunch}">Add Lunch</span>
                 </a>
               </div>
             </div>
@@ -133,7 +136,7 @@
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label dinner">
                 <i class="bi bi-moon"></i>
-                <span>Dinner</span>
+                <span th:text="#{mealPlanning.dinner}">Dinner</span>
               </div>
             </div>
             <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
@@ -143,16 +146,18 @@
                      class="meal-card">
                   <div class="meal-content">
                     <h6 class="meal-name" th:text="${meal.mealName}">Grilled Salmon</h6>
-                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">450 cal</p>
+                    <p class="meal-calories" th:if="${meal.calories != null}">
+                      <span th:text="${meal.calories}">450</span> <span th:text="#{mealPlanning.calories}">cal</span>
+                    </p>
                     <div class="meal-actions">
-                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" th:attr="onsubmit='return confirm(\'' + #{mealPlanning.removeMeal} + '\')'">
                         <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
                       </form>
                     </div>
                   </div>
                 </div>
-                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='DINNER', weekStart=${weekStart})}">
-                  <i class="bi bi-plus-circle"></i><span>Add Dinner</span>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${#temporals.format(weekStart.plusDays(day), 'yyyy-MM-dd')}, mealType='DINNER', weekStart=${#temporals.format(weekStart, 'yyyy-MM-dd')})}">
+                  <i class="bi bi-plus-circle"></i><span th:text="#{mealPlanning.addDinner}">Add Dinner</span>
                 </a>
               </div>
             </div>
@@ -162,7 +167,7 @@
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label snack">
                 <i class="bi bi-cup-hot"></i>
-                <span>Snacks</span>
+                <span th:text="#{mealPlanning.snacks}">Snacks</span>
               </div>
             </div>
             <div class="col meal-day-column" th:each="day : ${#numbers.sequence(0, 6)}">
@@ -172,16 +177,18 @@
                      class="meal-card">
                   <div class="meal-content">
                     <h6 class="meal-name" th:text="${meal.mealName}">Mixed Nuts</h6>
-                    <p class="meal-calories" th:if="${meal.calories != null}" th:text="${meal.calories + ' cal'}">180 cal</p>
+                    <p class="meal-calories" th:if="${meal.calories != null}">
+                      <span th:text="${meal.calories}">180</span> <span th:text="#{mealPlanning.calories}">cal</span>
+                    </p>
                     <div class="meal-actions">
-                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" onsubmit="return confirm('Remove this meal from your plan?')">
+                      <form th:action="@{'/meal-planning/' + ${meal.id} + '/delete'}" th:method="DELETE" th:attr="onsubmit='return confirm(\'' + #{mealPlanning.removeMeal} + '\')'">
                         <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove meal"><i class="bi bi-trash"></i></button>
                       </form>
                     </div>
                   </div>
                 </div>
-                <a class="add-meal-btn" th:href="@{/meal-planning(date=${weekStart.plusDays(day)}, mealType='SNACK', weekStart=${weekStart})}">
-                  <i class="bi bi-plus-circle"></i><span>Add Snack</span>
+                <a class="add-meal-btn" th:href="@{/meal-planning(date=${#temporals.format(weekStart.plusDays(day), 'yyyy-MM-dd')}, mealType='SNACK', weekStart=${#temporals.format(weekStart, 'yyyy-MM-dd')})}">
+                  <i class="bi bi-plus-circle"></i><span th:text="#{mealPlanning.addSnack}">Add Snack</span>
                 </a>
               </div>
             </div>
@@ -192,7 +199,7 @@
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5>
               <i class="bi bi-plus-circle me-2 text-primary"></i>
-              Add Meal to Plan
+              <span th:text="#{mealPlanning.addMealTitle}">Add Meal to Plan</span>
             </h5>
             <a th:href="@{/meal-planning}" class="btn btn-outline-secondary btn-sm">
               <i class="bi bi-x"></i> Cancel
@@ -202,11 +209,11 @@
           <div th:object="${mealPlanAddRequest}">
             <p class="alert-warning" th:if="${#fields.hasErrors('plannedDate')}" th:errors="*{plannedDate}"></p>
             <p class="alert-warning" th:if="${#fields.hasErrors('recipeId')}" th:errors="*{recipeId}"></p>
-            </div>
+          </div>
 
           <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            <strong>Planning for:</strong>
+            <strong th:text="#{mealPlanning.planningFor}">Planning for:</strong>
             <span th:text="${param.date != null ? param.date[0] : selectedDate}">2025-07-15</span>
             /
             <span th:text="${param.mealType != null ? param.mealType[0] : selectedMealType}">BREAKFAST</span>
@@ -218,9 +225,9 @@
             <input type="hidden" name="mealType" th:value="${param.mealType != null ? param.mealType[0] : selectedMealType}"/>
 
             <div class="mb-3">
-              <label for="recipeSelect" class="form-label">Choose Recipe:</label>
+              <label for="recipeSelect" class="form-label" th:text="#{mealPlanning.chooseRecipe}">Choose Recipe:</label>
               <select class="form-select" id="recipeSelect" name="recipeId" >
-                <option value="">Select a recipe...</option>
+                <option value="" th:text="#{mealPlanning.selectRecipe}">Select a recipe...</option>
                 <option th:each="recipe : ${userRecipes}"
                         th:value="${recipe.id}"
                         th:text="${recipe.title}">
@@ -229,7 +236,7 @@
             </div>
 
             <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i> Add to Plan</button>
+              <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i> <span th:text="#{mealPlanning.addToPlan}">Add to Plan</span></button>
               <a th:href="@{/meal-planning}" class="btn btn-outline-secondary">Cancel</a>
             </div>
           </form>
