@@ -53,10 +53,7 @@ public class MealPlanningController {
         modelAndView.addObject("weeklyMealPlans", weeklyMealPlans);
         modelAndView.addObject("userRecipes", userRecipes);
         modelAndView.addObject("weekStart", displayWeekStart);
-        modelAndView.addObject("weekStartString", displayWeekStart.toString());
         modelAndView.addObject("mealPlanAddRequest", new MealPlanAddRequest());
-
-
         modelAndView.addObject("selectedDate", date);
         modelAndView.addObject("selectedMealType", mealType);
 
