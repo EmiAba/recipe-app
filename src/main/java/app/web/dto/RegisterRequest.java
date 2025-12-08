@@ -12,18 +12,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class RegisterRequest {
-    @NotBlank
-    @Size(min=6, max=25, message="Username must be at least 6 symbols and no more than 25 symbols")
-     private String username;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Enter a valid email")
+    @NotBlank(message = "{validation.username.required}")
+    @Size(min=6, max=25, message="{validation.username.size}")
+    private String username;
+
+    @NotBlank(message = "{validation.email.required}")
+    @Email(message = "{validation.email.format}")
     private String email;
 
-    @NotBlank
-    @Size(min=6, message="Password must be at least 6 symbols")
+    @NotBlank(message = "{validation.password.required}")
+    @Size(min=6, message="{validation.password.size}")
     private String password;
-
 }
