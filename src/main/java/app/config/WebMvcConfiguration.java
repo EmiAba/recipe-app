@@ -38,8 +38,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
 
 
-
-
         return http.build();
     }
 
@@ -61,7 +59,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(localeChangeInterceptor())
+                .addPathPatterns("/**"); ;
     }
 
 }

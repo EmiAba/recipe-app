@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Buddy - Sign Up</title>
+    <title>Recipe Buddy - [[#{register.title}]]</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
@@ -14,8 +14,14 @@
 <nav class="navbar navbar-expand navbar-dark">
     <div class="container">
         <a class="navbar-brand fw-bold" href="/">🍕 Recipe Buddy</a>
-        <div class="ms-auto">
-            <a href="/login" class="btn btn-outline-light">Login</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <!-- Language Switcher -->
+            <div class="language-switcher">
+                <a th:href="@{/register(lang='en')}" th:classappend="${#locale.language == 'en'} ? 'active' : ''" class="text-light">EN</a>
+                <span class="text-light">|</span>
+                <a th:href="@{/register(lang='bg')}" th:classappend="${#locale.language == 'bg'} ? 'active' : ''" class="text-light">БГ</a>
+            </div>
+            <a href="/login" class="btn btn-outline-light">[[#{register.loginButton}]]</a>
         </div>
     </div>
 </nav>
@@ -27,26 +33,25 @@
             <div class="col-md-8 col-lg-6">
                 <div class="register-card">
                     <div class="text-center mb-4">
-                        <h1 class="mb-3">Create Your Account</h1>
-                        <p class="text-muted">Join our community and start saving your favorite recipes!</p>
+                        <h1 class="mb-3">[[#{register.heading}]]</h1>
+                        <p class="text-muted">[[#{register.subtitle}]]</p>
                     </div>
 
                     <form th:action="@{/register}" th:method="POST" th:object="${registerRequest}">
                         <!-- Username -->
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
+                            <label for="username" class="form-label">[[#{register.username}]]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
                                 <input type="text" class="form-control" id="username" name="username" th:field="*{username}" required>
                             </div>
                             <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
                             <p class="alert-warning" th:if="${usernameAlreadyExistMessage}" th:text="${usernameAlreadyExistMessage}"></p>
-
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
+                            <label for="email" class="form-label">[[#{register.email}]]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
                                 <input type="text" class="form-control" id="email" name="email" th:field="*{email}" required>
@@ -56,7 +61,7 @@
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label">[[#{register.password}]]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                                 <input type="password" class="form-control" id="password" name="password" th:field="*{password}" required>
@@ -64,19 +69,15 @@
                             <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                         </div>
 
-
-
                         <!-- Submit Button -->
                         <div class="d-grid">
-                            <button class="btn btn-primary btn-lg">Create Account</button>
+                            <button class="btn btn-primary btn-lg">[[#{register.createButton}]]</button>
                         </div>
                     </form>
 
                     <div class="mt-4 text-center">
-                        <p>Already have an account? <a href="/login" class="login-link">Log in</a></p>
+                        <p>[[#{register.alreadyHaveAccount}]] <a href="/login" class="login-link">[[#{register.loginLink}]]</a></p>
                     </div>
-
-
                 </div>
             </div>
         </div>

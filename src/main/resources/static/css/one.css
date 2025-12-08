@@ -1240,6 +1240,45 @@ body {
 .language-switcher span {
     color: rgba(255,255,255,0.3);
 }
+
+/* Language Switcher for Navbar (yellow background) */
+.navbar .language-switcher {
+    padding: 0;
+    border: none;
+    margin: 0;
+    gap: 8px;
+}
+
+.navbar .language-switcher a {
+    color: white;
+    background-color: var(--primary-green);
+    text-decoration: none;
+    font-weight: var(--fw-bold);
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 18px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.navbar .language-switcher a:hover {
+    background-color: #2d5f10;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.navbar .language-switcher a.active {
+    background-color: var(--coral);
+    color: white;
+}
+
+.navbar .language-switcher span {
+    color: var(--primary-green);
+    font-weight: var(--fw-bold);
+    margin: 0 2px;
+}
+
+
 /* Favorite Recipe Cards */
 
 .favorite-recipe-card {
