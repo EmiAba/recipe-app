@@ -52,24 +52,23 @@
                   <!-- Category Emoji -->
                   <div class="text-center mb-3 mt-3">
                     <div th:switch="${category.name}" class="category-emoji">
-                      <span th:case="'breakfast'">🍳</span>
-                      <span th:case="'lunch'">🥗</span>
-                      <span th:case="'dinner'">🍽️</span>
-                      <span th:case="'dessert'">🍰</span>
-                      <span th:case="'appetizer'">🥖</span>
-                      <span th:case="'snack'">🍿</span>
-                      <span th:case="'drink'">🥤</span>
-                      <span th:case="'soup'">🍲</span>
-                      <span th:case="'salad'">🥬</span>
+                      <span th:case="'Breakfast'">🍳</span>
+                      <span th:case="'Lunch'">🥗</span>
+                      <span th:case="'Dinner'">🍽️</span>
+                      <span th:case="'Dessert'">🍰</span>
+                      <span th:case="'Appetizer'">🥖</span>
+                      <span th:case="'Snack'">🍿</span>
+                      <span th:case="'Drink'">🥤</span>
+                      <span th:case="'Soup'">🍲</span>
+                      <span th:case="'Salad'">🥬</span>
                       <span th:case="*">🍽️</span>
                     </div>
                   </div>
 
                   <!-- Category Content -->
                   <div class="recipe-content text-center">
-                    <h3 th:text="${#messages.msg('form.' + category.name)}">Category</h3>
-                    <p th:text="${#messages.msg('category.desc.' + category.name)}" class="text-muted">Category description</p>
-
+                    <h3 th:text="${#messages.msg('form.' + #strings.toLowerCase(category.name))}">Category</h3>
+                    <p th:text="${#messages.msg('category.desc.' + #strings.toLowerCase(category.name))}" class="text-muted">Category description</p>
                     <!-- Recipe Count -->
                     <div class="mt-3">
                       <span class="tag category-tag" th:text="${categoryCounts[category.name]} + ' ' + #{categories.recipes}">0 recipes</span>

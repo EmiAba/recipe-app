@@ -65,8 +65,8 @@
               </div>
             </div>
             <div class="col-md-8">
-              <h1 th:text="${#messages.msg('form.' + category.name)} + ' ' + #{categoryDetail.recipesTitle}">Category Recipes</h1>
-              <p th:text="${#messages.msg('category.desc.' + category.name)}" class="text-muted">Category description</p>
+              <h1 th:text="${#messages.msg('form.' + #strings.toLowerCase(category.name))} + ' ' + #{categoryDetail.recipesTitle}">Category Recipes</h1>
+              <p th:text="${#messages.msg('category.desc.' + #strings.toLowerCase(category.name))}" class="text-muted">Category description</p>
               <div class="d-flex align-items-center gap-3">
 
                 <span class="tag category-tag" th:text="${recipeCount} + ' ' + #{categoryDetail.publicRecipes}">0 recipes</span>
