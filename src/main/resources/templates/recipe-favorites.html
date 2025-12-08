@@ -98,7 +98,7 @@
                     <!-- Categories  -->
                     <span class="tag category-tag"
                           th:each="category : ${recipe.categories}"
-                          th:text="${#messages.msg('form.' + category.name)}"
+                          th:text="${#messages.msg('form.' + #strings.toLowerCase(category.name))}"
                           title="Category">Category</span>
                   </div>
 
