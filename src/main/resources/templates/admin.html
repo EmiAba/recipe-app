@@ -125,6 +125,18 @@
                         [[#{admin.removeAdmin}]]
                       </button>
                     </form>
+
+                    <!-- Block/Unblock User -->
+                    <form th:action="@{/admin/users/{id}/toggle-status(id=${user.id})}"
+                          method="post" class="d-inline">
+                      <input type="hidden" name="_method" value="PATCH">
+                      <button type="submit"
+                              th:class="'btn btn-sm ' + (${user.isActive()} ? 'btn-outline-danger' : 'btn-outline-success')"
+                              th:disabled="${user.role.name() == 'ADMIN'}">
+                        <i th:class="'bi ' + (${user.isActive()} ? 'bi-lock' : 'bi-unlock')"></i>
+                        <span th:text="${user.isActive()} ? #{admin.block} : #{admin.unblock}"></span>
+                      </button>
+                    </form>
                   </div>
                 </td>
               </tr>

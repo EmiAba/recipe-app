@@ -132,6 +132,24 @@ public class UserService implements UserDetailsService {
     public long getUserCount() {
         return  userRepository.countByRole(UserRole.USER);
     }
+
+
+    // Block Users
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void toggleUserActiveStatus(UUID userId) {
+        User user = getById(userId);
+
+        if (user.getRole() == UserRole.ADMIN && user.isActive()) {
+            throw new IllegalStateException("Cannot block admin users!");
+        }
+
+        user.setActive(!user.isActive());
+        user.setUpdatedOn(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
        User user= userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with this username does not exist."));

@@ -51,4 +51,12 @@ public class AdminController {
     }
 
 
+    //block users
+    @PatchMapping("/users/{userId}/toggle-status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String toggleUserStatus(@PathVariable UUID userId) {
+        userService.toggleUserActiveStatus(userId);
+        return "redirect:/admin";
+    }
+
 }

@@ -1,5 +1,6 @@
 package app.config;
 
+import app.security.CustomAuthenticationFailureHandler;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,8 @@ import java.util.Locale;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   CustomAuthenticationFailureHandler failureHandler) throws Exception {  // DOBAVI failureHandler
         http
                 .authorizeHttpRequests(matchers -> matchers
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -30,18 +32,14 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/home", true)
-                        .failureUrl("/login?error")
+                        .failureHandler(failureHandler)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/"));
 
-
-
         return http.build();
     }
-
-
 
     @Bean
     public LocaleResolver localeResolver() {
@@ -60,10 +58,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor())
-                .addPathPatterns("/**"); ;
+                .addPathPatterns("/**");
     }
-
 }
-
-
-
