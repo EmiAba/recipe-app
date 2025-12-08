@@ -145,7 +145,7 @@
                                         </td>
                                         <td>
                                         <span th:if="${!recipe.categories.isEmpty()}"
-                                                th:text="${#messages.msg('form.' + recipe.categories.iterator().next().name)}">
+                                              th:text="${#messages.msg('form.' + #strings.toLowerCase(recipe.categories.iterator().next().name))}">
                                                         Category  </span>
                                             <span th:if="${recipe.categories.isEmpty()}">[[#{form.noCategory}]]</span>
                                         </td>
