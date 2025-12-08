@@ -24,8 +24,8 @@ public class CommentScheduler {
         this.commentRepository = commentRepository;
     }
 
-    @Scheduled(cron = "0 */1 * * * ?")
-    // @Scheduled(cron = "0 0 2 * * ?")
+
+     @Scheduled(cron = "0 0 2 * * ?")
     @Transactional(readOnly = true)
     public void dailyCommentReport() {
         log.info("Generating daily comment report");
@@ -40,8 +40,8 @@ public class CommentScheduler {
                 totalComments, usersWithComments, totalUsers);
     }
 
-    @Scheduled(fixedRate = 60000)
-    // @Scheduled(fixedRate = 1800000)
+
+   @Scheduled(fixedRate = 1800000)
     @Transactional(readOnly = true)
     public void recipeCommentAnalysis() {
         log.info("Analyzing recipe comment coverage");
