@@ -14,13 +14,16 @@
 <nav class="navbar navbar-expand navbar-dark">
     <div class="container">
         <a class="navbar-brand fw-bold" href="/">🍕 Recipe Buddy</a>
+
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <a th:href="@{/register(lang='en')}" th:classappend="${#locale.language == 'en'} ? 'active' : ''" class="text-light">EN</a>
+            <span class="text-light">|</span>
+            <a th:href="@{/register(lang='bg')}" th:classappend="${#locale.language == 'bg'} ? 'active' : ''" class="text-light">БГ</a>
+        </div>
         <div class="ms-auto d-flex align-items-center gap-3">
-            <!-- Language Switcher -->
-            <div class="language-switcher">
-                <a th:href="@{/register(lang='en')}" th:classappend="${#locale.language == 'en'} ? 'active' : ''" class="text-light">EN</a>
-                <span class="text-light">|</span>
-                <a th:href="@{/register(lang='bg')}" th:classappend="${#locale.language == 'bg'} ? 'active' : ''" class="text-light">БГ</a>
-            </div>
+
+
             <a href="/login" class="btn btn-outline-light">[[#{register.loginButton}]]</a>
         </div>
     </div>
