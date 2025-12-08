@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,13 +9,23 @@
     <link th:href="@{/css/one.css}" rel="stylesheet">
 </head>
 <body>
+
 <!-- Navigation -->
 <nav class="navbar navbar-expand navbar-dark">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#">🍕 Recipe Buddy</a>
-        <div class="ms-auto">
-            <a th:href="@{/login}" class="btn btn-sm btn-outline-light me-2">Login</a>
-            <a th:href="@{/register}" class="btn btn-sm btn-light">Register</a>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+
+            <!-- Language Switcher -->
+            <div class="language-switcher">
+                <a th:href="@{''(lang='en')}" th:classappend="${#locale.language == 'en'} ? 'active' : ''">EN</a>
+                <span>|</span>
+                <a th:href="@{''(lang='bg')}" th:classappend="${#locale.language == 'bg'} ? 'active' : ''">БГ</a>
+            </div>
+
+            <a th:href="@{/login}" class="btn btn-sm btn-outline-light me-2">[[#{index.login}]]</a>
+            <a th:href="@{/register}" class="btn btn-sm btn-light">[[#{index.register}]]</a>
         </div>
     </div>
 </nav>
@@ -23,10 +33,11 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="container text-center">
-        <h1 class="mb-4">Delicious Recipes<br>In Your Pocket</h1>
-        <p class="mb-4">Cook, share, and enjoy amazing meals!</p>
+        <h1 class="mb-4">[[#{index.heroTitle}]]</h1>
+        <p class="mb-4">[[#{index.heroSubtitle}]]</p>
+
         <div class="d-flex justify-content-center gap-3">
-            <a href="/recipes" class="btn btn-primary btn-lg">Browse Recipes</a>
+            <a href="/recipes" class="btn btn-primary btn-lg">[[#{index.browseRecipes}]]</a>
         </div>
     </div>
 </section>
@@ -39,32 +50,35 @@
             <div class="col-6">
                 <div class="feature-card">
                     <div class="icon">📝</div>
-                    <h3>Create</h3>
-                    <p>Save your own recipes</p>
+                    <h3>[[#{index.create}]]</h3>
+                    <p>[[#{index.createDesc}]]</p>
                 </div>
             </div>
+
             <div class="col-6">
                 <div class="feature-card">
                     <div class="icon">🗓️</div>
-                    <h3>Meal Panning</h3>
-                    <p>Plan what to eat day by day</p>
+                    <h3>[[#{index.mealPlanning}]]</h3>
+                    <p>[[#{index.mealPlanningDesc}]]</p>
                 </div>
             </div>
+
             <div class="col-6">
                 <div class="feature-card">
                     <div class="icon">🏷️</div>
-                    <h3>Categories</h3>
-                    <p>Organize your recipes</p>
+                    <h3>[[#{index.categories}]]</h3>
+                    <p>[[#{index.categoriesDesc}]]</p>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="feature-card">
                     <div class="icon">❤️</div>
-                    <h3>Favorites</h3>
-                    <p>Save recipes, you love</p>
+                    <h3>[[#{index.favorites}]]</h3>
+                    <p>[[#{index.favoritesDesc}]]</p>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
@@ -72,31 +86,31 @@
 <!-- Extended Features -->
 <section class="features-extended py-5">
     <div class="container">
-        <h2 class="text-center mb-4">All Your Cooking Needs</h2>
-        <div class="row g-4">
+        <h2 class="text-center mb-4">[[#{index.allCookingNeeds}]]</h2>
 
+        <div class="row g-4">
 
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon">💬</div>
-                    <h3>Comments</h3>
-                    <p>Share feedback and tips with other cooks</p>
+                    <h3>[[#{index.comments}]]</h3>
+                    <p>[[#{index.commentsDesc}]]</p>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon">👩‍🍳</div>
-                    <h3>Community</h3>
-                    <p>Find friends in crime</p>
+                    <h3>[[#{index.community}]]</h3>
+                    <p>[[#{index.communityDesc}]]</p>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon">📖</div>
-                    <h3> Tips</h3>
-                    <p>Find nice tips</p>
+                    <h3>[[#{index.tips}]]</h3>
+                    <p>[[#{index.tipsDesc}]]</p>
                 </div>
             </div>
 

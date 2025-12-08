@@ -1242,14 +1242,7 @@ body {
 }
 
 /* Language Switcher for Navbar (yellow background) */
-.navbar .language-switcher {
-    padding: 0;
-    border: none;
-    margin: 0;
-    gap: 8px;
-}
-
-.navbar .language-switcher a {
+.language-switcher a {
     color: white;
     background-color: var(--primary-green);
     text-decoration: none;
@@ -1261,21 +1254,26 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
-.navbar .language-switcher a:hover {
-    background-color: #2d5f10;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+
+.language-switcher a:hover {
+    background-color: #cfe1c3;
+    transform: translateY(-2px);
 }
 
-.navbar .language-switcher a.active {
-    background-color: var(--coral);
+
+.language-switcher a:active {
+    transform: scale(0.92) translateY(1px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     color: white;
+
 }
 
-.navbar .language-switcher span {
-    color: var(--primary-green);
-    font-weight: var(--fw-bold);
-    margin: 0 2px;
+
+.language-switcher a.active {
+    background-color: #b8d9a0 !important;
+    border-color: #88b36c !important;
+    color: #20470b !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 
