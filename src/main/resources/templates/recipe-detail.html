@@ -174,10 +174,26 @@
                             </div>
 
                             <!-- Recipe Ingredients -->
+
                             <div class="recipe-section">
                                 <h3>[[#{form.ingredients}]]:</h3>
                                 <div class="ingredients-list">
-                                    <p th:text="${recipe.ingredients}">Ingredients list</p>
+                                    <ul class="list-unstyled">
+                                        <li th:each="ri : ${recipe.recipeIngredients}" class="ingredient-item mb-2">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            <strong th:text="${ri.quantity} + ' ' + ${ri.unit}">2 cups</strong>
+                                            <span th:text="${ri.ingredient.name}">flour</span>
+                                            <span th:if="${ri.notes != null and !#strings.isEmpty(ri.notes)}"
+                                                  class="text-muted fst-italic">
+                    (<span th:text="${ri.notes}">sifted</span>)
+                </span>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Fallback if no ingredients -->
+                                    <p th:if="${#lists.isEmpty(recipe.recipeIngredients)}" class="text-muted">
+                                        <i class="bi bi-info-circle"></i> No ingredients listed yet.
+                                    </p>
                                 </div>
                             </div>
 

@@ -1,10 +1,13 @@
 package app.web.dto;
 
 import app.recipe.model.DifficultyLevel;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -44,8 +47,8 @@ public class RecipeCreateRequest {
 
     private Boolean isPublic = true;
 
-    @NotBlank(message = "Ingredients are required")
-    private String ingredients;
+    @Valid
+    private List<RecipeIngredientRequest> recipeIngredients = new ArrayList<>();
 
     private Integer calories;
     private Double protein;

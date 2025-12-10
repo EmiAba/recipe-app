@@ -142,15 +142,82 @@
                                 <div class="section-divider"></div>
 
                                 <!-- Ingredients Section -->
-                                <h4 class="mb-3">[[#{form.ingredients}]]</h4>
-                                <div class="mb-3">
 
-                                    <textarea class="form-control" th:field="*{ingredients}" rows="6"
-                                              th:placeholder="'Enter ingredients (one per line):\n2 cups all-purpose flour\n1 tsp salt\n3 large eggs\n1/2 cup milk'">
-                                    </textarea>
-                                    <div class="form-text">[[#{form.textI}]].</div>
-                                    <p class="alert-warning" th:if="${#fields.hasErrors('ingredients')}"
-                                       th:errors="*{ingredients}"></p>
+                                <h4 class="mb-3">[[#{form.ingredients}]]</h4>
+                                <div id="ingredientsContainer">
+                                    <div th:each="ingredient, stat : *{recipeIngredients}" class="ingredient-row mb-3">
+                                        <div class="row g-2">
+                                            <div class="col-md-4">
+                                                <label th:for="'ingredientName' + ${stat.index}" class="form-label">Ingredient Name</label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       th:field="*{recipeIngredients[__${stat.index}__].ingredientName}"
+                                                       th:id="'ingredientName' + ${stat.index}"
+                                                       placeholder="e.g., Tomatoes, Chicken, Olive Oil">
+                                                <p class="alert-warning"
+                                                   th:if="${#fields.hasErrors('recipeIngredients[' + stat.index + '].ingredientName')}"
+                                                   th:errors="*{recipeIngredients[__${stat.index}__].ingredientName}"></p>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label th:for="'quantity' + ${stat.index}" class="form-label">Quantity</label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       th:field="*{recipeIngredients[__${stat.index}__].quantity}"
+                                                       th:id="'quantity' + ${stat.index}"
+                                                       placeholder="2, 1/2, 3.5">
+                                                <p class="alert-warning"
+                                                   th:if="${#fields.hasErrors('recipeIngredients[' + stat.index + '].quantity')}"
+                                                   th:errors="*{recipeIngredients[__${stat.index}__].quantity}"></p>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label th:for="'unit' + ${stat.index}" class="form-label">Unit</label>
+                                                <select class="form-select"
+                                                        th:field="*{recipeIngredients[__${stat.index}__].unit}"
+                                                        th:id="'unit' + ${stat.index}">
+                                                    <option value="">Select</option>
+                                                    <option value="cup">Cup</option>
+                                                    <option value="tbsp">Tbsp</option>
+                                                    <option value="tsp">Tsp</option>
+                                                    <option value="g">Gram</option>
+                                                    <option value="kg">Kg</option>
+                                                    <option value="ml">ml</option>
+                                                    <option value="l">Liter</option>
+                                                    <option value="piece">Piece</option>
+                                                    <option value="clove">Clove</option>
+                                                    <option value="slice">Slice</option>
+                                                </select>
+                                                <p class="alert-warning"
+                                                   th:if="${#fields.hasErrors('recipeIngredients[' + stat.index + '].unit')}"
+                                                   th:errors="*{recipeIngredients[__${stat.index}__].unit}"></p>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label th:for="'notes' + ${stat.index}" class="form-label">Notes (Optional)</label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       th:field="*{recipeIngredients[__${stat.index}__].notes}"
+                                                       th:id="'notes' + ${stat.index}"
+                                                       placeholder="e.g., diced, chopped, room temp">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text mb-3">
+                                    <i class="bi bi-info-circle"></i> Fill in as many ingredients as needed. Empty rows will be ignored.
+                                </div>
+
+
+                                <div class="section-divider"></div>
+
+                                <!-- Ingredients Section -->
+                                <h4 class="mb-3">[[#{form.ingredients}]]</h4>
+                                <div id="ingredientsContainer">
+                                    ...
+                                </div>
+                                <div class="form-text mb-3">
+                                    <i class="bi bi-info-circle"></i> Fill in as many ingredients as needed. Empty rows will be ignored.
                                 </div>
 
                                 <div class="section-divider"></div>
@@ -158,14 +225,13 @@
                                 <!-- Instructions Section -->
                                 <h4 class="mb-3">[[#{form.instructions}]]</h4>
                                 <div class="mb-3">
-
-                                    <textarea class="form-control" th:field="*{instructions}" rows="6"
-                                              placeholder="#{form.instructionsPlaceholder}"></textarea>
-                                    <p class="alert-warning" th:if="${#fields.hasErrors('instructions')}"
-                                       th:errors="*{instructions}"></p>
+                                    <textarea class="form-control" th:field="*{instructions}" rows="6" th:placeholder="#{form.instructionsPlaceholder}"></textarea>
+                                    <p class="alert-warning" th:if="${#fields.hasErrors('instructions')}" th:errors="*{instructions}"></p>
                                 </div>
 
                                 <div class="section-divider"></div>
+
+                                <!-- Categories Section -->
 
                                 <!-- Categories Section -->
                                 <div class="row">

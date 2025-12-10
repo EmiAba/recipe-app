@@ -23,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ public class RecipeController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-form");
-        modelAndView.addObject("recipeCreateRequest",  new RecipeCreateRequest());
+        modelAndView.addObject("recipeCreateRequest", RecipeMapper.createEmptyRecipeRequest(5));
         modelAndView.addObject("categories", categoryService.getAllCategories());
         modelAndView.addObject("user", user);
         return modelAndView;
@@ -71,19 +72,18 @@ public class RecipeController {
 
         if (bindingResult.hasErrors()) {
 
+            RecipeMapper.ensureMinimumIngredients(recipeCreateRequest, 5);
 
             ModelAndView modelAndView = new ModelAndView("recipe-form");
+            modelAndView.addObject("recipeCreateRequest", recipeCreateRequest);
             modelAndView.addObject("categories", categoryService.getAllCategories());
             modelAndView.addObject("user", user);
             return modelAndView;
         }
 
-
         Recipe createdRecipe = recipeService.createRecipe(recipeCreateRequest, user);
         return new ModelAndView("redirect:/recipes/" + createdRecipe.getId());
     }
-
-
     @GetMapping("/{recipeId}")
     public ModelAndView viewRecipe(@PathVariable UUID recipeId,
                                    @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
@@ -131,16 +131,17 @@ public class RecipeController {
         User user = userService.getById(authenticationMethadata.getUserId());
         Recipe recipe = recipeService.getById(recipeId);
 
+        RecipeUpdateRequest recipeUpdateRequest = RecipeMapper.toUpdateRequest(recipe);
+        RecipeMapper.ensureMinimumIngredients(recipeUpdateRequest, 5);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("recipe-edit");
-        modelAndView.addObject("recipeUpdateRequest",  RecipeMapper.toUpdateRequest(recipe));
+        modelAndView.addObject("recipeUpdateRequest", recipeUpdateRequest);
         modelAndView.addObject("recipeId", recipeId);
         modelAndView.addObject("categories", categoryService.getAllCategories());
         modelAndView.addObject("user", user);
         return modelAndView;
     }
-
     @PutMapping("/{recipeId}")
     public ModelAndView updateRecipe(@PathVariable UUID recipeId,
                                      @Valid RecipeUpdateRequest recipeUpdateRequest,
@@ -150,6 +151,8 @@ public class RecipeController {
         User user = userService.getById(authenticationMethadata.getUserId());
 
         if (bindingResult.hasErrors()) {
+
+            RecipeMapper.ensureMinimumIngredients(recipeUpdateRequest, 5);
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("recipe-edit");
             modelAndView.addObject("recipeUpdateRequest", recipeUpdateRequest);
@@ -162,7 +165,6 @@ public class RecipeController {
         Recipe updatedRecipe = recipeService.updateRecipe(recipeId, recipeUpdateRequest, user);
         return new ModelAndView("redirect:/recipes/" + updatedRecipe.getId());
     }
-
 
     @DeleteMapping("/{recipeId}/delete")
     public ModelAndView deleteRecipe(@PathVariable UUID recipeId,

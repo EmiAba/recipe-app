@@ -3,6 +3,7 @@ package app.recipe.model;
 
 import app.category.model.Category;
 import app.comment.model.Comment;
+import app.recipeingredient.model.RecipeIngredient;
 import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -60,8 +61,10 @@ public class Recipe {
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
-    @Column(columnDefinition = "TEXT")
-    private String ingredients;
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdOn ASC")
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+
 
     private Integer calories;
     private Double protein;

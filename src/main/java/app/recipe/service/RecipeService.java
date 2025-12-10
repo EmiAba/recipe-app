@@ -3,7 +3,11 @@ package app.recipe.service;
 import app.category.model.Category;
 import app.exception.RecipeNotFoundException;
 import app.exception.UnauthorizedAccessException;
+import app.ingredient.model.Ingredient;
+import app.ingredient.service.IngredientService;
+import app.recipeingredient.model.RecipeIngredient;
 import app.user.service.UserService;
+import app.web.dto.RecipeIngredientRequest;
 import app.web.dto.RecipeUpdateRequest;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -35,17 +39,19 @@ public class RecipeService {
     private final CategoryService categoryService;
 
     private final UserService userService;
+    private final IngredientService  ingredientService;
 
 
 
     public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService,
-                         UserService userService) {
+                         UserService userService, IngredientService ingredientService) {
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
 
 
         this.userService = userService;
 
+        this.ingredientService = ingredientService;
     }
 
 
@@ -63,7 +69,6 @@ public class RecipeService {
                 .imageUrl(recipeCreateRequest.getImageUrl())
                 .isPublic(recipeCreateRequest.getIsPublic())
                 .author(author)
-                .ingredients(recipeCreateRequest.getIngredients())
                 .calories(recipeCreateRequest.getCalories())
                 .protein(recipeCreateRequest.getProtein())
                 .carbs(recipeCreateRequest.getCarbs())
@@ -74,9 +79,39 @@ public class RecipeService {
                 .categories(categories)
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
+                .recipeIngredients(new ArrayList<>())
                 .build();
 
-        return recipeRepository.save(recipe);
+
+        recipe = recipeRepository.save(recipe);
+
+
+        if (recipeCreateRequest.getRecipeIngredients() != null &&
+                !recipeCreateRequest.getRecipeIngredients().isEmpty()) {
+
+            for (RecipeIngredientRequest ingReq : recipeCreateRequest.getRecipeIngredients()) {
+
+                if (ingReq.getIngredientName() == null || ingReq.getIngredientName().isBlank()) {
+                    continue;
+                }
+
+                Ingredient ingredient = ingredientService.findOrCreateIngredient(ingReq.getIngredientName());
+
+                RecipeIngredient recipeIngredient = RecipeIngredient.builder()
+                        .recipe(recipe)
+                        .ingredient(ingredient)
+                        .quantity(ingReq.getQuantity())
+                        .unit(ingReq.getUnit())
+                        .notes(ingReq.getNotes())
+                        .build();
+
+                recipe.getRecipeIngredients().add(recipeIngredient);
+            }
+
+            recipe = recipeRepository.save(recipe);
+        }
+
+        return recipe;
     }
 
     public Recipe getById(UUID id) {
@@ -103,7 +138,6 @@ public class RecipeService {
         recipe.setDifficultyLevel(recipeUpdateRequest.getDifficultyLevel());
         recipe.setImageUrl(recipeUpdateRequest.getImageUrl());
         recipe.setPublic(recipeUpdateRequest.getIsPublic());
-        recipe.setIngredients(recipeUpdateRequest.getIngredients());
         recipe.setCalories(recipeUpdateRequest.getCalories());
         recipe.setProtein(recipeUpdateRequest.getProtein());
         recipe.setCarbs(recipeUpdateRequest.getCarbs());
@@ -115,8 +149,40 @@ public class RecipeService {
         recipe.getCategories().addAll(categories);
         recipe.setUpdatedOn(LocalDateTime.now());
 
+
+        recipe.getRecipeIngredients().clear();
+
+        System.out.println("========== UPDATE RECIPE CALLED ==========");
+        System.out.println("Recipe ID: " + recipeId);
+        System.out.println("Ingredients count: " +       (recipeUpdateRequest.getRecipeIngredients() != null ?
+                recipeUpdateRequest.getRecipeIngredients().size() : "null"));
+
+        if (recipeUpdateRequest.getRecipeIngredients() != null &&
+                !recipeUpdateRequest.getRecipeIngredients().isEmpty()) {
+
+            for (RecipeIngredientRequest ingReq : recipeUpdateRequest.getRecipeIngredients()) {
+
+                if (ingReq.getIngredientName() == null || ingReq.getIngredientName().isBlank()) {
+                    continue;
+                }
+
+                Ingredient ingredient = ingredientService.findOrCreateIngredient(ingReq.getIngredientName());
+
+                RecipeIngredient recipeIngredient = RecipeIngredient.builder()
+                        .recipe(recipe)
+                        .ingredient(ingredient)
+                        .quantity(ingReq.getQuantity())
+                        .unit(ingReq.getUnit())
+                        .notes(ingReq.getNotes())
+                        .build();
+
+                recipe.getRecipeIngredients().add(recipeIngredient);
+            }
+        }
+
         return recipeRepository.save(recipe);
     }
+
 
 
     public void deleteRecipe(UUID recipeId, User currentUser) {
@@ -243,9 +309,26 @@ public class RecipeService {
         }
 
 
-        if (recipe.getIngredients() != null && !recipe.getIngredients().isEmpty()) {
+        if (recipe.getRecipeIngredients() != null && !recipe.getRecipeIngredients().isEmpty()) {
             document.add(new Paragraph("Ingredients").setFontSize(16).setBold());
-            document.add(new Paragraph(recipe.getIngredients()));
+
+            for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+                StringBuilder ingredientLine = new StringBuilder();
+
+
+                ingredientLine.append(ri.getQuantity()).append(" ").append(ri.getUnit());
+
+
+                ingredientLine.append(" ").append(ri.getIngredient().getName());
+
+
+                if (ri.getNotes() != null && !ri.getNotes().isBlank()) {
+                    ingredientLine.append(" (").append(ri.getNotes()).append(")");
+                }
+
+                document.add(new Paragraph(ingredientLine.toString()));
+            }
+
             document.add(new Paragraph(" "));
         }
 
