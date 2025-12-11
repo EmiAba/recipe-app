@@ -242,11 +242,21 @@
                                         <div>
                                             <i class="bi bi-tag-fill me-2"></i>
                                             <span th:switch="${category.key}">
-    <span th:case="'From Recipe'" th:text="#{shopping.fromRecipe}">From Recipe</span>
-    <span th:case="'Uncategorized'" th:text="#{shopping.uncategorized}">Uncategorized</span>
-    <span th:case="*"
-          th:text="${category.key}">Category</span>
-</span>
+    <span th:case="'From Recipe'" th:text="#{shopping.fromRecipe}"></span>
+    <span th:case="'Uncategorized'" th:text="#{shopping.uncategorized}"></span>
+    <span th:case="'Produce'" th:text="#{shopping.category.produce}"></span>
+    <span th:case="'Dairy'" th:text="#{shopping.category.dairy}"></span>
+    <span th:case="'Meat'" th:text="#{shopping.category.meat}"></span>
+    <span th:case="'Pantry'" th:text="#{shopping.category.pantry}"></span>
+    <span th:case="'Frozen'" th:text="#{shopping.category.frozen}"></span>
+    <span th:case="'Beverages'" th:text="#{shopping.category.beverages}"></span>
+    <span th:case="'Snacks'" th:text="#{shopping.category.snacks}"></span>
+    <span th:case="'Household'" th:text="#{shopping.category.household}"></span>
+    <span th:case="'Personal Care'" th:text="#{shopping.category.personal}"></span>
+    <span th:case="'Other'" th:text="#{shopping.category.other}"></span>
+    <span th:case="*" th:text="${category.key}"></span>
+
+
 
                                         </div>
 

@@ -99,6 +99,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" th:text="#{shopping.category}">Category</label>
                                     <select class="form-select" th:field="*{customCategory}">
+                                        <option value="" th:text="#{shopping.category}">Category</option>
                                         <option value="Produce" th:text="#{shopping.category.produce}"></option>
                                         <option value="Dairy" th:text="#{shopping.category.dairy}"></option>
                                         <option value="Meat" th:text="#{shopping.category.meat}"></option>
@@ -109,7 +110,6 @@
                                         <option value="Household" th:text="#{shopping.category.household}"></option>
                                         <option value="Personal Care" th:text="#{shopping.category.personal}"></option>
                                         <option value="Other" th:text="#{shopping.category.other}"></option>
-
                                     </select>
                                 </div>
 

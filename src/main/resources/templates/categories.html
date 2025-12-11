@@ -52,16 +52,27 @@
                   <!-- Category Emoji -->
                   <div class="text-center mb-3 mt-3">
                     <div th:switch="${category.name}" class="category-emoji">
-                      <span th:case="'breakfast'">🍳</span>
-                      <span th:case="'lunch'">🥗</span>
-                      <span th:case="'dinner'">🍽️</span>
-                      <span th:case="'dessert'">🍰</span>
-                      <span th:case="'appetizer'">🥖</span>
-                      <span th:case="'snack'">🍿</span>
-                      <span th:case="'drink'">🥤</span>
-                      <span th:case="'soup'">🍲</span>
-                      <span th:case="'salad'">🥬</span>
-                      <span th:case="*">🍽️</span>
+                      <div th:switch="${category.name}">
+                        <span th:case="'Breakfast'">&#x1F373;</span> <!-- 🍳 -->
+                        <span th:case="'breakfast'">&#x1F373;</span> <!-- ако е с малки букви -->
+                        <span th:case="'Lunch'">&#x1F957;</span> <!-- 🥗 -->
+                        <span th:case="'lunch'">&#x1F957;</span>
+                        <span th:case="'Dinner'">&#x1F37D;&#xFE0F;</span> <!-- 🍽️ -->
+                        <span th:case="'dinner'">&#x1F37D;&#xFE0F;</span>
+                        <span th:case="'Dessert'">&#x1F370;</span> <!-- 🍰 -->
+                        <span th:case="'dessert'">&#x1F370;</span>
+                        <span th:case="'Appetizer'">&#x1F956;</span> <!-- 🥖 -->
+                        <span th:case="'appetizer'">&#x1F956;</span>
+                        <span th:case="'Snack'">&#x1F37F;</span> <!-- 🍿 -->
+                        <span th:case="'snack'">&#x1F37F;</span>
+                        <span th:case="'Drink'">&#x1F964;</span> <!-- 🥤 -->
+                        <span th:case="'drink'">&#x1F964;</span>
+                        <span th:case="'Soup'">&#x1F372;</span> <!-- 🍲 -->
+                        <span th:case="'soup'">&#x1F372;</span>
+                        <span th:case="'Salad'">&#x1F96C;</span> <!-- 🥬 -->
+                        <span th:case="'salad'">&#x1F96C;</span>
+                        <span th:case="*">&#x1F37D;&#xFE0F;</span> <!-- default -->
+                      </div>
                     </div>
                   </div>
 

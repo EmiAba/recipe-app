@@ -1332,8 +1332,8 @@ body {
 }
 
 .category-header {
-    background: linear-gradient(135deg, #ff9f43 0%, #ff6f3c 100%);
-    color: white;
+    background: linear-gradient(135deg, #ffd93d 0%, #ffb300 100%);
+    color: #2d5016;
     padding: 0.75rem 1rem;
     border-radius: 10px;
     margin-bottom: 1rem;
@@ -1344,8 +1344,8 @@ body {
 }
 
 .add-item-card {
-    background: linear-gradient(135deg, #f9a23b 0%, #ffce72 100%);
-    color: white;
+    background: linear-gradient(135deg, #ffce72 0%, #ffd93d 100%);
+    color: #2d5016;
     border: none;
     margin-bottom: 2rem;
     border-radius: 15px;
@@ -1370,13 +1370,14 @@ body {
 
 .add-item-card .btn-light {
     background-color: white;
-    color: #f5576c;
+    color: #2d5016;
     font-weight: 600;
     border: none;
 }
 
 .add-item-card .btn-light:hover {
-    background-color: #fff;
+    background-color: #2d5016;
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -1433,7 +1434,7 @@ body {
 
 /* Quick actions section */
 .quick-actions-card {
-    background: linear-gradient(135deg, #8bcf58 0%, #f0c35a 100%);
+    background: linear-gradient(135deg, #6b9440 0%, #ffd93d 100%);
     color: white;
     border-radius: 15px;
     border: none;

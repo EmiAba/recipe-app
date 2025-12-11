@@ -148,19 +148,19 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <label th:for="'unit' + ${stat.index}" class="form-label">Unit</label>
+                                                <label th:for="'unit' + ${stat.index}" class="form-label" th:text="#{shopping.unit}">Unit</label>
                                                 <select class="form-select"
                                                         th:field="*{recipeIngredients[__${stat.index}__].unit}"
                                                         th:id="'unit' + ${stat.index}">
                                                     <option value="">Select</option>
-                                                    <option value="cup">Cup</option>
-                                                    <option value="tbsp">Tbsp</option>
-                                                    <option value="tsp">Tsp</option>
-                                                    <option value="g">Gram</option>
-                                                    <option value="kg">Kg</option>
-                                                    <option value="ml">ml</option>
-                                                    <option value="l">Liter</option>
-                                                    <option value="piece">Piece</option>
+                                                    <option value="cup" th:text="#{shopping.unit.cup}">Cup</option>
+                                                    <option value="tbsp" th:text="#{shopping.unit.tbsp}">Tbsp</option>
+                                                    <option value="tsp" th:text="#{shopping.unit.tsp}">Tsp</option>
+                                                    <option value="g" th:text="#{shopping.unit.g}">Gram</option>
+                                                    <option value="kg" th:text="#{shopping.unit.kg}">Kg</option>
+                                                    <option value="ml" th:text="#{shopping.unit.ml}">ml</option>
+                                                    <option value="l" th:text="#{shopping.unit.l}">Liter</option>
+                                                    <option value="piece" th:text="#{shopping.unit.piece}">Piece</option>
                                                     <option value="clove">Clove</option>
                                                     <option value="slice">Slice</option>
                                                 </select>
