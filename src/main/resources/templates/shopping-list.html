@@ -1,297 +1,340 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping List - Recipe Buddy</title>
+    <title th:text="#{shopping.title}">Shopping List</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/one.css}">
 </head>
+
 <body>
 <div class="dashboard-container">
+
     <!-- Sidebar -->
     <div th:replace="~{fragments/navbar::navbar}"></div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Top Navigation Bar -->
+
+        <!-- Top Navbar -->
         <nav class="top-navbar">
-            <div class="container-fluid">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <button class="sidebar-toggle btn">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <h5 class="mb-0 ms-3">Shopping List</h5>
+                    <button class="sidebar-toggle btn"><i class="bi bi-list"></i></button>
+                    <h5 class="mb-0 ms-3" th:text="#{shopping.title}">Shopping List</h5>
                 </div>
-                <div class="d-flex align-items-center">
-                    <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
-                </div>
+                <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
             </div>
         </nav>
 
-        <!-- Dashboard Content -->
+        <!-- Content -->
         <div class="dashboard-content">
             <div class="container-fluid py-4">
 
-                <!-- Stats Cards -->
+                <!-- Stats -->
                 <div class="row mb-4">
+
                     <div class="col-md-3">
                         <div class="stats-card card text-center">
                             <div class="card-body">
                                 <i class="bi bi-cart3 fs-2 text-primary"></i>
                                 <h3 class="mt-2" th:text="${totalItems}">0</h3>
-                                <p class="text-muted mb-0">Total Items</p>
+                                <p class="text-muted mb-0" th:text="#{shopping.totalItems}">Total Items</p>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-3">
                         <div class="stats-card card text-center">
                             <div class="card-body">
                                 <i class="bi bi-check-circle fs-2 text-success"></i>
                                 <h3 class="mt-2" th:text="${completedItems}">0</h3>
-                                <p class="text-muted mb-0">Completed</p>
+                                <p class="text-muted mb-0" th:text="#{shopping.completed}">Completed</p>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-3">
                         <div class="stats-card card text-center">
                             <div class="card-body">
                                 <i class="bi bi-book fs-2 text-info"></i>
                                 <h3 class="mt-2" th:text="${recipeCount}">0</h3>
-                                <p class="text-muted mb-0">From Recipes</p>
+                                <p class="text-muted mb-0" th:text="#{shopping.fromRecipes}">From Recipes</p>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-3">
                         <div class="stats-card card text-center">
                             <div class="card-body">
                                 <i class="bi bi-percent fs-2 text-warning"></i>
                                 <h3 class="mt-2" th:text="${completionPercentage} + '%'">0%</h3>
-                                <p class="text-muted mb-0">Complete</p>
+                                <p class="text-muted mb-0" th:text="#{shopping.complete}">Complete</p>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
+
                 <div class="row">
-                    <!-- Left Column: Add Item Forms -->
+
+                    <!-- LEFT SIDE -->
                     <div class="col-lg-4">
 
-                        <!-- Add Item Manually -->
+                        <!-- Add Manually -->
                         <div class="card add-item-card">
                             <div class="card-body">
+
                                 <h5 class="mb-3">
-                                    <i class="bi bi-plus-circle me-2"></i>Add Item Manually
+                                    <i class="bi bi-plus-circle me-2"></i><span th:text="#{shopping.addItemManually}">Add Item Manually</span>
                                 </h5>
+
                                 <form th:action="@{/shopping-list/add}" method="post" th:object="${itemRequest}">
+
                                     <div class="mb-3">
                                         <input type="text" class="form-control" th:field="*{name}"
-                                               placeholder="Item name (e.g., Milk, Eggs)" required>
+                                               th:placeholder="#{shopping.itemPlaceholder}" required>
                                         <div class="text-danger mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-6">
                                             <input type="text" class="form-control" th:field="*{quantity}"
-                                                   placeholder="Quantity">
+                                                   th:placeholder="#{shopping.quantity}">
                                         </div>
                                         <div class="col-6">
                                             <select class="form-select" th:field="*{unit}">
-                                                <option value="">Unit</option>
-                                                <option value="piece">Piece</option>
-                                                <option value="pack">Pack</option>
-                                                <option value="cup">Cup</option>
-                                                <option value="tbsp">Tbsp</option>
-                                                <option value="tsp">Tsp</option>
-                                                <option value="oz">Oz</option>
-                                                <option value="lb">Lb</option>
-                                                <option value="g">Gram</option>
-                                                <option value="kg">Kg</option>
-                                                <option value="ml">mL</option>
-                                                <option value="l">Liter</option>
+                                                <option value="" th:text="#{shopping.unit}">Unit</option>
+                                                <option value="piece" th:text="#{shopping.unit.piece}"></option>
+                                                <option value="pack" th:text="#{shopping.unit.pack}"></option>
+                                                <option value="cup" th:text="#{shopping.unit.cup}"></option>
+                                                <option value="tbsp" th:text="#{shopping.unit.tbsp}"></option>
+                                                <option value="tsp" th:text="#{shopping.unit.tsp}"></option>
+                                                <option value="oz" th:text="#{shopping.unit.oz}"></option>
+                                                <option value="lb" th:text="#{shopping.unit.lb}"></option>
+                                                <option value="g" th:text="#{shopping.unit.g}"></option>
+                                                <option value="kg" th:text="#{shopping.unit.kg}"></option>
+                                                <option value="ml" th:text="#{shopping.unit.ml}"></option>
+                                                <option value="l" th:text="#{shopping.unit.l}"></option>
+
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="mb-3 mt-3">
                                         <select class="form-select" th:field="*{customCategory}">
-                                            <option value="">Category (optional)</option>
-                                            <option value="Produce">Produce</option>
-                                            <option value="Dairy">Dairy</option>
-                                            <option value="Meat">Meat & Seafood</option>
-                                            <option value="Pantry">Pantry</option>
-                                            <option value="Frozen">Frozen</option>
-                                            <option value="Beverages">Beverages</option>
-                                            <option value="Snacks">Snacks</option>
-                                            <option value="Household">Household</option>
-                                            <option value="Personal Care">Personal Care</option>
-                                            <option value="Other">Other</option>
+                                            <option value="" th:text="#{shopping.category}">Category</option>
+                                            <option value="Produce" th:text="#{shopping.category.produce}"></option>
+                                            <option value="Dairy" th:text="#{shopping.category.dairy}"></option>
+                                            <option value="Meat" th:text="#{shopping.category.meat}"></option>
+                                            <option value="Pantry" th:text="#{shopping.category.pantry}"></option>
+                                            <option value="Frozen" th:text="#{shopping.category.frozen}"></option>
+                                            <option value="Beverages" th:text="#{shopping.category.beverages}"></option>
+                                            <option value="Snacks" th:text="#{shopping.category.snacks}"></option>
+                                            <option value="Household" th:text="#{shopping.category.household}"></option>
+                                            <option value="Personal Care" th:text="#{shopping.category.personal}"></option>
+                                            <option value="Other" th:text="#{shopping.category.other}"></option>
+
                                         </select>
                                     </div>
 
                                     <div class="mb-3">
                                         <textarea class="form-control" th:field="*{notes}" rows="2"
-                                                  placeholder="Notes (optional)"></textarea>
+                                                  th:placeholder="#{shopping.notes}"></textarea>
                                     </div>
 
                                     <button type="submit" class="btn btn-light w-100">
-                                        <i class="bi bi-plus-lg me-2"></i>Add Item
+                                        <i class="bi bi-plus-lg me-2"></i><span th:text="#{shopping.addItem}">Add Item</span>
                                     </button>
+
                                 </form>
+
                             </div>
                         </div>
 
-                        <!-- Add from Recipe -->
+
+                        <!-- Add from recipe -->
                         <div class="dashboard-card" th:if="${userRecipes != null and !userRecipes.isEmpty()}">
                             <h5 class="mb-3">
-                                <i class="bi bi-book me-2"></i>Add from Recipe
+                                <i class="bi bi-book me-2"></i><span th:text="#{shopping.addFromRecipe}">Add from Recipe</span>
                             </h5>
+
                             <form th:action="@{/shopping-list/add-from-recipe}" method="post">
                                 <div class="mb-3">
                                     <select class="form-select" name="recipeId" required>
-                                        <option value="">Select a recipe...</option>
+                                        <option value="" th:text="#{shopping.selectRecipe}"></option>
                                         <option th:each="recipe : ${userRecipes}"
                                                 th:value="${recipe.id}"
                                                 th:text="${recipe.title}">
                                         </option>
                                     </select>
                                 </div>
+
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-cart-plus me-2"></i>Add Ingredients
+                                    <i class="bi bi-cart-plus me-2"></i><span th:text="#{shopping.addIngredients}">Add Ingredients</span>
                                 </button>
                             </form>
                         </div>
 
-                        <!-- Bulk Actions -->
+
+                        <!-- Quick Actions -->
                         <div class="dashboard-card mt-3">
                             <h5 class="mb-3">
-                                <i class="bi bi-lightning me-2"></i>Quick Actions
+                                <i class="bi bi-lightning me-2"></i><span th:text="#{shopping.quickActions}">Quick Actions</span>
                             </h5>
+
                             <div class="d-grid gap-2">
-                                <!-- Mark All Complete - PUT -->
-                                <form th:action="@{/shopping-list/mark-all-complete}" th:method="PUT" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-success w-100"
-                                            th:if="${totalItems > 0}">
-                                        <i class="bi bi-check-all me-2"></i>Mark All Complete
+
+                                <form th:action="@{/shopping-list/mark-all-complete}" th:method="PUT">
+                                    <button type="submit" class="btn btn-outline-success w-100" th:if="${totalItems > 0}">
+                                        <i class="bi bi-check-all me-2"></i><span th:text="#{shopping.markAllComplete}">Mark All Complete</span>
                                     </button>
                                 </form>
 
-                                <!-- Remove Completed - DELETE -->
-                                <form th:action="@{/shopping-list/remove-completed}" th:method="DELETE" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-warning w-100"
-                                            th:if="${completedItems > 0}">
-                                        <i class="bi bi-trash me-2"></i>Remove Completed
+                                <form th:action="@{/shopping-list/remove-completed}" th:method="DELETE">
+                                    <button type="submit" class="btn btn-outline-warning w-100" th:if="${completedItems > 0}">
+                                        <i class="bi bi-trash me-2"></i><span th:text="#{shopping.removeCompleted}">Remove Completed</span>
                                     </button>
                                 </form>
 
-                                <!-- Clear All - DELETE -->
-                                <form th:action="@{/shopping-list/clear-all}" th:method="DELETE" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-danger w-100"
-                                            th:if="${totalItems > 0}">
-                                        <i class="bi bi-x-circle me-2"></i>Clear All
+                                <form th:action="@{/shopping-list/clear-all}" th:method="DELETE">
+                                    <button type="submit" class="btn btn-outline-danger w-100" th:if="${totalItems > 0}">
+                                        <i class="bi bi-x-circle me-2"></i><span th:text="#{shopping.clearAll}">Clear All</span>
                                     </button>
                                 </form>
+
                             </div>
                         </div>
 
-                    </div>
+                    </div> <!-- END LEFT -->
 
-                    <!-- Right Column: Shopping List Items -->
+
+                    <!-- RIGHT SIDE -->
                     <div class="col-lg-8">
                         <div class="dashboard-card">
+
                             <h4 class="mb-4">
-                                <i class="bi bi-list-check me-2"></i>My Shopping List
+                                <i class="bi bi-list-check me-2"></i><span th:text="#{shopping.title}">My Shopping List</span>
                             </h4>
 
-                            <!-- Empty State -->
+                            <!-- Empty -->
                             <div th:if="${shoppingListItems == null or shoppingListItems.isEmpty()}"
                                  class="text-center py-5">
+
                                 <i class="bi bi-cart-x display-1 text-muted"></i>
-                                <h5 class="mt-3 text-muted">Your shopping list is empty</h5>
-                                <p class="text-muted">Add items manually or from your recipes</p>
+                                <h5 class="mt-3 text-muted" th:text="#{shopping.emptyList}"></h5>
+                                <p class="text-muted" th:text="#{shopping.emptyList.description}"></p>
+
                             </div>
 
-                            <!-- Categorized Items -->
+
+                            <!-- Items -->
                             <div th:if="${categorizedItems != null and !categorizedItems.isEmpty()}">
+
                                 <div th:each="category : ${categorizedItems}" class="category-section">
+
                                     <div class="category-header">
                                         <div>
                                             <i class="bi bi-tag-fill me-2"></i>
-                                            <span th:text="${category.key}">Category</span>
+                                            <span th:switch="${category.key}">
+    <span th:case="'From Recipe'" th:text="#{shopping.fromRecipe}">From Recipe</span>
+    <span th:case="'Uncategorized'" th:text="#{shopping.uncategorized}">Uncategorized</span>
+    <span th:case="*"
+          th:text="${category.key}">Category</span>
+</span>
+
                                         </div>
+
                                         <span class="badge bg-white text-dark"
-                                              th:text="${category.value.size()}">0</span>
+                                              th:text="${category.value.size()}"></span>
                                     </div>
 
                                     <div class="list-group">
+
                                         <div th:each="item : ${category.value}"
                                              class="list-group-item shopping-item"
                                              th:classappend="${item.completed} ? 'completed' : ''">
+
                                             <div class="row align-items-center">
+
+                                                <!-- Toggle -->
                                                 <div class="col-auto">
-                                                    <!-- Toggle - PUT -->
                                                     <form th:action="@{/shopping-list/toggle/{id}(id=${item.id})}"
                                                           th:method="PUT" class="d-inline">
-                                                        <button type="submit" class="btn btn-link p-0 text-decoration-none">
-                                                            <i th:if="${item.completed}"
-                                                               class="bi bi-check-circle-fill fs-4 text-success"></i>
-                                                            <i th:unless="${item.completed}"
-                                                               class="bi bi-circle fs-4 text-muted"></i>
+                                                        <button type="submit" class="btn btn-link p-0">
+                                                            <i th:if="${item.completed}" class="bi bi-check-circle-fill fs-4 text-success"></i>
+                                                            <i th:unless="${item.completed}" class="bi bi-circle fs-4 text-muted"></i>
                                                         </button>
                                                     </form>
                                                 </div>
 
+                                                <!-- Info -->
                                                 <div class="col">
-                                                    <h6 class="mb-1 item-name" th:text="${item.name}">Item Name</h6>
+
+                                                    <h6 class="mb-1 item-name" th:text="${item.name}">Item</h6>
+
                                                     <small class="text-muted">
-                                                        <span th:if="${item.quantity}"
-                                                              th:text="${item.quantity}">2</span>
-                                                        <span th:if="${item.unit}"
-                                                              th:text="${item.unit}">cups</span>
+                                                        <span th:if="${item.quantity}" th:text="${item.quantity}"></span>
+                                                        <span th:if="${item.unit}" th:text="${item.unit}"></span>
                                                         <span th:if="${item.notes}" class="ms-2">
                                                             <i class="bi bi-chat-left-text"></i>
-                                                            <span th:text="${item.notes}">notes</span>
+                                                            <span th:text="${item.notes}"></span>
                                                         </span>
                                                     </small>
+
                                                     <div th:if="${item.recipe != null}" class="mt-1">
                                                         <span class="badge bg-success">
                                                             <i class="bi bi-book me-1"></i>
-                                                            <span th:text="${item.recipe.title}">Recipe</span>
+                                                            <span th:text="${item.recipe.title}"></span>
                                                         </span>
                                                     </div>
+
                                                 </div>
 
+                                                <!-- Actions -->
                                                 <div class="col-auto">
+
                                                     <a th:href="@{/shopping-list/edit/{id}(id=${item.id})}"
                                                        class="btn btn-sm btn-outline-primary me-1">
                                                         <i class="bi bi-pencil"></i>
                                                     </a>
-                                                    <!-- Delete - DELETE -->
+
                                                     <form th:action="@{/shopping-list/delete/{id}(id=${item.id})}"
                                                           th:method="DELETE" class="d-inline">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
+
                                                 </div>
+
                                             </div>
                                         </div>
+
                                     </div>
+
                                 </div>
+
                             </div>
 
                         </div>
                     </div>
+
                 </div>
 
             </div>
         </div>
+
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/one.js}"></script>
+
 </body>
 </html>
