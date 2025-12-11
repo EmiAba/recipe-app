@@ -21,9 +21,7 @@ public class IngredientService {
         this.ingredientRepository = ingredientRepository;
     }
 
-    /**
-     * Finds existing ingredient by name or creates a new one
-     */
+
     public Ingredient findOrCreateIngredient(String name) {
         String normalizedName = name.trim().toLowerCase();
 
@@ -40,11 +38,7 @@ public class IngredientService {
                     return saved;
                 });
     }
-    /**
 
-     * Finds ingredient by name, returns null if not found
-     * Used for shopping list - we don't want to create ingredients for non-food items
-     */
     public Ingredient findByNameOptional(String name) {
         if (name == null || name.trim().isEmpty()) {
             return null;

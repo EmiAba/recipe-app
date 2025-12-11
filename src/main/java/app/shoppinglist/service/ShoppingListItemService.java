@@ -38,15 +38,11 @@ public class ShoppingListItemService {
         this.ingredientService = ingredientService;
     }
 
-    // ========== CREATE Operations ==========
 
-    /**
-     * Добавяне на item ръчно от user-a
-     */
     public ShoppingListItem addItem(User user, String name, String quantity,
                                     String unit, String notes, String customCategory) {
 
-        // Опитай се да намериш съществуващ Ingredient
+
         Ingredient ingredient = ingredientService.findByNameOptional(name);
 
         ShoppingListItem item = ShoppingListItem.builder()
@@ -68,9 +64,7 @@ public class ShoppingListItemService {
         return savedItem;
     }
 
-    /**
-     * Добавяне на всички ingredients от рецепта
-     */
+
     public void addIngredientsFromRecipe(User user, UUID recipeId) {
         Recipe recipe = recipeService.getById(recipeId);
 
@@ -101,18 +95,15 @@ public class ShoppingListItemService {
                 user.getUsername(), recipe.getRecipeIngredients().size(), recipe.getTitle());
     }
 
-    // ========== UPDATE Operations ==========
 
-    /**
-     * Обновяване на съществуващ item
-     */
+
     public ShoppingListItem updateItem(UUID itemId, User user, String name,
                                        String quantity, String unit, String notes,
                                        String customCategory) {
         ShoppingListItem item = getById(itemId);
         validateOwnership(item, user);
 
-        // Провери дали има нов Ingredient ако името се е променило
+
         Ingredient ingredient = null;
         if (!item.getName().equalsIgnoreCase(name)) {
             ingredient = ingredientService.findByNameOptional(name);
@@ -133,9 +124,7 @@ public class ShoppingListItemService {
         return updatedItem;
     }
 
-    /**
-     * Toggle completed status на item
-     */
+
     public ShoppingListItem toggleItemCompletion(UUID itemId, User user) {
         ShoppingListItem item = getById(itemId);
         validateOwnership(item, user);
@@ -149,9 +138,7 @@ public class ShoppingListItemService {
         return updatedItem;
     }
 
-    /**
-     * Mark all items as completed
-     */
+
     public void markAllCompleted(User user) {
         List<ShoppingListItem> userItems = getUserShoppingList(user);
 
@@ -166,11 +153,9 @@ public class ShoppingListItemService {
         log.info("User [{}] marked all shopping list items as completed", user.getUsername());
     }
 
-    // ========== DELETE Operations ==========
 
-    /**
-     * Изтриване на един item
-     */
+
+
     public void deleteItem(UUID itemId, User user) {
         ShoppingListItem item = getById(itemId);
         validateOwnership(item, user);
@@ -179,9 +164,7 @@ public class ShoppingListItemService {
         log.info("User [{}] deleted shopping list item [{}]", user.getUsername(), item.getName());
     }
 
-    /**
-     * Премахване на всички completed items
-     */
+
     public void removeCompletedItems(User user) {
         List<ShoppingListItem> completedItems =
                 shoppingListRepository.findByUserAndCompletedOrderByCreatedOnDesc(user, true);
@@ -191,9 +174,7 @@ public class ShoppingListItemService {
                 user.getUsername(), completedItems.size());
     }
 
-    /**
-     * Изчистване на целия shopping list
-     */
+
     public void clearAllItems(User user) {
         List<ShoppingListItem> userItems = getUserShoppingList(user);
         shoppingListRepository.deleteAll(userItems);
@@ -203,27 +184,21 @@ public class ShoppingListItemService {
 
     // ========== READ Operations ==========
 
-    /**
-     * Взимане на item по ID
-     */
+
     public ShoppingListItem getById(UUID id) {
         return shoppingListRepository.findById(id)
                 .orElseThrow(() -> new ShoppingListItemNotFoundException(
                         "Shopping list item with ID [%s] not found".formatted(id)));
     }
 
-    /**
-     * Взимане на item за редакция (с ownership validation)
-     */
+
     public ShoppingListItem getItemForEdit(UUID itemId, User currentUser) {
         ShoppingListItem item = getById(itemId);
         validateOwnership(item, currentUser);
         return item;
     }
 
-    /**
-     * Всички items на user-a
-     */
+
     public List<ShoppingListItem> getUserShoppingList(User user) {
         return shoppingListRepository.findByUserOrderByCreatedOnDesc(user);
     }
@@ -235,9 +210,7 @@ public class ShoppingListItemService {
         return shoppingListRepository.findByUserAndCompletedOrderByCreatedOnDesc(user, true);
     }
 
-    /**
-     * Группиране на items по категория
-     */
+
     public Map<String, List<ShoppingListItem>> getCategorizedItems(User user) {
         List<ShoppingListItem> allItems = getUserShoppingList(user);
         return allItems.stream()
