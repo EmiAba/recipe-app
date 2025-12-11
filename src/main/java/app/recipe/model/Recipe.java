@@ -1,6 +1,6 @@
 package app.recipe.model;
 
-
+import app.shoppinglist.model.ShoppingListItem;
 import app.category.model.Category;
 import app.comment.model.Comment;
 import app.recipeingredient.model.RecipeIngredient;
@@ -82,6 +82,9 @@ public class Recipe {
 
     @ManyToMany
     private Set<User> favoriteBy = new HashSet<>();
+
+    @OneToMany(mappedBy = "recipe")
+    private List<ShoppingListItem> shoppingListItems = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean deleted = false;

@@ -40,4 +40,20 @@ public class IngredientService {
                     return saved;
                 });
     }
+    /**
+
+     * Finds ingredient by name, returns null if not found
+     * Used for shopping list - we don't want to create ingredients for non-food items
+     */
+    public Ingredient findByNameOptional(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return null;
+        }
+
+        String normalizedName = name.trim().toLowerCase();
+        return ingredientRepository.findByNameIgnoreCase(normalizedName).orElse(null);
+    }
+
+
+
 }

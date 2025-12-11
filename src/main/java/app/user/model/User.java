@@ -2,6 +2,7 @@ package app.user.model;
 
 import app.comment.model.Comment;
 import app.recipe.model.Recipe;
+import app.shoppinglist.model.ShoppingListItem;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -57,6 +58,7 @@ public class User {
     @ManyToMany(mappedBy = "favoriteBy")
     private Set<Recipe> favorites = new HashSet<>();
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShoppingListItem> shoppingListItems = new ArrayList<>();
 
 }

@@ -1,5 +1,6 @@
 package app.ingredient.model;
 
+import app.shoppinglist.model.ShoppingListItem;
 import app.recipeingredient.model.RecipeIngredient;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,9 @@ public class Ingredient {
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ingredient")
+    private List<ShoppingListItem> shoppingListItems = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

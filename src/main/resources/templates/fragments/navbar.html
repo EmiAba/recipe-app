@@ -29,6 +29,9 @@
             <li class="nav-link">
                 <a th:href="@{/meal-planning}"><i class="bi bi-calendar-fill"></i> [[#{nav.mealPlanning}]]</a>
             </li>
+            <li class="nav-link">
+                <a th:href="@{/shopping-list}"><i class="bi bi-cart-fill"></i> [[#{nav.shoppingList}]]</a>
+            </li>
             <li class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')">
                 <a th:href="@{/admin}">
                     <i class="bi bi-gear-fill"></i> [[#{nav.adminSettings}]]

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Shopping List Item - Recipe Buddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/one.css}">
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/navbar::navbar}"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation Bar -->
+        <nav class="top-navbar">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+                    <button class="sidebar-toggle btn">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <h5 class="mb-0 ms-3">Edit Shopping List Item</h5>
+                </div>
+                <div class="d-flex align-items-center">
+                      <div th:replace="~{fragments/profile-menu :: profile-menu}"></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <div class="container-fluid py-4">
+
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">Edit Shopping List Item</h2>
+                        <p class="text-muted">Update your shopping list item details</p>
+                    </div>
+                    <div>
+                        <a th:href="@{/shopping-list}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Shopping List
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Edit Form -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <h4 class="mb-4">
+                                <i class="bi bi-pencil-square me-2"></i>Edit Item Details
+                            </h4>
+
+                            <!-- Form with PUT method -->
+                            <form th:action="@{/shopping-list/edit/{itemId}(itemId=${item.id})}"
+                                  th:method="PUT"
+                                  th:object="${itemRequest}">
+
+                                <!-- Item Name -->
+                                <div class="mb-3">
+                                    <label for="itemName" class="form-label">Item Name *</label>
+                                    <input type="text" class="form-control" id="itemName"
+                                           th:field="*{name}" required>
+                                    <div class="text-danger mt-1" th:if="${#fields.hasErrors('name')}"
+                                         th:errors="*{name}"></div>
+                                </div>
+
+                                <!-- Quantity and Unit Row -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="itemQuantity" class="form-label">Quantity</label>
+                                            <input type="text" class="form-control" id="itemQuantity"
+                                                   th:field="*{quantity}"
+                                                   placeholder="e.g., 2, 1/2, 3.5">
+                                            <div class="text-danger mt-1" th:if="${#fields.hasErrors('quantity')}"
+                                                 th:errors="*{quantity}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="itemUnit" class="form-label">Unit</label>
+                                            <select class="form-select" id="itemUnit" th:field="*{unit}">
+                                                <option value="">Select unit</option>
+                                                <option value="piece">Piece</option>
+                                                <option value="pack">Pack</option>
+                                                <option value="cup">Cup</option>
+                                                <option value="tbsp">Tablespoon</option>
+                                                <option value="tsp">Teaspoon</option>
+                                                <option value="oz">Ounce</option>
+                                                <option value="lb">Pound</option>
+                                                <option value="g">Gram</option>
+                                                <option value="kg">Kilogram</option>
+                                                <option value="ml">Milliliter</option>
+                                                <option value="l">Liter</option>
+                                                <option value="slice">Slice</option>
+                                                <option value="clove">Clove</option>
+                                                <option value="bunch">Bunch</option>
+                                                <option value="bag">Bag</option>
+                                                <option value="box">Box</option>
+                                                <option value="can">Can</option>
+                                                <option value="bottle">Bottle</option>
+                                            </select>
+                                            <div class="text-danger mt-1" th:if="${#fields.hasErrors('unit')}"
+                                                 th:errors="*{unit}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Category -->
+                                <div class="mb-3">
+                                    <label for="itemCategory" class="form-label">Category</label>
+                                    <select class="form-select" id="itemCategory" th:field="*{customCategory}">
+                                        <option value="">Select category</option>
+                                        <option value="Produce">Produce</option>
+                                        <option value="Dairy">Dairy</option>
+                                        <option value="Meat">Meat & Seafood</option>
+                                        <option value="Pantry">Pantry</option>
+                                        <option value="Frozen">Frozen</option>
+                                        <option value="Beverages">Beverages</option>
+                                        <option value="Snacks">Snacks</option>
+                                        <option value="Household">Household</option>
+                                        <option value="Personal Care">Personal Care</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <div class="text-danger mt-1" th:if="${#fields.hasErrors('customCategory')}"
+                                         th:errors="*{customCategory}"></div>
+                                </div>
+
+                                <!-- Notes -->
+                                <div class="mb-4">
+                                    <label for="itemNotes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="itemNotes" th:field="*{notes}"
+                                              rows="3"
+                                              placeholder="e.g., organic, low-fat, brand preference, special instructions"></textarea>
+                                    <div class="text-danger mt-1" th:if="${#fields.hasErrors('notes')}"
+                                         th:errors="*{notes}"></div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="d-flex justify-content-between">
+                                    <a th:href="@{/shopping-list}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-x-circle me-2"></i>Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>Update Item
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Current Item Info (if from recipe) -->
+                            <div th:if="${item.recipe != null}" class="mt-4">
+                                <div class="alert alert-info">
+                                    <h6 class="alert-heading">
+                                        <i class="bi bi-book me-2"></i>From Recipe
+                                    </h6>
+                                    <p class="mb-0">
+                                        This item was added from the recipe:
+                                        <strong th:text="${item.recipe.title}">Recipe Title</strong>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/one.js}"></script>
+</body>
+</html>

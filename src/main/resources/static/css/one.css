@@ -1302,3 +1302,158 @@ body {
     font-weight: var(--fw-bold);
     margin-bottom: var(--space-md);
 }
+
+
+/* ========== Shopping List Styles ========== */
+
+.shopping-item {
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.shopping-item:hover {
+    background-color: #f8f9fa;
+    border-left-color: forestgreen;
+}
+
+.shopping-item.completed {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+    border-left-color: #28a745;
+}
+
+.shopping-item.completed .item-name {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.category-section {
+    margin-bottom: 2rem;
+}
+
+.category-header {
+    background: linear-gradient(135deg, #ff9f43 0%, #ff6f3c 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-item-card {
+    background: linear-gradient(135deg, #f9a23b 0%, #ffce72 100%);
+    color: white;
+    border: none;
+    margin-bottom: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(240, 147, 251, 0.3);
+}
+
+.add-item-card .card-body {
+    padding: 1.5rem;
+}
+
+.add-item-card .form-control,
+.add-item-card .form-select,
+.add-item-card textarea {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    color: #333;
+}
+
+.add-item-card .form-control::placeholder {
+    color: #999;
+}
+
+.add-item-card .btn-light {
+    background-color: white;
+    color: #f5576c;
+    font-weight: 600;
+    border: none;
+}
+
+.add-item-card .btn-light:hover {
+    background-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.stats-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stats-card .card-body {
+    padding: 1.5rem;
+}
+
+.shopping-item .btn-link {
+    text-decoration: none;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.shopping-item .btn-link:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Empty state styling */
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    opacity: 0.3;
+}
+
+/* Recipe badge in item */
+.shopping-item .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Quick actions section */
+.quick-actions-card {
+    background: linear-gradient(135deg, #8bcf58 0%, #f0c35a 100%);
+    color: white;
+    border-radius: 15px;
+    border: none;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+
+    .category-header {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .shopping-item .col-auto {
+        flex: 0 0 auto;
+        width: auto;
+    }
+}
