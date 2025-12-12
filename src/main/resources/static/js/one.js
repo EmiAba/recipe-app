@@ -147,6 +147,81 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+// ========== Recipe Form - Dynamic Ingredients ==========
+const ingredientsContainer = document.getElementById('ingredientsContainer');
+const ingredientTemplate = document.getElementById('ingredient-template');
+
+if (ingredientsContainer && ingredientTemplate) {
+    let ingredientIndex = ingredientsContainer.querySelectorAll('.ingredient-row').length;
+
+    // Create "Add More Ingredient" button
+       const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.className = 'btn btn-outline-primary mb-3';
+
+// Get translated text from hidden span
+    const addMoreText = document.getElementById('addMoreIngredientText');
+    const buttonText = addMoreText ? addMoreText.textContent : 'Add More Ingredient';
+    addButton.innerHTML = `<i class="bi bi-plus-circle me-2"></i>${buttonText}`;
+
+    // Insert button after help text
+    const helpText = ingredientsContainer.nextElementSibling;
+    if (helpText && helpText.classList.contains('form-text')) {
+        helpText.insertAdjacentElement('afterend', addButton);
+    } else {
+        ingredientsContainer.insertAdjacentElement('afterend', addButton);
+    }
+
+    // Add new ingredient row on button click
+    addButton.addEventListener('click', function() {
+        // Clone the template
+        const newRow = ingredientTemplate.content.cloneNode(true);
+        const rowDiv = newRow.querySelector('.ingredient-row');
+
+        // Set proper name attributes for form binding
+        const nameInput = newRow.querySelector('input[type="text"]');
+        const quantityInput = newRow.querySelectorAll('input[type="text"]')[1];
+        const unitSelect = newRow.querySelector('select');
+        const notesInput = newRow.querySelectorAll('input[type="text"]')[2];
+
+        nameInput.name = `recipeIngredients[${ingredientIndex}].ingredientName`;
+        nameInput.id = `ingredientName${ingredientIndex}`;
+
+        quantityInput.name = `recipeIngredients[${ingredientIndex}].quantity`;
+        quantityInput.id = `quantity${ingredientIndex}`;
+
+        unitSelect.name = `recipeIngredients[${ingredientIndex}].unit`;
+        unitSelect.id = `unit${ingredientIndex}`;
+
+        notesInput.name = `recipeIngredients[${ingredientIndex}].notes`;
+        notesInput.id = `notes${ingredientIndex}`;
+
+        // Update label 'for' attributes
+        const labels = newRow.querySelectorAll('label');
+        if (labels[0]) labels[0].setAttribute('for', `ingredientName${ingredientIndex}`);
+        if (labels[1]) labels[1].setAttribute('for', `quantity${ingredientIndex}`);
+        if (labels[2]) labels[2].setAttribute('for', `unit${ingredientIndex}`);
+        if (labels[3]) labels[3].setAttribute('for', `notes${ingredientIndex}`);
+
+        // Add remove functionality
+        const removeBtn = newRow.querySelector('.remove-ingredient');
+        removeBtn.addEventListener('click', function() {
+            rowDiv.remove();
+        });
+
+        ingredientsContainer.appendChild(newRow);
+        ingredientIndex++;
+    });
+
+    // Add remove functionality to existing rows (optional - if you want to allow deleting initial rows)
+    document.querySelectorAll('.remove-ingredient').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.ingredient-row').remove();
+        });
+    });
+}
+
 // ========== CSS Animation (add to CSS if you use the animation above) ==========
 // @keyframes fadeInSlide {
 //     from {

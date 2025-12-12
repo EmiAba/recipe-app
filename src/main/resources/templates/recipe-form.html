@@ -119,7 +119,6 @@
 
 
                                 <!-- Ingredients Section -->
-                                <!-- Ingredients Section -->
                                 <h4 class="mb-3">[[#{form.ingredients}]]</h4>
                                 <div id="ingredientsContainer">
                                     <div th:each="ingredient, stat : *{recipeIngredients}" class="ingredient-row mb-3">
@@ -193,7 +192,58 @@
                                     <i class="bi bi-info-circle"></i>
                                     <span th:text="#{recipe.ingredients.help}">Fill in as many ingredients as needed. Empty rows will be ignored.</span>
                                 </div>
+                                <!-- Hidden Template for New Ingredient Row -->
+                                <template id="ingredient-template">
+                                    <div class="ingredient-row mb-3">
+                                        <div class="row g-2">
+                                            <div class="col-md-4">
+                                                <label class="form-label" th:text="#{recipe.ingredients.name.label}">Ingredient Name</label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       th:placeholder="#{recipe.ingredients.name.placeholder}">
+                                            </div>
 
+                                            <div class="col-md-2">
+                                                <label class="form-label" th:text="#{recipe.ingredients.quantity.label}">Quantity</label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       th:placeholder="#{recipe.ingredients.quantity.placeholder}">
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label class="form-label" th:text="#{recipe.ingredients.unit.label}">Unit</label>
+                                                <select class="form-select">
+                                                    <option value="" th:text="#{recipe.ingredients.unit.select}">Select</option>
+                                                    <option value="cup" th:text="#{shopping.unit.cup}">Cup</option>
+                                                    <option value="tbsp" th:text="#{shopping.unit.tbsp}">Tbsp</option>
+                                                    <option value="tsp" th:text="#{shopping.unit.tsp}">Tsp</option>
+                                                    <option value="g" th:text="#{shopping.unit.g}">Gram</option>
+                                                    <option value="kg" th:text="#{shopping.unit.kg}">Kg</option>
+                                                    <option value="ml" th:text="#{shopping.unit.ml}">ml</option>
+                                                    <option value="l" th:text="#{shopping.unit.l}">Liter</option>
+                                                    <option value="piece" th:text="#{shopping.unit.piece}">Piece</option>
+                                                    <option value="clove" th:text="#{shopping.unit.clove}">Clove</option>
+                                                    <option value="slice" th:text="#{shopping.unit.slice}">Slice</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label" th:text="#{recipe.ingredients.notes.label}">Notes (Optional)</label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       th:placeholder="#{recipe.ingredients.notes.placeholder}">
+                                            </div>
+
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                <button type="button" class="btn btn-danger btn-sm remove-ingredient">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <span id="addMoreIngredientText" th:text="#{recipe.ingredients.addMore}" style="display: none;"></span>
                                 <div class="section-divider"></div>
 
                                 <!-- Instructions Section -->
@@ -202,6 +252,8 @@
                                     <textarea class="form-control" th:field="*{instructions}" rows="6" th:placeholder="#{form.instructionsPlaceholder}"></textarea>
                                     <p class="alert-warning" th:if="${#fields.hasErrors('instructions')}" th:errors="*{instructions}"></p>
                                 </div>
+
+
 
                                 <div class="section-divider"></div>
 
@@ -348,6 +400,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+<script th:src="@{/js/one.js}"></script>
 </body>
 </html>
