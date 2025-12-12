@@ -222,6 +222,16 @@ if (ingredientsContainer && ingredientTemplate) {
     });
 }
 
+
+// ========== Recipe Detail - Select All Ingredients ==========
+function selectAllIngredients() {
+    document.querySelectorAll('input[name="selectedIngredients"]').forEach(cb => cb.checked = true);
+}
+
+// Make function globally available
+window.selectAllIngredients = selectAllIngredients;
+
+
 // ========== CSS Animation (add to CSS if you use the animation above) ==========
 // @keyframes fadeInSlide {
 //     from {

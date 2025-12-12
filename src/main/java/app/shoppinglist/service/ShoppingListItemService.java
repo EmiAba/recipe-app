@@ -277,4 +277,37 @@ public class ShoppingListItemService {
                     "You can only modify your own shopping list items");
         }
     }
+
+    public void addSelectedIngredientsFromRecipe(User user, UUID recipeId, List<UUID> selectedIngredientIds) {
+        Recipe recipe = recipeService.getById(recipeId);
+
+        if (recipe.getRecipeIngredients().isEmpty()) {
+            log.warn("Recipe [{}] has no ingredients to add", recipe.getTitle());
+            return;
+        }
+
+        // Filter only selected ingredients
+        recipe.getRecipeIngredients().stream()
+                .filter(recipeIngredient -> selectedIngredientIds.contains(recipeIngredient.getId()))
+                .forEach(recipeIngredient -> {
+                    ShoppingListItem item = ShoppingListItem.builder()
+                            .name(recipeIngredient.getIngredient().getName())
+                            .quantity(recipeIngredient.getQuantity())
+                            .unit(recipeIngredient.getUnit())
+                            .notes(recipeIngredient.getNotes())
+                            .ingredient(recipeIngredient.getIngredient())
+                            .recipe(recipe)
+                            .customCategory("From Recipe")
+                            .completed(false)
+                            .user(user)
+                            .createdOn(LocalDateTime.now())
+                            .updatedOn(LocalDateTime.now())
+                            .build();
+
+                    shoppingListRepository.save(item);
+                });
+
+        log.info("User [{}] added {} selected ingredients from recipe [{}] to shopping list",
+                user.getUsername(), selectedIngredientIds.size(), recipe.getTitle());
+    }
 }

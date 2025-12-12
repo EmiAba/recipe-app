@@ -179,36 +179,52 @@
                                 <p th:text="${recipe.description}">Recipe description...</p>
                             </div>
 
-                            <!-- INGREDIENTS (WITH SHOPPING LIST BUTTON ADDED) -->
+                            <!-- INGREDIENTS (WITH SHOPPING LIST BUTTONS) -->
                             <div class="recipe-section">
                                 <h3>[[#{form.ingredients}]]:</h3>
 
-                                <div class="ingredients-list">
-                                    <ul class="list-unstyled">
-                                        <li th:each="ri : ${recipe.recipeIngredients}" class="ingredient-item mb-2">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                            <strong th:text="${ri.quantity} + ' ' + ${ri.unit}">2 cups</strong>
-                                            <span th:text="${ri.ingredient.name}">flour</span>
-                                            <span th:if="${ri.notes != null and !#strings.isEmpty(ri.notes)}"
-                                                  class="text-muted fst-italic">
-                                                (<span th:text="${ri.notes}">sifted</span>)
-                                            </span>
-                                        </li>
-                                    </ul>
+                                <form th:action="@{/shopping-list/add-from-recipe/{recipeId}(recipeId=${recipe.id})}"
+                                      method="post" id="ingredientsForm">
 
-                                    <!-- 🍋 ADD TO SHOPPING LIST BUTTON -->
-                                    <form th:action="@{/shopping-list/add-from-recipe/{recipeId}(recipeId=${recipe.id})}"
-                                          method="post" class="mt-3">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-cart-plus me-2"></i>
-                                            [[#{recipe.details.add.to.shopping.list}]]
-                                        </button>
-                                    </form>
+                                    <div class="ingredients-list">
+                                        <ul class="list-unstyled">
+                                            <li th:each="ri : ${recipe.recipeIngredients}" class="ingredient-item mb-2">
+                                                <input type="checkbox"
+                                                       class="form-check-input me-2"
+                                                       name="selectedIngredients"
+                                                       th:value="${ri.id}"
+                                                       th:id="'ingredient-' + ${ri.id}">
+                                                <label th:for="'ingredient-' + ${ri.id}" class="form-check-label">
+                                                    <strong th:text="${ri.quantity} + ' ' + ${ri.unit}">2 cups</strong>
+                                                    <span th:text="${ri.ingredient.name}">flour</span>
+                                                    <span th:if="${ri.notes != null and !#strings.isEmpty(ri.notes)}"
+                                                          class="text-muted fst-italic">
+                            (<span th:text="${ri.notes}">sifted</span>)
+                        </span>
+                                                </label>
+                                            </li>
+                                        </ul>
 
-                                    <p th:if="${#lists.isEmpty(recipe.recipeIngredients)}" class="text-muted mt-2">
-                                        <i class="bi bi-info-circle"></i> No ingredients listed yet.
-                                    </p>
-                                </div>
+                                        <!-- TWO BUTTONS: ADD ALL & ADD SELECTED -->
+                                        <div class="mt-3 d-flex gap-2">
+                                            <button type="button"
+                                                    class="btn btn-primary"
+                                                    onclick="selectAllIngredients(); document.getElementById('ingredientsForm').submit();">
+                                                <i class="bi bi-cart-plus me-2"></i>
+                                                [[#{recipe.details.addAllToShoppingList}]]
+                                            </button>
+
+                                            <button type="submit" class="btn btn-outline-primary">
+                                                <i class="bi bi-cart-check me-2"></i>
+                                                [[#{recipe.details.addSelectedToShoppingList}]]
+                                            </button>
+                                        </div>
+
+                                        <p th:if="${#lists.isEmpty(recipe.recipeIngredients)}" class="text-muted mt-2">
+                                            <i class="bi bi-info-circle"></i> [[#{recipe.details.no.ingredients}]]
+                                        </p>
+                                    </div>
+                                </form>
                             </div>
 
                             <!-- Instructions -->

@@ -127,14 +127,19 @@ public class ShoppingListItemController {
 
     @PostMapping("/add-from-recipe/{recipeId}")
     public ModelAndView addFromRecipeDetail(@PathVariable UUID recipeId,
+                                            @RequestParam(required = false) List<UUID> selectedIngredients,
                                             @AuthenticationPrincipal AuthenticationMethadata auth) {
 
         User user = userService.getById(auth.getUserId());
-        shoppingListItemService.addIngredientsFromRecipe(user, recipeId);
+
+         if (selectedIngredients == null || selectedIngredients.isEmpty()) {
+            shoppingListItemService.addIngredientsFromRecipe(user, recipeId);
+        } else {
+            shoppingListItemService.addSelectedIngredientsFromRecipe(user, recipeId, selectedIngredients);
+        }
 
         return new ModelAndView("redirect:/recipes/" + recipeId);
     }
-
 
 
     @PutMapping("/toggle/{itemId}")
