@@ -87,11 +87,20 @@ public class RecipeController {
     @GetMapping("/{recipeId}")
     public ModelAndView viewRecipe(@PathVariable UUID recipeId,
                                    @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
-        User user = userService.getById(authenticationMethadata.getUserId());
+
         Recipe recipe = recipeService.getById(recipeId);
 
-        boolean isAuthor = recipeService.isAuthor(recipe, user);
-        boolean isFavorite = recipeService.isFavorite(recipe, user);
+
+        User user = null;
+        boolean isAuthor = false;
+        boolean isFavorite = false;
+
+        if (authenticationMethadata != null) {
+
+            user = userService.getById(authenticationMethadata.getUserId());
+            isAuthor = recipeService.isAuthor(recipe, user);
+            isFavorite = recipeService.isFavorite(recipe, user);
+        }
 
         Double averageRating = commentService.getAverageRatingForRecipe(recipeId);
         int totalRatings = commentService.getTotalRatingsForRecipe(recipeId);
@@ -109,7 +118,6 @@ public class RecipeController {
 
         return modelAndView;
     }
-
 
     @GetMapping("/mine")
     public ModelAndView getMyRecipes(@AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {

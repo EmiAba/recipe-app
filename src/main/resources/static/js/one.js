@@ -70,13 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addItemForm) {
         const nameInput = addItemForm.querySelector('input[name="name"]');
 
-        // Autofocus on name input when page loads
+
         if (nameInput) {
             nameInput.focus();
         }
 
-        // Clear form after successful submission (optional)
-        // This is handled by redirect, but you can add animation here
+
     }
 
     // ========== Category Section Collapse (Optional Enhancement) ==========
@@ -103,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========== Smooth Scroll for Long Lists ==========
     const shoppingItems = document.querySelectorAll('.shopping-item');
     if (shoppingItems.length > 10) {
-        // Add "Back to Top" button functionality if needed
+
         const backToTopBtn = document.createElement('button');
         backToTopBtn.innerHTML = '<i class="bi bi-arrow-up-circle-fill"></i>';
         backToTopBtn.className = 'btn btn-primary position-fixed bottom-0 end-0 m-4';
@@ -130,14 +129,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (recipeSelect) {
         recipeSelect.addEventListener('change', function() {
             if (this.value) {
-                // Optional: Show preview or additional info
+
                 console.log('Selected recipe:', this.value);
             }
         });
     }
 
     // ========== Animation for Newly Added Items (if you want) ==========
-    // This would require session attribute or URL parameter
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('added') === 'true') {
         const lastItem = document.querySelector('.shopping-item:first-child');
@@ -155,17 +154,17 @@ const ingredientTemplate = document.getElementById('ingredient-template');
 if (ingredientsContainer && ingredientTemplate) {
     let ingredientIndex = ingredientsContainer.querySelectorAll('.ingredient-row').length;
 
-    // Create "Add More Ingredient" button
+
        const addButton = document.createElement('button');
     addButton.type = 'button';
     addButton.className = 'btn btn-outline-primary mb-3';
 
-// Get translated text from hidden span
+
     const addMoreText = document.getElementById('addMoreIngredientText');
     const buttonText = addMoreText ? addMoreText.textContent : 'Add More Ingredient';
     addButton.innerHTML = `<i class="bi bi-plus-circle me-2"></i>${buttonText}`;
 
-    // Insert button after help text
+
     const helpText = ingredientsContainer.nextElementSibling;
     if (helpText && helpText.classList.contains('form-text')) {
         helpText.insertAdjacentElement('afterend', addButton);
@@ -173,13 +172,13 @@ if (ingredientsContainer && ingredientTemplate) {
         ingredientsContainer.insertAdjacentElement('afterend', addButton);
     }
 
-    // Add new ingredient row on button click
+
     addButton.addEventListener('click', function() {
-        // Clone the template
+
         const newRow = ingredientTemplate.content.cloneNode(true);
         const rowDiv = newRow.querySelector('.ingredient-row');
 
-        // Set proper name attributes for form binding
+
         const nameInput = newRow.querySelector('input[type="text"]');
         const quantityInput = newRow.querySelectorAll('input[type="text"]')[1];
         const unitSelect = newRow.querySelector('select');
@@ -197,14 +196,14 @@ if (ingredientsContainer && ingredientTemplate) {
         notesInput.name = `recipeIngredients[${ingredientIndex}].notes`;
         notesInput.id = `notes${ingredientIndex}`;
 
-        // Update label 'for' attributes
+
         const labels = newRow.querySelectorAll('label');
         if (labels[0]) labels[0].setAttribute('for', `ingredientName${ingredientIndex}`);
         if (labels[1]) labels[1].setAttribute('for', `quantity${ingredientIndex}`);
         if (labels[2]) labels[2].setAttribute('for', `unit${ingredientIndex}`);
         if (labels[3]) labels[3].setAttribute('for', `notes${ingredientIndex}`);
 
-        // Add remove functionality
+
         const removeBtn = newRow.querySelector('.remove-ingredient');
         removeBtn.addEventListener('click', function() {
             rowDiv.remove();
@@ -214,7 +213,7 @@ if (ingredientsContainer && ingredientTemplate) {
         ingredientIndex++;
     });
 
-    // Add remove functionality to existing rows (optional - if you want to allow deleting initial rows)
+
     document.querySelectorAll('.remove-ingredient').forEach(btn => {
         btn.addEventListener('click', function() {
             this.closest('.ingredient-row').remove();
@@ -228,10 +227,53 @@ function selectAllIngredients() {
     document.querySelectorAll('input[name="selectedIngredients"]').forEach(cb => cb.checked = true);
 }
 
-// Make function globally available
 window.selectAllIngredients = selectAllIngredients;
 
+function shareRecipe() {
+    const recipeUrl = window.location.href;
+    const recipeTitle = document.querySelector('h1').textContent;
 
+
+    navigator.clipboard.writeText(recipeUrl).then(function() {
+
+        showToast('Link copied! Share: ' + recipeTitle);
+    }).catch(function(err) {
+
+        const tempInput = document.createElement('input');
+        tempInput.value = recipeUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        showToast('Link copied!');
+    });
+}
+
+function showToast(message) {
+
+    const toast = document.createElement('div');
+    toast.className = 'position-fixed bottom-0 end-0 p-3';
+    toast.style.zIndex = '9999';
+    toast.innerHTML = `
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-success text-white">
+                <i class="bi bi-check-circle me-2"></i>
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" onclick="this.closest('.position-fixed').remove()"></button>
+            </div>
+            <div class="toast-body">
+                ${message}
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
 // ========== CSS Animation (add to CSS if you use the animation above) ==========
 // @keyframes fadeInSlide {
 //     from {
