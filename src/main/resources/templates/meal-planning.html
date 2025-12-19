@@ -70,6 +70,7 @@
 
           <div class="section-divider"></div>
 
+          <!-- BREAKFAST -->
           <div class="row meal-type-row">
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label breakfast">
@@ -83,7 +84,14 @@
                      th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'BREAKFAST'}"
                      class="meal-card">
                   <div class="meal-content">
-                    <h6 class="meal-name" th:text="${meal.mealName}">Oatmeal with Berries</h6>
+                    <div th:if="${recipeAvailability.get(meal.recipeId)}">
+                      <a th:href="@{'/recipes/' + ${meal.recipeId}}" class="text-decoration-none">
+                        <h6 class="meal-name" th:text="${meal.mealName}">Oatmeal with Berries</h6>
+                      </a>
+                    </div>
+                    <div th:unless="${recipeAvailability.get(meal.recipeId)}">
+                      <h6 class="meal-name text-muted" th:text="${meal.mealName} + ' (unavailable)'">Oatmeal (unavailable)</h6>
+                    </div>
                     <p class="meal-calories" th:if="${meal.calories != null}">
                       <span th:text="${meal.calories}">320</span> <span th:text="#{mealPlanning.calories}">cal</span>
                     </p>
@@ -101,6 +109,7 @@
             </div>
           </div>
 
+          <!-- LUNCH -->
           <div class="row meal-type-row">
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label lunch">
@@ -114,7 +123,14 @@
                      th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'LUNCH'}"
                      class="meal-card">
                   <div class="meal-content">
-                    <h6 class="meal-name" th:text="${meal.mealName}">Caesar Salad</h6>
+                    <div th:if="${recipeAvailability.get(meal.recipeId)}">
+                      <a th:href="@{'/recipes/' + ${meal.recipeId}}" class="text-decoration-none">
+                        <h6 class="meal-name" th:text="${meal.mealName}">Caesar Salad</h6>
+                      </a>
+                    </div>
+                    <div th:unless="${recipeAvailability.get(meal.recipeId)}">
+                      <h6 class="meal-name text-muted" th:text="${meal.mealName} + ' (unavailable)'">Caesar Salad (unavailable)</h6>
+                    </div>
                     <p class="meal-calories" th:if="${meal.calories != null}">
                       <span th:text="${meal.calories}">280</span> <span th:text="#{mealPlanning.calories}">cal</span>
                     </p>
@@ -132,6 +148,7 @@
             </div>
           </div>
 
+          <!-- DINNER -->
           <div class="row meal-type-row">
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label dinner">
@@ -145,7 +162,14 @@
                      th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'DINNER'}"
                      class="meal-card">
                   <div class="meal-content">
-                    <h6 class="meal-name" th:text="${meal.mealName}">Grilled Salmon</h6>
+                    <div th:if="${recipeAvailability.get(meal.recipeId)}">
+                      <a th:href="@{'/recipes/' + ${meal.recipeId}}" class="text-decoration-none">
+                        <h6 class="meal-name" th:text="${meal.mealName}">Grilled Salmon</h6>
+                      </a>
+                    </div>
+                    <div th:unless="${recipeAvailability.get(meal.recipeId)}">
+                      <h6 class="meal-name text-muted" th:text="${meal.mealName} + ' (unavailable)'">Grilled Salmon (unavailable)</h6>
+                    </div>
                     <p class="meal-calories" th:if="${meal.calories != null}">
                       <span th:text="${meal.calories}">450</span> <span th:text="#{mealPlanning.calories}">cal</span>
                     </p>
@@ -163,6 +187,7 @@
             </div>
           </div>
 
+          <!-- SNACK -->
           <div class="row meal-type-row">
             <div class="col-md-2 d-flex align-items-center justify-content-center">
               <div class="meal-type-label snack">
@@ -176,7 +201,14 @@
                      th:if="${meal.plannedDate.equals(weekStart.plusDays(day)) and meal.mealType == 'SNACK'}"
                      class="meal-card">
                   <div class="meal-content">
-                    <h6 class="meal-name" th:text="${meal.mealName}">Mixed Nuts</h6>
+                    <div th:if="${recipeAvailability.get(meal.recipeId)}">
+                      <a th:href="@{'/recipes/' + ${meal.recipeId}}" class="text-decoration-none">
+                        <h6 class="meal-name" th:text="${meal.mealName}">Mixed Nuts</h6>
+                      </a>
+                    </div>
+                    <div th:unless="${recipeAvailability.get(meal.recipeId)}">
+                      <h6 class="meal-name text-muted" th:text="${meal.mealName} + ' (unavailable)'">Mixed Nuts (unavailable)</h6>
+                    </div>
                     <p class="meal-calories" th:if="${meal.calories != null}">
                       <span th:text="${meal.calories}">180</span> <span th:text="#{mealPlanning.calories}">cal</span>
                     </p>
@@ -193,8 +225,10 @@
               </div>
             </div>
           </div>
+
         </div>
 
+        <!-- ADD MEAL FORM -->
         <div th:if="${param.date != null or selectedDate != null}" class="dashboard-card mt-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5>
@@ -226,12 +260,24 @@
 
             <div class="mb-3">
               <label for="recipeSelect" class="form-label" th:text="#{mealPlanning.chooseRecipe}">Choose Recipe:</label>
-              <select class="form-select" id="recipeSelect" name="recipeId" >
+              <select class="form-select" id="recipeSelect" name="recipeId">
                 <option value="" th:text="#{mealPlanning.selectRecipe}">Select a recipe...</option>
-                <option th:each="recipe : ${userRecipes}"
-                        th:value="${recipe.id}"
-                        th:text="${recipe.title}">
-                </option>
+
+                <!-- My Recipes Group -->
+                <optgroup label="My Recipes" th:if="${!userRecipes.isEmpty()}">
+                  <option th:each="recipe : ${userRecipes}"
+                          th:value="${recipe.id}"
+                          th:text="${recipe.title}">
+                  </option>
+                </optgroup>
+
+                <!-- Favorite Recipes Group -->
+                <optgroup label="Favorite Recipes" th:if="${!favoriteRecipes.isEmpty()}">
+                  <option th:each="recipe : ${favoriteRecipes}"
+                          th:value="${recipe.id}"
+                          th:text="${recipe.title}">
+                  </option>
+                </optgroup>
               </select>
             </div>
 

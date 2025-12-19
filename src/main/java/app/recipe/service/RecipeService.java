@@ -6,11 +6,8 @@ import app.exception.UnauthorizedAccessException;
 import app.ingredient.model.Ingredient;
 import app.ingredient.service.IngredientService;
 import app.recipeingredient.model.RecipeIngredient;
-import app.user.service.UserService;
 import app.web.dto.RecipeIngredientRequest;
 import app.web.dto.RecipeUpdateRequest;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.recipe.model.Recipe;
@@ -37,21 +34,15 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final CategoryService categoryService;
-
-    private final UserService userService;
     private final IngredientService  ingredientService;
 
 
 
     public RecipeService(RecipeRepository recipeRepository, CategoryService categoryService,
-                         UserService userService, IngredientService ingredientService) {
+                         IngredientService ingredientService) {
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
-
-
-        this.userService = userService;
-
-        this.ingredientService = ingredientService;
+       this.ingredientService = ingredientService;
     }
 
 
@@ -152,10 +143,6 @@ public class RecipeService {
 
         recipe.getRecipeIngredients().clear();
 
-        System.out.println("========== UPDATE RECIPE CALLED ==========");
-        System.out.println("Recipe ID: " + recipeId);
-        System.out.println("Ingredients count: " +       (recipeUpdateRequest.getRecipeIngredients() != null ?
-                recipeUpdateRequest.getRecipeIngredients().size() : "null"));
 
         if (recipeUpdateRequest.getRecipeIngredients() != null &&
                 !recipeUpdateRequest.getRecipeIngredients().isEmpty()) {
@@ -222,7 +209,7 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
-    @CacheEvict(value = "userFavorites",  allEntries = true)
+
     public void addToFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
         user.getFavorites().add(recipe);
@@ -231,21 +218,17 @@ public class RecipeService {
     }
 
 
-    @Cacheable(value = "userFavorites", key = "#userId")
-    public List<Recipe> getUserFavorites(UUID userId) {
-        User user = userService.getById(userId);
 
-        return user.getFavorites().stream()
-                .filter(recipe -> !recipe.isDeleted())
-                .sorted((r1, r2) -> r2.getCreatedOn().compareTo(r1.getCreatedOn()))
-                .collect(Collectors.toList());
+    public List<Recipe> getUserFavorites(UUID userId) {
+        return recipeRepository.findUserFavoritesWithCategories(userId);
     }
+
 
     public boolean isFavorite(Recipe recipe, User user) {
         return user.getFavorites().contains(recipe);
     }
 
-    @CacheEvict(value = "userFavorites", allEntries = true)
+
     public void removeFromFavorites(User user, UUID recipeId) {
         Recipe recipe = getById(recipeId);
         user.getFavorites().remove(recipe);
@@ -261,6 +244,10 @@ public class RecipeService {
         return getUserFavorites(userId).size();
     }
 
+
+    public List<Recipe> getByIds(Set<UUID> ids) {
+        return recipeRepository.findAllById(ids);
+    }
 
     public byte[] generateRecipePdf(UUID recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId)

@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,6 +80,37 @@ public class MealPlanningService {
                 ? weekStart
                 : LocalDate.now().with(java.time.DayOfWeek.MONDAY);
     }
+
+
+    /**
+     * Проверява кои рецепти от meal plans са налични (не са deleted)
+     */
+
+    public Map<UUID, Boolean> getRecipeAvailability(List<MealPlanResponse> mealPlans) {
+
+        Set<UUID> recipeIds = mealPlans.stream()
+                .map(MealPlanResponse::getRecipeId)
+                .collect(Collectors.toSet());
+
+
+        List<Recipe> recipes = recipeService.getByIds(recipeIds);
+
+
+        Map<UUID, Boolean> availability = new HashMap<>();
+        for (Recipe recipe : recipes) {
+            availability.put(recipe.getId(), !recipe.isDeleted());
+        }
+
+
+        for (UUID recipeId : recipeIds) {
+            if (!availability.containsKey(recipeId)) {
+                availability.put(recipeId, false);
+            }
+        }
+
+        return availability;
+    }
+
 }
 
 

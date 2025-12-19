@@ -2,6 +2,7 @@ package app.web;
 
 import app.mealplanning.client.dto.MealPlanResponse;
 import app.mealplanning.service.MealPlanningService;
+import app.recipe.model.Recipe;
 import app.recipe.service.RecipeService;
 import app.security.AuthenticationMethadata;
 import app.user.model.User;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -46,16 +48,20 @@ public class MealPlanningController {
         User user = userService.getById(authenticationMethadata.getUserId());
         LocalDate displayWeekStart = mealPlanningService.resolveWeekStart(weekStart);
         List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), displayWeekStart);
-        List<app.recipe.model.Recipe> userRecipes = recipeService.getRecipesByUser(user, null);
+        List<Recipe> userRecipes = recipeService.getRecipesByUser(user, null);
+        List<Recipe> favoriteRecipes = recipeService.getUserFavorites(user.getId());
+        Map<UUID, Boolean> recipeAvailability = mealPlanningService.getRecipeAvailability(weeklyMealPlans);
 
         ModelAndView modelAndView = new ModelAndView("meal-planning");
         modelAndView.addObject("user", user);
         modelAndView.addObject("weeklyMealPlans", weeklyMealPlans);
         modelAndView.addObject("userRecipes", userRecipes);
+        modelAndView.addObject("favoriteRecipes", favoriteRecipes);
         modelAndView.addObject("weekStart", displayWeekStart);
         modelAndView.addObject("mealPlanAddRequest", new MealPlanAddRequest());
         modelAndView.addObject("selectedDate", date);
         modelAndView.addObject("selectedMealType", mealType);
+        modelAndView.addObject("recipeAvailability", recipeAvailability);
 
         return modelAndView;
     }
