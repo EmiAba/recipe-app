@@ -1487,3 +1487,13 @@ body {
     cursor: not-allowed;
     opacity: 0.6;
 }
+/*Navbar*/
+/* When no sidebar (for guest users) */
+.dashboard-container.no-sidebar {
+    grid-template-columns: 1fr;
+}
+
+.dashboard-container.no-sidebar .main-content {
+    margin-left: 0;
+    width: 100%;
+}

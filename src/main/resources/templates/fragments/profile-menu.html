@@ -5,12 +5,12 @@
 </head>
 <body>
 
-<div th:fragment="profile-menu" class="dropdown profile">
+<div th:fragment="profile-menu" th:if="${user != null}" class="dropdown profile">
     <button class="btn profile-btn" type="button" data-bs-toggle="dropdown">
         <div class="profile-img">
-            <img th:src="${#strings.isEmpty(user.profilePicture)
-              ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
-              : user.profilePicture}"
+            <img th:src="${user.profilePicture != null && !#strings.isEmpty(user.profilePicture)
+              ? user.profilePicture
+              : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'}"
                  th:alt="${user.username}"
                  class="rounded-circle"
                  style="width:32px;height:32px;object-fit:cover;">

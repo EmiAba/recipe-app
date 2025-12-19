@@ -7,7 +7,7 @@
     <title>Navbar</title>
 </head>
 <body>
-<div th:fragment="navbar" class="sidebar">
+<div th:fragment="navbar" th:if="${user != null}" class="sidebar">
     <div class="sidebar-header">
         <h2 class="logo">🍕 Recipe Buddy</h2>
     </div>
