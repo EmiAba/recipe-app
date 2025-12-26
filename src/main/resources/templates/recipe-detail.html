@@ -188,8 +188,26 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
 
+                            <!-- Dietary Tags -->
+                            <div class="mt-3" th:if="${!recipe.dietaryTags.isEmpty()}">
+                                <h5>
+                                    <i class="bi bi-heart-pulse text-success"></i> Dietary Preferences:
+                                </h5>
+                                <div class="recipe-tags">
+                                    <span class="tag dietary-tag"
+                                          th:each="dietaryTag : ${recipe.dietaryTags}"
+                                          th:text="${#strings.replace(dietaryTag, '_', ' ')}">
+                                        Dietary Tag
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- END col-lg-5 -->
+
+                        <!-- Recipe Content -->
+                        <div class="col-lg-7">
                         <!-- Recipe Content -->
                         <div class="col-lg-7">
 

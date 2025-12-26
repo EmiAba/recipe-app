@@ -258,49 +258,128 @@
                                 <div class="section-divider"></div>
 
                                 <!-- Categories Section -->
-                                <div class="row">
+                                <!-- Categories & Dietary Tags Section -->
+                                <div class="row g-3">
+                                    <!-- Categories Column -->
                                     <div class="col-md-6">
                                         <h4 class="mb-3">[[#{form.categories}]]</h4>
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="breakfast" id="categoryBreakfast">
-                                                <label class="form-check-label" for="categoryBreakfast">[[#{form.breakfast}]]</label>
+                                        <div class="category-dietary-box">
+                                            <p class="text-muted mb-3">Select recipe categories</p>
+                                            <div class="category-checkboxes">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="breakfast" id="categoryBreakfast">
+                                                    <label class="form-check-label" for="categoryBreakfast">[[#{form.breakfast}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="lunch" id="categoryLunch">
+                                                    <label class="form-check-label" for="categoryLunch">[[#{form.lunch}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="dinner" id="categoryDinner">
+                                                    <label class="form-check-label" for="categoryDinner">[[#{form.dinner}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="appetizer" id="categoryAppetizer">
+                                                    <label class="form-check-label" for="categoryAppetizer">[[#{form.appetizer}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="dessert" id="categoryDessert">
+                                                    <label class="form-check-label" for="categoryDessert">[[#{form.dessert}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="snack" id="categorySnack">
+                                                    <label class="form-check-label" for="categorySnack">[[#{form.snack}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="drink" id="categoryDrink">
+                                                    <label class="form-check-label" for="categoryDrink">[[#{form.drink}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="soup" id="categorySoup">
+                                                    <label class="form-check-label" for="categorySoup">[[#{form.soup}]]</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="salad" id="categorySalad">
+                                                    <label class="form-check-label" for="categorySalad">[[#{form.salad}]]</label>
+                                                </div>
                                             </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="lunch" id="categoryLunch">
-                                                <label class="form-check-label" for="categoryLunch">[[#{form.lunch}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="dinner" id="categoryDinner">
-                                                <label class="form-check-label" for="categoryDinner">[[#{form.dinner}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="appetizer" id="categoryAppetizer">
-                                                <label class="form-check-label" for="categoryAppetizer">[[#{form.appetizer}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="dessert" id="categoryDessert">
-                                                <label class="form-check-label" for="categoryDessert">[[#{form.dessert}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="snack" id="categorySnack">
-                                                <label class="form-check-label" for="categorySnack">[[#{form.snack}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="drink" id="categoryDrink">
-                                                <label class="form-check-label" for="categoryDrink">[[#{form.drink}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="soup" id="categorySoup">
-                                                <label class="form-check-label" for="categorySoup">[[#{form.soup}]]</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{categoryNames}" value="salad" id="categorySalad">
-                                                <label class="form-check-label" for="categorySalad">[[#{form.salad}]]</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dietary Tags Column -->
+                                    <div class="col-md-6">
+                                        <h4 class="mb-3">
+                                            <i class="bi bi-heart-pulse text-success"></i> Dietary Preferences
+                                        </h4>
+                                        <div class="category-dietary-box">
+                                            <p class="text-muted mb-3">Select dietary tags that apply</p>
+                                            <div class="dietary-checkboxes">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="VEGETARIAN" id="tagVegetarian">
+                                                    <label class="form-check-label" for="tagVegetarian">
+                                                        <i class="bi bi-egg-fried"></i> Vegetarian
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="VEGAN" id="tagVegan">
+                                                    <label class="form-check-label" for="tagVegan">
+                                                        <i class="bi bi-flower1"></i> Vegan
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="GLUTEN_FREE" id="tagGlutenFree">
+                                                    <label class="form-check-label" for="tagGlutenFree">
+                                                        <i class="bi bi-check-circle"></i> Gluten Free
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="DAIRY_FREE" id="tagDairyFree">
+                                                    <label class="form-check-label" for="tagDairyFree">
+                                                        <i class="bi bi-droplet-half"></i> Dairy Free
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="KETO" id="tagKeto">
+                                                    <label class="form-check-label" for="tagKeto">
+                                                        <i class="bi bi-lightning"></i> Keto
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="LOW_CARB" id="tagLowCarb">
+                                                    <label class="form-check-label" for="tagLowCarb">
+                                                        <i class="bi bi-bar-chart"></i> Low Carb
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="HIGH_PROTEIN" id="tagHighProtein">
+                                                    <label class="form-check-label" for="tagHighProtein">
+                                                        <i class="bi bi-award"></i> High Protein
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="NUT_FREE" id="tagNutFree">
+                                                    <label class="form-check-label" for="tagNutFree">
+                                                        <i class="bi bi-x-circle"></i> Nut Free
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="PALEO" id="tagPaleo">
+                                                    <label class="form-check-label" for="tagPaleo">
+                                                        <i class="bi bi-fire"></i> Paleo
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{dietaryTags}" value="DIABETIC_FRIENDLY" id="tagDiabeticFriendly">
+                                                    <label class="form-check-label" for="tagDiabeticFriendly">
+                                                        <i class="bi bi-heart"></i> Diabetic Friendly
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
 
                                 <div class="section-divider"></div>
 

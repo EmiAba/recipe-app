@@ -12,6 +12,23 @@
         <h2 class="logo">🍕 Recipe Buddy</h2>
     </div>
 
+    <!-- Search Bar -->
+    <div class="sidebar-search">
+        <form th:action="@{/recipes/search}" method="get" class="search-form">
+            <div class="search-wrapper">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       name="q"
+                       class="search-input"
+                       th:placeholder="#{search.placeholder}"
+                       autocomplete="off">
+                <button type="submit" class="search-submit-btn">
+                    <i class="bi bi-arrow-right-circle-fill"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
     <div class="sidebar-menu">
         <ul class="nav-links">
             <li class="nav-link active">

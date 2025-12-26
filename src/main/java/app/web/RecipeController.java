@@ -227,4 +227,25 @@ public class RecipeController {
         return ResponseEntity.ok().headers(headers).body(pdf);
     }
 
+
+
+    // SEArch
+
+    @GetMapping("/search")
+    public ModelAndView searchRecipes(
+            @RequestParam(required = false) String q,
+            @AuthenticationPrincipal AuthenticationMethadata authenticationMethadata) {
+
+        User user = userService.getById(authenticationMethadata.getUserId());
+        List<Recipe> searchResults = recipeService.searchRecipes(q);
+
+        ModelAndView modelAndView = new ModelAndView("recipe-search-results");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("recipes", searchResults);
+        modelAndView.addObject("searchTerm", q);
+        modelAndView.addObject("resultCount", searchResults.size());
+
+        return modelAndView;
+    }
+
 }

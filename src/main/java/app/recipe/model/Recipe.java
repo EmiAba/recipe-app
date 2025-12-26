@@ -57,6 +57,12 @@ public class Recipe {
     @Column(nullable = false)
     private LocalDateTime updatedOn;
 
+    @ElementCollection
+    @CollectionTable(name = "recipe_dietary_tags", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "dietary_tag")
+    @Enumerated(EnumType.STRING)
+    private Set<DietaryTag> dietaryTags = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User author;

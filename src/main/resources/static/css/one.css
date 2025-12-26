@@ -1497,3 +1497,141 @@ body {
     margin-left: 0;
     width: 100%;
 }
+
+/* ====   SEARCH BAR STYLES - ================ */
+
+.sidebar-search {
+    padding: 15px 20px;
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-form {
+    width: 100%;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.search-wrapper:focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(252, 218, 5, 0.3);
+}
+
+.search-wrapper i.bi-search {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    font-weight: var(--fw-medium);
+    padding: 5px 0;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-submit-btn {
+    background: transparent;
+    border: none;
+    color: var(--bright-yellow);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.search-submit-btn:hover {
+    transform: scale(1.15);
+    color: #fff;
+}
+
+.search-submit-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar-search {
+        padding: 10px 15px;
+    }
+
+    .search-wrapper {
+        padding: 8px 12px;
+    }
+
+    .search-input {
+        font-size: 13px;
+    }
+}
+
+
+/* ===============  DIETARY CHECKBOXES ============== */
+
+.dietary-checkboxes .form-check {
+    margin-bottom: 10px;
+}
+
+.dietary-checkboxes .form-check-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.dietary-checkboxes .form-check-label i {
+    color: var(--lime-green);
+    font-size: 1rem;
+}
+
+.dietary-checkboxes .form-check-input:checked ~ .form-check-label {
+    color: var(--primary-green);
+    font-weight: var(--fw-medium);
+}
+
+.category-dietary-box {
+    background: var(--light-cream);
+    border: 2px solid rgba(252, 218, 5, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    height: 100%;
+    min-height: 400px;
+}
+
+.category-dietary-box .text-muted {
+    font-weight: var(--fw-medium);
+}
+
+.tag.dietary-tag {
+    background-color: rgba(157, 226, 79, 0.2);
+    color: var(--primary-green);
+    border: 1px solid rgba(157, 226, 79, 0.6);
+    padding: 5px 12px;
+    font-weight: var(--fw-bold);
+    text-transform: capitalize;
+}
+
+.tag.dietary-tag:hover {
+    background-color: rgba(157, 226, 79, 0.3);
+    transform: translateY(-2px);
+}

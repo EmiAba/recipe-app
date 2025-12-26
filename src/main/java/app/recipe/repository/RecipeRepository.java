@@ -25,5 +25,15 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
             "AND r.deleted = false " +
             "ORDER BY r.createdOn DESC")
     List<Recipe> findUserFavoritesWithCategories(@Param("userId") UUID userId);
+
+    // ===== NEW: SEARCH METHOD =====
+    @Query("SELECT DISTINCT r FROM Recipe r " +
+            "LEFT JOIN FETCH r.categories " +
+            "LEFT JOIN FETCH r.author " +
+            "WHERE r.deleted = false " +
+            "AND r.isPublic = true " +
+            "AND LOWER(r.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+            "ORDER BY r.createdOn DESC")
+    List<Recipe> searchPublicRecipesByTitle(@Param("searchTerm") String searchTerm);
 }
 

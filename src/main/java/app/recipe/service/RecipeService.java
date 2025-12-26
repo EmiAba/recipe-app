@@ -68,14 +68,14 @@ public class RecipeService {
                 .sugar(recipeCreateRequest.getSugar())
                 .sodium(recipeCreateRequest.getSodium())
                 .categories(categories)
+                .dietaryTags(recipeCreateRequest.getDietaryTags() != null ?
+                        recipeCreateRequest.getDietaryTags() : new HashSet<>())
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .recipeIngredients(new ArrayList<>())
                 .build();
 
-
         recipe = recipeRepository.save(recipe);
-
 
         if (recipeCreateRequest.getRecipeIngredients() != null &&
                 !recipeCreateRequest.getRecipeIngredients().isEmpty()) {
@@ -136,13 +136,20 @@ public class RecipeService {
         recipe.setFiber(recipeUpdateRequest.getFiber());
         recipe.setSugar(recipeUpdateRequest.getSugar());
         recipe.setSodium(recipeUpdateRequest.getSodium());
+
         recipe.getCategories().clear();
         recipe.getCategories().addAll(categories);
+
+
+        recipe.getDietaryTags().clear();
+        if (recipeUpdateRequest.getDietaryTags() != null) {
+            recipe.getDietaryTags().addAll(recipeUpdateRequest.getDietaryTags());
+        }
+
+
         recipe.setUpdatedOn(LocalDateTime.now());
 
-
         recipe.getRecipeIngredients().clear();
-
 
         if (recipeUpdateRequest.getRecipeIngredients() != null &&
                 !recipeUpdateRequest.getRecipeIngredients().isEmpty()) {
@@ -169,7 +176,6 @@ public class RecipeService {
 
         return recipeRepository.save(recipe);
     }
-
 
 
     public void deleteRecipe(UUID recipeId, User currentUser) {
@@ -341,4 +347,18 @@ public class RecipeService {
         document.close();
         return output.toByteArray();
     }
+
+    //serach po title
+    public List<Recipe> searchRecipes(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+
+            return recipeRepository.findByIsPublicTrue().stream()
+                    .filter(recipe -> !recipe.isDeleted())
+                    .sorted((r1, r2) -> r2.getCreatedOn().compareTo(r1.getCreatedOn()))
+                    .collect(Collectors.toList());
+        }
+
+        return recipeRepository.searchPublicRecipesByTitle(searchTerm.trim());
+    }
+
 }
