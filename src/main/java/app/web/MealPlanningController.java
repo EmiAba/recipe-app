@@ -79,13 +79,17 @@ public class MealPlanningController {
         if (bindingResult.hasErrors()) {
 
             User user = userService.getById(authenticationMethadata.getUserId());
-            List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), weekStart);
-            List<app.recipe.model.Recipe> userRecipes = recipeService.getRecipesByUser(user, null);
+            List<MealPlanResponse> weeklyMealPlans = mealPlanningService.getWeeklyMealPlans(user.getId(), currentWeekStart);
+            List<Recipe> userRecipes = recipeService.getRecipesByUser(user, null);
+            List<Recipe> favoriteRecipes = recipeService.getUserFavorites(user.getId());
+            Map<UUID, Boolean> recipeAvailability = mealPlanningService.getRecipeAvailability(weeklyMealPlans);
 
             ModelAndView modelAndView = new ModelAndView("meal-planning");
             modelAndView.addObject("user", user);
             modelAndView.addObject("weeklyMealPlans", weeklyMealPlans);
             modelAndView.addObject("userRecipes", userRecipes);
+            modelAndView.addObject("favoriteRecipes", favoriteRecipes);
+            modelAndView.addObject("recipeAvailability", recipeAvailability);
             modelAndView.addObject("weekStart", currentWeekStart);
             modelAndView.addObject("mealPlanAddRequest", request);
             modelAndView.addObject("selectedDate", request.getPlannedDate());
@@ -94,7 +98,7 @@ public class MealPlanningController {
             return modelAndView;
         }
 
-           mealPlanningService.addRecipeToMealPlan(
+        mealPlanningService.addRecipeToMealPlan(
                 authenticationMethadata.getUserId(),
                 request.getRecipeId(),
                 request.getMealType(),
@@ -103,7 +107,6 @@ public class MealPlanningController {
 
         return new ModelAndView("redirect:/meal-planning?weekStart=" + currentWeekStart.toString());
     }
-
 
 
     @DeleteMapping("/{mealPlanId}/delete")

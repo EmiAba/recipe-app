@@ -20,6 +20,7 @@ public class MealPlanAddRequest {
     private UUID recipeId;
 
 
+    @NotNull(message = "Meal type is required")
     private String mealType;
 
     @NotNull(message = "Planned date is required")
