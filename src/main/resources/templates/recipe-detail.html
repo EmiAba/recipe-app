@@ -195,10 +195,10 @@
                                     <i class="bi bi-heart-pulse text-success"></i> Dietary Preferences:
                                 </h5>
                                 <div class="recipe-tags">
-                                    <span class="tag dietary-tag"
-                                          th:each="dietaryTag : ${recipe.dietaryTags}"
-                                          th:text="${#strings.replace(dietaryTag, '_', ' ')}">
-                                        Dietary Tag
+                                <span class="tag dietary-tag"
+                                     th:each="dietaryTag : ${recipe.dietaryTags}"
+                                     th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(dietaryTag, '_', ' ')))}">
+                                    Dietary Tag
                                     </span>
                                 </div>
                             </div>
